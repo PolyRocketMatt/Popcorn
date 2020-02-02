@@ -1,6 +1,7 @@
 package com.popcorn.compiler.lexical;
 
 import com.popcorn.compiler.node.Node;
+import com.popcorn.utils.enums.NodeType;
 
 import java.util.LinkedList;
 
@@ -52,6 +53,11 @@ public class Token extends Node {
     @Override
     public void add(Node... nodes) {
 
+    }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.TokenNode;
     }
 
     @Override

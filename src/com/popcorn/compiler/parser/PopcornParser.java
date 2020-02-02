@@ -2,7 +2,7 @@ package com.popcorn.compiler.parser;
 
 import com.popcorn.compiler.exception.conversion.InternalValueException;
 import com.popcorn.compiler.exception.conversion.InvalidOperatorException;
-import com.popcorn.compiler.exception.conversion.LiteralToTypeException;
+import com.popcorn.compiler.exception.conversion.InvalidTypeException;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
@@ -12,6 +12,7 @@ import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 import com.popcorn.compiler.node.expressions.ParenthesizedExpressionNode;
 import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
+import com.popcorn.compiler.node.statements.VariableDeclarationStatementNode;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.InternalValue;
@@ -52,15 +53,55 @@ public class PopcornParser {
     }
 
     public Node parse() {
-        if (stream.current().getType().equals(TokenType.SOF)) {
-            stream.next();
-            return parseExpression(0);
+        if (current().getType().equals(TokenType.SOF)) {
+            next();
+        }
+
+        if (ConversionUtils.isType(current().getType())) {
+            currentNode = parseVariableStatement();
+        } else {
+            diagnostics.add("Unexpected syntax {0}", current().getType());
+        }
+
+        return currentNode;
+    }
+
+    private VariableDeclarationStatementNode parseVariableStatement() {
+        try {
+            ConversionUtils.DataType type = ConversionUtils.toType(get().getType());
+            Token identifierToken = match(TokenType.IDENTIFIER, true);
+
+            if (identifierToken.getValue() != null) {
+                String name = identifierToken.getValue();
+                VariableDeclarationStatementNode varNode = new VariableDeclarationStatementNode(null, type, name);
+                Token distinction = matchAny(new TokenType[] { TokenType.EQUAL, TokenType.SEMI_COLON });
+
+                if (distinction.getValue() != null) {
+                    if (distinction.getType().equals(TokenType.EQUAL)) {
+                        ExpressionNode value = parseExpression(0);
+
+                        if (value == null)
+                            diagnostics.add("Expected expression, found null instead!");
+
+                        value.setSuperNode(varNode);
+                        varNode.add(value);
+
+                        Token end = match(TokenType.SEMI_COLON, true);
+                    }
+
+                    return varNode;
+                } else {
+                    diagnostics.add("Expected assignment (\"=\") or termination (\";\"), found {0} instead!", current().getType());
+                }
+            }
+        } catch (InvalidTypeException ex) {
+            diagnostics.add(ex.getException());
         }
 
         return null;
     }
 
-    public ExpressionNode parseExpression(int parentPrecedence) {
+    private ExpressionNode parseExpression(int parentPrecedence) {
         ExpressionNode left = null;
 
         int unaryOpPrecedence = SyntaxRules.getUnaryOperatorPrecedence(current().getType());
@@ -80,7 +121,7 @@ public class PopcornParser {
                     diagnostics.add(ex.getException());
                 }
         } else {
-            left = parsePrimaryExpression();
+            left = parseBasicExpression();
         }
 
         while (true) {
@@ -110,7 +151,7 @@ public class PopcornParser {
         return left;
     }
 
-    public ExpressionNode parsePrimaryExpression() {
+    private ExpressionNode parseBasicExpression() {
         if (current().getType().equals(TokenType.OPAREN)) {
             Token left = get();
             ExpressionNode expression = parseExpression(0);
@@ -127,7 +168,7 @@ public class PopcornParser {
                         null,
                         new InternalValue(ConversionUtils.toInternalValue(type, literal.getValue()), type)
                 );
-            } catch (LiteralToTypeException ex) {
+            } catch (InvalidTypeException ex) {
                 diagnostics.add("Couldn't add literal {0} because {1} is not a valid type", literal.getValue(), literal.getType());
             } catch (InternalValueException ex) {
                 diagnostics.add("\"{0}\" is not a valid representation of a literal", stream.current().getValue());

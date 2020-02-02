@@ -4,6 +4,7 @@ import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.BinaryOperatorType;
+import com.popcorn.utils.enums.NodeType;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -67,6 +68,11 @@ public class BinaryExpressionNode extends ExpressionNode {
     @Override
     public void add(Node... nodes) {
         subNodes.addAll(Arrays.asList(nodes));
+    }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.BinOpNode;
     }
 
 }

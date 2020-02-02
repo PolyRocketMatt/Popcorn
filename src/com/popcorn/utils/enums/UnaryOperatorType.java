@@ -3,6 +3,7 @@ package com.popcorn.utils.enums;
 public enum UnaryOperatorType {
 
     IDENTITY,
-    NEGATION
+    NEGATION,
+    LOGICAL_NEGATION
 
 }

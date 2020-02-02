@@ -3,6 +3,7 @@ package com.popcorn.compiler.node.expressions;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.InternalValue;
+import com.popcorn.utils.enums.NodeType;
 
 import java.util.LinkedList;
 
@@ -40,4 +41,9 @@ public class LiteralExpressionNode extends ExpressionNode {
 
     @Override
     public void add(Node... nodes) { }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.LiteralNode;
+    }
 }

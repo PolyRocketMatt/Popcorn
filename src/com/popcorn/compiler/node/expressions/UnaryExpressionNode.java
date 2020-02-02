@@ -3,6 +3,7 @@ package com.popcorn.compiler.node.expressions;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
+import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.enums.UnaryOperatorType;
 
 import java.util.Arrays;
@@ -57,4 +58,10 @@ public class UnaryExpressionNode extends ExpressionNode {
     public void add(Node... nodes) {
         subNodes.addAll(Arrays.asList(nodes));
     }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.UnaryOpNode;
+    }
+
 }

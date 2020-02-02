@@ -23,12 +23,57 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/popcode/Instructions.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/resources/compiler.properties">
           <value>
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/InstructionSet.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/InstructionType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/InstructionUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/Popcode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/PopcodeException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/PopcodeInstruction.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcode/ValueConstructor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/Popcorn.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/exception/PopcodeException.java">
           <value>
             <set />
           </value>
@@ -103,7 +148,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/VariableDeclarationStatementNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/parser/PopcornParser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/interpreter/PopcornInterpreter.java">
           <value>
             <set />
           </value>
@@ -134,6 +189,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/lexical/Tokenizer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/popcode/InstructionType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/popcode/Popcode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/popcode/PopcodeInstruction.java">
           <value>
             <set />
           </value>
@@ -183,12 +253,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/ValueConstructor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/BinaryOperatorType.java">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/DataType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/ExpressionResultType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/NodeType.java">
           <value>
             <set />
           </value>
@@ -203,7 +288,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/utilities/InstructionUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/utilities/PrintUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/utilities/TypeUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/popcode/InstructionType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/popcode/PopcodeInstruction.java">
           <value>
             <set />
           </value>

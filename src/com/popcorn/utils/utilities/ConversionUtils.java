@@ -2,7 +2,7 @@ package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.exception.conversion.InternalValueException;
 import com.popcorn.compiler.exception.conversion.InvalidOperatorException;
-import com.popcorn.compiler.exception.conversion.LiteralToTypeException;
+import com.popcorn.compiler.exception.conversion.InvalidTypeException;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.utils.enums.BinaryOperatorType;
 import com.popcorn.utils.enums.UnaryOperatorType;
@@ -51,6 +51,18 @@ public class ConversionUtils {
         }
     }
 
+    public static boolean isType(TokenType type) {
+        switch (type) {
+            case INT:
+            case FLOAT:
+            case BOOL:
+            case STRING:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public static boolean isUnaryOperator(TokenType type) {
         switch (type) {
             case PLUS:
@@ -73,7 +85,7 @@ public class ConversionUtils {
         }
     }
 
-    public static DataType literalToDataType(TokenType type) throws LiteralToTypeException {
+    public static DataType literalToDataType(TokenType type) throws InvalidTypeException {
         if (isLiteral(type)) {
             switch (type) {
                 default:
@@ -88,7 +100,7 @@ public class ConversionUtils {
             }
         }
 
-        throw new LiteralToTypeException("Inconvertible literal {0}", PrintUtils.toPrintable(type));
+        throw new InvalidTypeException("Inconvertible literal {0}", PrintUtils.toPrintable(type));
     }
 
     public static Object toInternalValue(DataType type, String value) throws InternalValueException {
@@ -144,6 +156,24 @@ public class ConversionUtils {
         }
 
         throw new InvalidOperatorException("Invalid unary operator {0}", PrintUtils.toPrintable(type));
+    }
+
+    public static DataType toType(TokenType type) throws InvalidTypeException {
+        if (isType(type)) {
+            switch (type) {
+                default:
+                case INT:
+                    return DataType.INT;
+                case FLOAT:
+                    return DataType.FLOAT;
+                case BOOL:
+                    return DataType.BOOL;
+                case STRING:
+                    return DataType.STRING;
+            }
+        }
+
+        throw new InvalidTypeException("{0} is not a type", PrintUtils.toPrintable(type));
     }
 
 }
