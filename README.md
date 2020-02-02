@@ -1,4 +1,6 @@
 <dl>
-    <link rel="stylesheet" type="text/css" href="css/readme_styles.css">
-    <img src="images/popcorn.png" class="center">
+    <div align="center">
+        <img src="images/popcorn.png" class="center">
+        <h1>Popcorn</h1>
+    </div>
 </dl>
