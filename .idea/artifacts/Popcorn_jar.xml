@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="Popcorn:jar">
+    <output-path>$USER_HOME$/Desktop/Popcorn/Popcorn_jar</output-path>
+    <root id="archive" name="Popcorn.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Popcorn" />
+      <element id="module-test-output" name="Popcorn" />
+    </root>
+  </artifact>
+</component>
