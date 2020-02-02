@@ -55,7 +55,7 @@ public class PopcornParser {
     }
 
     public ExpressionNode parseExpression() {
-        int unaryOpPrecedence = SyntaxRules.getUnaryOperatorPrecedence()
+        return parsePrimaryExpression();
     }
 
     public LiteralExpressionNode parsePrimaryExpression() {
