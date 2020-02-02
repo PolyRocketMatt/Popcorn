@@ -1,7 +1,8 @@
 package com.popcorn.compiler.lexical;
 
-import com.popcorn.utils.ConversionUtils;
+import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
+import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +128,7 @@ public class TokenStream {
                 return optional;
         }
 
-        diagnostics.add("Unexpected token {0}, expected type of {1}", current().getType(), ConversionUtils.toPrintable(types));
+        diagnostics.add("Unexpected token {0}, expected type of {1}", current().getType(), PrintUtils.toPrintable(types));
 
         return new Token(types[0], null, current().getLine(), current().getColumn());
     }

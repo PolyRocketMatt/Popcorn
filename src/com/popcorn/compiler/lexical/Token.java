@@ -1,6 +1,10 @@
 package com.popcorn.compiler.lexical;
 
-public class Token {
+import com.popcorn.compiler.node.Node;
+
+import java.util.LinkedList;
+
+public class Token extends Node {
 
     private final TokenType type;
     private final String value;
@@ -28,6 +32,26 @@ public class Token {
 
     public int getColumn() {
         return column;
+    }
+
+    @Override
+    public Node getSuperNode() {
+        return null;
+    }
+
+    @Override
+    public void setSuperNode(Node node) {
+
+    }
+
+    @Override
+    public LinkedList<Node> getSubNodes() {
+        return new LinkedList<>();
+    }
+
+    @Override
+    public void add(Node... nodes) {
+
     }
 
     @Override

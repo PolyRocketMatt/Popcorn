@@ -1,27 +1,12 @@
-package com.popcorn.utils;
+package com.popcorn.utils.utilities;
 
-import com.popcorn.compiler.exception.conversion.InternalValueException;
-import com.popcorn.compiler.exception.conversion.LiteralToTypeException;
+import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
+import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
+import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 
-import java.util.LinkedList;
-import java.util.List;
-
-public class ConversionUtils {
-
-    public enum DataType {
-        INT,
-        FLOAT,
-        BOOL,
-        STRING
-    }
-
-    public static TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
-    public static TokenType[] types = { TokenType.VOID, TokenType.INT, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
-
-    public static <T> LinkedList<T> toLinkedList(List<T> list) {
-        return new LinkedList<>(list);
-    }
+public class PrintUtils {
 
     public static String toPrintable(TokenType[] types) {
         StringBuilder builder = new StringBuilder("{");
@@ -149,57 +134,33 @@ public class ConversionUtils {
         }
     }
 
-    public static boolean isLiteral(TokenType type) {
-        switch (type) {
-            case INT_LITERAL:
-            case FLOAT_LITERAL:
-            case BOOL_LITERAL:
-            case STRING_LITERAL:
-                return true;
-            default:
-                return false;
-        }
-    }
+    public static void prettyPrint(Node node, String indent, boolean isLast) {
+        String marker = isLast ? "└──" : "├──";
+        String nodeRep = indent + marker + node.getClass().getSimpleName();
+        System.out.print(nodeRep);
 
-    public static DataType literalToDataType(TokenType type) throws LiteralToTypeException {
-        if (isLiteral(type)) {
-            switch (type) {
-                default:
-                case INT_LITERAL:
-                    return DataType.INT;
-                case FLOAT_LITERAL:
-                    return DataType.FLOAT;
-                case BOOL_LITERAL:
-                    return DataType.BOOL;
-                case STRING_LITERAL:
-                    return DataType.STRING;
-            }
+        if (node instanceof Token) {
+            System.out.print(": " + ((Token) node).getValue());
+        } else if (node instanceof LiteralExpressionNode) {
+            System.out.print(": " + ((LiteralExpressionNode) node).getValue().getValue());
         }
 
-        throw new LiteralToTypeException("Inconvertible literal {0}", toPrintable(type));
-    }
+        System.out.println();
 
-    public static Object toInternalValue(DataType type, String value) throws InternalValueException {
-        switch (type) {
-            case INT:
-                try {
-                    return Integer.parseInt(value);
-                } catch (NumberFormatException ex) {
-                    throw new InternalValueException("{0} is not a valid integer", value);
-                }
-            case FLOAT:
-                try {
-                    return Float.parseFloat(value);
-                } catch (NumberFormatException ex) {
-                    throw new InternalValueException("{0 is not a valid float", value);
-                }
-            case BOOL:
-                return Boolean.parseBoolean(value);
-            case STRING:
-                return value;
-            default:
-                throw new InternalValueException("{0} isn't a valid type");
+        indent +=  isLast ? "    " : "│   ";
+
+        Node lastNode;
+
+        if (!node.getSubNodes().isEmpty())
+            lastNode = node.getSubNodes().getLast();
+        else
+            lastNode = null;
+
+        for (Node child : node.getSubNodes()) {
+            if (lastNode != null)
+                prettyPrint(child, indent, child == lastNode);
+            else
+                prettyPrint(child, indent, false);
         }
     }
-
 }

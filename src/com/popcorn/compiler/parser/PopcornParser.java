@@ -1,14 +1,17 @@
 package com.popcorn.compiler.parser;
 
 import com.popcorn.compiler.exception.conversion.InternalValueException;
+import com.popcorn.compiler.exception.conversion.InvalidOperatorException;
 import com.popcorn.compiler.exception.conversion.LiteralToTypeException;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
+import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
-import com.popcorn.utils.ConversionUtils;
+import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
+import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.InternalValue;
 import com.popcorn.utils.SyntaxRules;
@@ -47,20 +50,68 @@ public class PopcornParser {
         return currentNode;
     }
 
-    public void parse() {
+    public Node parse() {
         if (stream.current().getType().equals(TokenType.SOF)) {
             stream.next();
-            parseExpression();
+            return parseExpression(0);
         }
+
+        return null;
     }
 
-    public ExpressionNode parseExpression() {
-        return parsePrimaryExpression();
+    public ExpressionNode parseExpression(int parentPrecedence) {
+        ExpressionNode left = null;
+
+        int unaryOpPrecedence = SyntaxRules.getUnaryOperatorPrecedence(current().getType());
+        if (unaryOpPrecedence != 0 && unaryOpPrecedence >= parentPrecedence) {
+            Token operator = get();
+            ExpressionNode operand = parseExpression(parentPrecedence);
+
+            if (ConversionUtils.isUnaryOperator(operator.getType()))
+                try {
+                    left = new UnaryExpressionNode(
+                            null,
+                            operator,
+                            ConversionUtils.toUnaryOpType(operator.getType()) ,
+                            operand
+                    );
+                } catch (InvalidOperatorException ex) {
+                    diagnostics.add(ex.getException());
+                }
+        } else {
+            left = parsePrimaryExpression();
+        }
+
+        while (true) {
+            // TODO: 02/02/2020 Expect a binary operator! Throw exception if not!
+            int precedence = SyntaxRules.getBinaryOperatorPrecedence(current().getType());
+            if (precedence == 0 || precedence <= parentPrecedence)
+                break;
+
+            Token operator = get();
+            ExpressionNode right = parseExpression(precedence);
+
+            if (ConversionUtils.isBinaryOperator(operator.getType())) {
+                try {
+                    left = new BinaryExpressionNode(
+                            null,
+                            operator,
+                            ConversionUtils.toBinaryOpType(operator.getType()),
+                            left,
+                            right
+                    );
+                } catch (InvalidOperatorException ex) {
+                    diagnostics.add(ex.getException());
+                }
+            }
+        }
+
+        return left;
     }
 
     public LiteralExpressionNode parsePrimaryExpression() {
         // TODO: 02/02/2020 Parse parenthesized operation
-        Token literal = stream.matchAny(ConversionUtils.literals);
+        Token literal = stream.matchAny(ConversionUtils.getLiterals());
 
         try {
             ConversionUtils.DataType type = ConversionUtils.literalToDataType(literal.getType());

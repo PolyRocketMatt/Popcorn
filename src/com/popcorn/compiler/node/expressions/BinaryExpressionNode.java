@@ -3,39 +3,50 @@ package com.popcorn.compiler.node.expressions;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
-import com.popcorn.utils.enums.UnaryOperatorType;
+import com.popcorn.utils.enums.BinaryOperatorType;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class UnaryExpressionNode extends ExpressionNode {
+public class BinaryExpressionNode extends ExpressionNode {
 
     private Node superNode;
     private LinkedList<Node> subNodes;
 
     // Node specific fields
     private Token operatorToken;
-    private UnaryOperatorType operation;
-    private ExpressionNode operand;
+    private BinaryOperatorType operation;
+    private ExpressionNode left;
+    private ExpressionNode right;
 
-    public UnaryExpressionNode(Node superNode, Token operatorToken, UnaryOperatorType operation, ExpressionNode operand) {
+    public BinaryExpressionNode(Node superNode, Token operatorToken, BinaryOperatorType operation, ExpressionNode left, ExpressionNode right) {
         this.superNode = superNode;
         this.subNodes = new LinkedList<>();
 
         this.operatorToken = operatorToken;
         this.operation = operation;
-        this.operand = operand;
+        this.left = left;
+        this.right = right;
 
+        add(left);
         add(operatorToken);
-        add(operand);
+        add(right);
     }
 
-    public UnaryOperatorType getOperation() {
+    public Token getOperatorToken() {
+        return operatorToken;
+    }
+
+    public BinaryOperatorType getOperation() {
         return operation;
     }
 
-    public ExpressionNode getOperand() {
-        return operand;
+    public ExpressionNode getLeft() {
+        return left;
+    }
+
+    public ExpressionNode getRight() {
+        return right;
     }
 
     @Override
@@ -57,4 +68,5 @@ public class UnaryExpressionNode extends ExpressionNode {
     public void add(Node... nodes) {
         subNodes.addAll(Arrays.asList(nodes));
     }
+
 }

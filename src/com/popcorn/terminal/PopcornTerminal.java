@@ -4,6 +4,7 @@ import com.popcorn.compiler.lexical.Tokenizer;
 import com.popcorn.compiler.parser.PopcornParser;
 import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.Filters;
+import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Scanner;
@@ -37,8 +38,7 @@ public class PopcornTerminal {
                     }
                 } else {
                     PopcornParser parser = new PopcornParser(diagnostics, tokenizer.getStream());
-
-                    parser.parse();
+                    PrintUtils.prettyPrint(parser.parse(), "", true);
 
                     if (!parser.getDiagnostics().getDiagnostics().isEmpty()) {
                         for (String err : parser.getDiagnostics().getDiagnostics()) {
