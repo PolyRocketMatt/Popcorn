@@ -10,6 +10,7 @@ import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
+import com.popcorn.compiler.node.expressions.ParenthesizedExpressionNode;
 import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
@@ -109,24 +110,31 @@ public class PopcornParser {
         return left;
     }
 
-    public LiteralExpressionNode parsePrimaryExpression() {
-        // TODO: 02/02/2020 Parse parenthesized operation
-        Token literal = stream.matchAny(ConversionUtils.getLiterals());
+    public ExpressionNode parsePrimaryExpression() {
+        if (current().getType().equals(TokenType.OPAREN)) {
+            Token left = get();
+            ExpressionNode expression = parseExpression(0);
+            Token right = match(TokenType.CPAREN, true);
 
-        try {
-            ConversionUtils.DataType type = ConversionUtils.literalToDataType(literal.getType());
+            return new ParenthesizedExpressionNode(null, left, right, expression);
+        } else {
+            Token literal = stream.matchAny(ConversionUtils.getLiterals());
 
-            return new LiteralExpressionNode(
-                    null,
-                    new InternalValue(ConversionUtils.toInternalValue(type, literal.getValue()), type)
-            );
-        } catch (LiteralToTypeException ex) {
-            diagnostics.add("Couldn't add literal {0} because {1} is not a valid type", literal.getValue(), literal.getType());
-        } catch (InternalValueException ex) {
-            diagnostics.add("\"{0}\" is not a valid representation of a literal", stream.current().getValue());
+            try {
+                ConversionUtils.DataType type = ConversionUtils.literalToDataType(literal.getType());
+
+                return new LiteralExpressionNode(
+                        null,
+                        new InternalValue(ConversionUtils.toInternalValue(type, literal.getValue()), type)
+                );
+            } catch (LiteralToTypeException ex) {
+                diagnostics.add("Couldn't add literal {0} because {1} is not a valid type", literal.getValue(), literal.getType());
+            } catch (InternalValueException ex) {
+                diagnostics.add("\"{0}\" is not a valid representation of a literal", stream.current().getValue());
+            }
+
+            return new LiteralExpressionNode(null, new InternalValue(null, null));
         }
-
-        return new LiteralExpressionNode(null, new InternalValue(null, null));
     }
 
     // Wrapper Functions

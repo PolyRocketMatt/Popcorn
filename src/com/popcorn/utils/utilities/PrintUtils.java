@@ -2,7 +2,6 @@ package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
-import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 
