@@ -136,10 +136,6 @@ public class TokenStream {
         index = Math.max(index - offset, 0);
     }
 
-    public boolean expect(TokenType type) {
-        return current().getType().equals(type);
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("[STREAM:     {\n");

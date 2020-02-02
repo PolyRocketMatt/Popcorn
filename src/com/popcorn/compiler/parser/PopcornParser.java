@@ -11,6 +11,7 @@ import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 import com.popcorn.utils.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.InternalValue;
+import com.popcorn.utils.SyntaxRules;
 
 public class PopcornParser {
 
@@ -54,7 +55,7 @@ public class PopcornParser {
     }
 
     public ExpressionNode parseExpression() {
-        return parsePrimaryExpression();
+        int unaryOpPrecedence = SyntaxRules.getUnaryOperatorPrecedence()
     }
 
     public LiteralExpressionNode parsePrimaryExpression() {
@@ -75,6 +76,47 @@ public class PopcornParser {
         }
 
         return new LiteralExpressionNode(null, new InternalValue(null, null));
+    }
+
+    // Wrapper Functions
+    private Token current() {
+        return stream.current();
+    }
+
+    private Token get() {
+        return stream.get();
+    }
+
+    private Token getNext() {
+        return stream.getNext();
+    }
+
+    private void next() {
+        stream.next();
+    }
+
+    private Token peek(int offset) {
+        return stream.peek(offset);
+    }
+
+    private int peekAny(TokenType type) {
+        return stream.peekAny(type);
+    }
+
+    private Token skip(int offset) {
+        return stream.skip(offset);
+    }
+
+    private Token match(TokenType type, boolean addDiagnostic) {
+        return stream.match(type, addDiagnostic);
+    }
+
+    private Token matchAny(TokenType[] types) {
+        return stream.matchAny(types);
+    }
+
+    private void rollback(int offset) {
+        stream.rollback(offset);
     }
 
 }
