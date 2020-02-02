@@ -1,23 +1,32 @@
 package com.popcorn.compiler.lexical;
 
 import com.popcorn.utils.ConversionUtils;
+import com.popcorn.utils.Diagnostics;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class TokenStream {
 
+    private Diagnostics diagnostics;
+
     private LinkedList<Token> tokens;
     private int index;
 
-    public TokenStream() {
+    public TokenStream(Diagnostics diagnostics) {
+        this.diagnostics = diagnostics;
         this.tokens = new LinkedList<>();
         this.index = 0;
     }
 
-    public TokenStream(List<Token> tokens) {
+    public TokenStream(Diagnostics diagnostics, List<Token> tokens) {
+        this.diagnostics = diagnostics;
         this.tokens = ConversionUtils.toLinkedList(tokens);
         this.index = 0;
+    }
+
+    public Diagnostics getDiagnostics() {
+        return diagnostics;
     }
 
     public List<Token> getTokens() {
@@ -28,8 +37,8 @@ public class TokenStream {
         return index;
     }
 
-    public static TokenStream fromStream(TokenStream stream) {
-        return new TokenStream(stream.getTokens());
+    public static TokenStream fromStream(Diagnostics diagnostics, TokenStream stream) {
+        return new TokenStream(diagnostics, stream.getTokens());
     }
 
     public void add(Token token) {
@@ -41,9 +50,9 @@ public class TokenStream {
     }
 
     public Token get() {
-        if (index == tokens.size() - 1) {
+        if (index == tokens.size() - 1)
             return tokens.get(index);
-        } else {
+        else {
             Token token = tokens.get(index);
             index++;
 
@@ -58,17 +67,15 @@ public class TokenStream {
     }
 
     public void next() {
-        if (index != tokens.size() - 1) {
+        if (index != tokens.size() - 1)
             index++;
-        }
     }
 
     public Token peek(int offset) {
-        if (index + offset < tokens.size() - 1) {
+        if (index + offset < tokens.size() - 1)
             return tokens.get(index + offset);
-        } else {
+        else
             return tokens.get(tokens.size() - 1);
-        }
     }
 
     public int peekAny(TokenType type) {
@@ -102,12 +109,31 @@ public class TokenStream {
         }
     }
 
-    public void rollback(int offset) {
-        if (index - offset >= 0) {
-            index = index - offset;
-        } else {
-            index = 0;
+    public Token match(TokenType type, boolean addDiagnostic) {
+        if (current().getType().equals(type))
+            return get();
+
+        if (addDiagnostic)
+            diagnostics.add("Unexpected token {0}, expected {1}", current().getType(), type);
+
+        return new Token(type, null, current().getLine(), current().getColumn());
+    }
+
+    public Token matchAny(TokenType[] types) {
+        for (TokenType type : types) {
+            Token optional = match(type, false);
+
+            if (optional.getValue() != null)
+                return optional;
         }
+
+        diagnostics.add("Unexpected token {0}, expected type of {1}", current().getType(), ConversionUtils.toPrintable(types));
+
+        return new Token(types[0], null, current().getLine(), current().getColumn());
+    }
+
+    public void rollback(int offset) {
+        index = Math.max(index - offset, 0);
     }
 
     public boolean expect(TokenType type) {
@@ -116,7 +142,7 @@ public class TokenStream {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("[STREAM:     {");
+        StringBuilder builder = new StringBuilder("[STREAM:     {\n");
         for (Token t : tokens) {
             builder.append(t.toString()).append("\n");
         }

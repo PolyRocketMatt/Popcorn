@@ -12,6 +12,10 @@ public abstract class Node {
 
     public abstract Node getSuperNode();
 
+    public abstract void setSuperNode(Node node);
+
     public abstract LinkedList<Node> getSubNodes();
+
+    public abstract void add(Node...nodes);
 
 }

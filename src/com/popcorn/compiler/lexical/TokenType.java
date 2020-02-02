@@ -41,7 +41,7 @@ public enum TokenType {
     STRING,             //  string
     BOOL,               //  boolean
     CLASS,              //  class
-    IMPORT,             // import
+    USE,             // import
     NULL,               //  null
     RETURN,             //  return
     FOR,                //  for
@@ -53,6 +53,7 @@ public enum TokenType {
     VOID,               //  void
     PRINT,              //  print
     REPEAT,             //  repeat
+    SWAP,               //  swap
 
     //Last possible option for a token
     IDENTIFIER,         //  Represents an identifier

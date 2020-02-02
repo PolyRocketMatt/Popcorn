@@ -1,6 +1,7 @@
 package com.popcorn.terminal;
 
 import com.popcorn.compiler.lexical.Tokenizer;
+import com.popcorn.compiler.parser.PopcornParser;
 import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.Filters;
 
@@ -35,8 +36,18 @@ public class PopcornTerminal {
                         System.out.println(err);
                     }
                 } else {
-                    System.out.println(tokenizer.getStream().toString());
+                    PopcornParser parser = new PopcornParser(diagnostics, tokenizer.getStream());
+
+                    parser.parse();
+
+                    if (!parser.getDiagnostics().getDiagnostics().isEmpty()) {
+                        for (String err : parser.getDiagnostics().getDiagnostics()) {
+                            System.out.println(err);
+                        }
+                    }
                 }
+
+                diagnostics.getDiagnostics().clear();
 
                 System.out.print("> ");
                 instruction = scanner.nextLine();

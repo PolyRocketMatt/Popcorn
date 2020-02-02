@@ -55,7 +55,7 @@ public class Tokenizer {
         add(TokenType.STRING, "string");
         add(TokenType.BOOL, "bool");
         add(TokenType.CLASS, "class");
-        add(TokenType.IMPORT, "import");
+        add(TokenType.USE, "use");
         add(TokenType.NULL, "null");
         add(TokenType.RETURN, "return");
         add(TokenType.FOR, "for");
@@ -103,7 +103,7 @@ public class Tokenizer {
     }
 
     public void tokenize() {
-        this.stream = new TokenStream();
+        this.stream = new TokenStream(diagnostics);
 
         stream.add(new Token(TokenType.SOF, "SOF", 0, 0));
 
@@ -142,6 +142,7 @@ public class Tokenizer {
         }
 
         stream.add(new Token(TokenType.EOF, "EOF", ++lineIndex, 0));
+        diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
     }
 
 }

@@ -33,6 +33,31 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/exception/PopcornException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/exception/conversion/InternalValueException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/exception/conversion/LiteralToTypeException.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/lexical/TokenStream.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/lexical/TokenType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/lexical/Tokenizer.java">
           <value>
             <set />
@@ -44,6 +69,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/Node.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/LiteralExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/UnaryExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/parser/PopcornParser.java">
           <value>
             <set />
           </value>
@@ -103,7 +143,27 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/InternalValue.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/ResourceLoader.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/SyntaxRules.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/DataType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/UnaryOperatorType.java">
           <value>
             <set />
           </value>
