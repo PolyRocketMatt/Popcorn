@@ -2,30 +2,23 @@ package com.popcorn.compiler.node.statements;
 
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
-import com.popcorn.utils.utilities.ConversionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class VariableDeclarationStatementNode extends Node {
+public class AssignmentStatementNode extends Node {
 
     private Node superNode;
     private LinkedList<Node> subNodes;
 
     // Node specific fields
-    private ConversionUtils.DataType type;
     private String identifier;
 
-    public VariableDeclarationStatementNode(Node superNode, ConversionUtils.DataType type, String identifier) {
+    public AssignmentStatementNode(Node superNode, String identifier) {
         this.superNode = superNode;
         this.subNodes = new LinkedList<>();
 
-        this.type = type;
         this.identifier = identifier;
-    }
-
-    public ConversionUtils.DataType getType() {
-        return type;
     }
 
     public String getIdentifier() {
@@ -38,8 +31,8 @@ public class VariableDeclarationStatementNode extends Node {
     }
 
     @Override
-    public void setSuperNode(Node superNode) {
-        this.superNode = superNode;
+    public void setSuperNode(Node node) {
+        superNode = node;
     }
 
     @Override
@@ -54,6 +47,6 @@ public class VariableDeclarationStatementNode extends Node {
 
     @Override
     public NodeType getNodeType() {
-        return NodeType.VariableNode;
+        return NodeType.AssignmentNode;
     }
 }

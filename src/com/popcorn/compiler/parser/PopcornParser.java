@@ -12,6 +12,7 @@ import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 import com.popcorn.compiler.node.expressions.ParenthesizedExpressionNode;
 import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
+import com.popcorn.compiler.node.statements.AssignmentStatementNode;
 import com.popcorn.compiler.node.statements.VariableDeclarationStatementNode;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.Diagnostics;
@@ -59,6 +60,8 @@ public class PopcornParser {
 
         if (ConversionUtils.isType(current().getType())) {
             currentNode = parseVariableStatement();
+        } else if (current().getType().equals(TokenType.IDENTIFIER)) {
+            currentNode = parseAssignment();
         } else {
             diagnostics.add("Unexpected syntax {0}", current().getType());
         }
@@ -72,8 +75,8 @@ public class PopcornParser {
             Token identifierToken = match(TokenType.IDENTIFIER, true);
 
             if (identifierToken.getValue() != null) {
-                String name = identifierToken.getValue();
-                VariableDeclarationStatementNode varNode = new VariableDeclarationStatementNode(null, type, name);
+                String identifier = identifierToken.getValue();
+                VariableDeclarationStatementNode varNode = new VariableDeclarationStatementNode(null, type, identifier);
                 Token distinction = matchAny(new TokenType[] { TokenType.EQUAL, TokenType.SEMI_COLON });
 
                 if (distinction.getValue() != null) {
@@ -81,12 +84,14 @@ public class PopcornParser {
                         ExpressionNode value = parseExpression(0);
 
                         if (value == null)
-                            diagnostics.add("Expected expression, found null instead!");
+                            diagnostics.add("Expected expression, found {0} instead!", stream.current().getType());
 
+                        // TODO: 03/02/2020 Remove assert 
+                        assert value != null;
                         value.setSuperNode(varNode);
                         varNode.add(value);
 
-                        Token end = match(TokenType.SEMI_COLON, true);
+                        match(TokenType.SEMI_COLON, true);
                     }
 
                     return varNode;
@@ -97,6 +102,35 @@ public class PopcornParser {
         } catch (InvalidTypeException ex) {
             diagnostics.add(ex.getException());
         }
+
+        return null;
+    }
+
+    private AssignmentStatementNode parseAssignment() {
+        Token identifierToken = match(TokenType.IDENTIFIER, true);
+
+        if (identifierToken.getValue() != null) {
+            String identifier = identifierToken.getValue();
+            AssignmentStatementNode assignmentNode = new AssignmentStatementNode(null, identifier);
+            Token distiction = match(TokenType.EQUAL, true);
+
+            if (distiction.getValue() != null) {
+                ExpressionNode value = parseExpression(0);
+
+                if (value == null)
+                    diagnostics.add("Expected expression, found {0} instead!", stream.current().getType());
+
+                // TODO: 07/02/2020 Remove assert
+                assert value != null;
+                value.setSuperNode(assignmentNode);
+                assignmentNode.add(value);
+
+                match(TokenType.SEMI_COLON, true);
+                return assignmentNode;
+            }
+        }
+
+        diagnostics.add("Expected assignment, found {0} instead!", stream.current().getType());
 
         return null;
     }

@@ -7,4 +7,5 @@ public enum NodeType {
     ParenthesizedNode,
     TokenNode,
     VariableNode,
+    AssignmentNode,
 }
