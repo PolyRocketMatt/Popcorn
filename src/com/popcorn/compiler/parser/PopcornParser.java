@@ -6,6 +6,7 @@ import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.node.ExpressionNode;
 import com.popcorn.node.expressions.BinaryExpressionNode;
 import com.popcorn.node.expressions.LiteralExpressionNode;
+import com.popcorn.node.expressions.ParenthesizedExpression;
 import com.popcorn.node.expressions.UnaryExpressionNode;
 import com.popcorn.utils.SyntaxRules;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
@@ -63,10 +64,19 @@ public class PopcornParser {
 
     private ExpressionNode parsePrimitiveExpression() throws Exception {
         try {
-            Token literal = matchAny(ConversionUtils.getLiterals());
-            ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());
+            switch (current().getType()) {
+                case OPAREN:
+                    Token openParenthesisToken = get();
+                    ExpressionNode expression = parseBinaryExpression(0);
+                    Token closedParenthesisToken = match(TokenType.CPAREN, true);
 
-            return new LiteralExpressionNode(new LiteralValue(type, literal.getValue()));
+                    return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
+                default:
+                    Token literal = matchAny(ConversionUtils.getLiterals());
+                    ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());
+
+                    return new LiteralExpressionNode(new LiteralValue(type, literal.getValue()));
+            }
         } catch (Exception ex) {
             diagnostics.reportUnexpectedLiteralException(current().getType());
         }
