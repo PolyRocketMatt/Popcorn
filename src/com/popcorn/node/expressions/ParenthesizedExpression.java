@@ -3,6 +3,7 @@ package com.popcorn.node.expressions;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.node.ExpressionNode;
 import com.popcorn.node.Node;
+import com.popcorn.utils.enums.NodeType;
 
 public class ParenthesizedExpression extends ExpressionNode {
 
@@ -31,5 +32,10 @@ public class ParenthesizedExpression extends ExpressionNode {
     @Override
     public Node[] getChildren() {
         return new Node[] { openParenthesisToken, expression, closedParenthesisToken };
+    }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.PARENTHESIZED_EXPRESSION_NODE;
     }
 }

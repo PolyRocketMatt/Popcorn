@@ -1,11 +1,9 @@
 package com.popcorn.utils.enums;
 
-public enum UnaryOperatorType {
+public enum BoundUnaryOperatorKind {
 
     IDENTITY,
     NEGATION,
     LOGICAL_NEGATION,
-
-    NON_EXISTENT,
 
 }

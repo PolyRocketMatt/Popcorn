@@ -24,11 +24,16 @@ public enum TokenType {
     OBRACKET,           //  [
     CBRACKET,           //  ]
 
+    DOUBLE_EQUALS,      //  ==
+    NOT_EQUALS,         //  !=
     EQUAL,              //  =
     EXCLAMATION,        //  !
     LESS_THAN,          //  <
     GREATER_THAN,       //  >
+    DOUBLE_AMPERSAND,   //  &&
     AMPERSAND,          //  &
+    DOUBLE_PIPE,        //  ||
+    PIPE,               //  |
     COLON,              //  :
     SEMI_COLON,         //  ;
     DOT,                //  .

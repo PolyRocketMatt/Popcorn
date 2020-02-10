@@ -1,9 +1,11 @@
 package com.popcorn.terminal;
 
+import com.popcorn.compiler.Compilation;
 import com.popcorn.compiler.lexical.Tokenizer;
 import com.popcorn.compiler.parser.PopcornParser;
 import com.popcorn.node.Node;
 import com.popcorn.utils.Filters;
+import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.PrintUtils;
@@ -49,20 +51,20 @@ public class PopcornTerminal {
                         }
                     } else {
                         try {
-                            PopcornParser parser = new PopcornParser(diagnostics, tokenizer.getStream());
-                            Node root = parser.parse();
+                            Compilation compilation = new Compilation(SyntaxTree.parse(instruction));
 
-                            if (root != null) {
-                                if (isPrint)
-                                    PrintUtils.prettyPrint(root, "", true);
-                            }
-
-                            if (!parser.getDiagnostics().getDiagnostics().isEmpty()) {
-                                for (Diagnostic error : parser.getDiagnostics().getDiagnostics()) {
-                                    System.out.println(error.getMessage());
+                            // TODO: 10/02/2020 Implement proper error reporting!
+                            if (!compilation.getDiagnostics().isEmpty()) {
+                                for (Diagnostic diagnostic : compilation.getDiagnostics()) {
+                                    System.out.println(diagnostic.getMessage());
                                 }
+                            } else {
+                                PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
                             }
-                        } catch (Exception ex) {}
+
+                        } catch (Exception ex) {
+                            System.out.println(ex.getMessage());
+                        }
                     }
                 }
 

@@ -1,5 +1,6 @@
 package com.popcorn.utils.utilities;
 
+import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.node.Node;
@@ -146,7 +147,7 @@ public class PrintUtils {
 
         System.out.println();
 
-        indent +=  isLast ? "    " : "│   ";
+        indent += isLast ? "    " : "│   ";
 
         Node lastNode;
 

@@ -109,12 +109,14 @@ public class ConversionUtils {
                     return UnaryOperatorType.IDENTITY;
                 case MINUS:
                     return UnaryOperatorType.NEGATION;
+                case EXCLAMATION:
+                    return UnaryOperatorType.LOGICAL_NEGATION;
                 default:
                     throw new Exception(MessageFormat.format("Unexpected unary operator {0}", PrintUtils.toPrintable(type)));
             }
         }
 
-        throw new Exception(MessageFormat.format("Type {0} is not a unary operator", PrintUtils.toPrintable(type)));
+        return UnaryOperatorType.NON_EXISTENT;
     }
 
     public static BinaryOperatorType toBinaryOperator(TokenType type) throws Exception {
@@ -128,12 +130,20 @@ public class ConversionUtils {
                     return BinaryOperatorType.MULTIPLICATION;
                 case F_SLASH:
                     return BinaryOperatorType.DIVISION;
+                case DOUBLE_AMPERSAND:
+                    return BinaryOperatorType.LOGICAL_AND;
+                case DOUBLE_PIPE:
+                    return BinaryOperatorType.LOGICAL_OR;
+                case DOUBLE_EQUALS:
+                    return BinaryOperatorType.LOGICAL_EQUALS;
+                case NOT_EQUALS:
+                    return BinaryOperatorType.LOGICAL_NOT_EQUALS;
                 default:
                     throw new Exception(MessageFormat.format("Unexpected binary operator {0}", PrintUtils.toPrintable(type)));
             }
         }
 
-        throw new Exception(MessageFormat.format("Type {0} is not a binary operator", PrintUtils.toPrintable(type)));
+        return BinaryOperatorType.NON_EXISTENT;
     }
 
 }

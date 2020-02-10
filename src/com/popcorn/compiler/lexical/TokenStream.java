@@ -111,7 +111,7 @@ public class TokenStream {
     }
 
     public Token match(TokenType type, boolean addDiagnostic) {
-        if (current().getType().equals(type))
+        if (current().getNodeType().equals(type))
             return get();
 
         if (addDiagnostic)

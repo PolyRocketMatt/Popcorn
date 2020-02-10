@@ -39,11 +39,16 @@ public class Tokenizer {
         add(TokenType.OBRACKET, "\\[");
         add(TokenType.CBRACKET, "\\]");
 
+        add(TokenType.DOUBLE_EQUALS, "\\=\\=");
+        add(TokenType.NOT_EQUALS, "\\!\\=");
         add(TokenType.EQUAL, "\\=");
         add(TokenType.EXCLAMATION, "\\!");
         add(TokenType.GREATER_THAN, "\\>");
         add(TokenType.LESS_THAN, "\\<");
+        add(TokenType.DOUBLE_AMPERSAND, "\\&\\&");
         add(TokenType.AMPERSAND, "\\&");
+        add(TokenType.DOUBLE_PIPE, "\\|\\|");
+        add(TokenType.PIPE, "\\|");
         add(TokenType.COLON, "\\:");
         add(TokenType.SEMI_COLON, "\\;");
         add(TokenType.DOT, "\\.");

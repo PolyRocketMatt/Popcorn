@@ -3,6 +3,7 @@ package com.popcorn.node.expressions;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.node.ExpressionNode;
 import com.popcorn.node.Node;
+import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.enums.UnaryOperatorType;
 import com.popcorn.utils.utilities.ConversionUtils;
 
@@ -36,5 +37,10 @@ public class UnaryExpressionNode extends ExpressionNode {
     @Override
     public Node[] getChildren() {
         return new Node[] { operatorToken, operand };
+    }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.UNARY_OPERATOR_NODE;
     }
 }

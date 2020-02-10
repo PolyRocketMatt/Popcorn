@@ -1,6 +1,7 @@
 package com.popcorn.utils.diagnostics;
 
 import com.popcorn.compiler.lexical.TokenType;
+import com.popcorn.utils.utilities.ConversionUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -45,5 +46,19 @@ public class DiagnosticsBag {
         String message = "Unexpected type for literal {0}";
 
         report(type, message, tokenType);
+    }
+
+    public void reportUndefinedUnaryOperator(String text, ConversionUtils.DataType dataType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Unary operator {0} is not defined for type {1}";
+
+        report(type, message, text, dataType);
+    }
+
+    public void reportUndefinedBinaryOperator(String text, ConversionUtils.DataType leftType, ConversionUtils.DataType rightType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Binary operator {0} is not defined for types {1} and {2}";
+
+        report(type, message, text, leftType, rightType);
     }
 }

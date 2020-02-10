@@ -9,6 +9,7 @@ import com.popcorn.node.expressions.LiteralExpressionNode;
 import com.popcorn.node.expressions.ParenthesizedExpression;
 import com.popcorn.node.expressions.UnaryExpressionNode;
 import com.popcorn.utils.SyntaxRules;
+import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
@@ -27,8 +28,15 @@ public class PopcornParser {
         return diagnostics;
     }
 
-    public ExpressionNode parse() throws Exception {
-        return parseExpression();
+    public TokenStream getStream() {
+        return stream;
+    }
+
+    public SyntaxTree parse() throws Exception {
+        ExpressionNode expression = parseExpression();
+        Token endOfFileToken = match(TokenType.EOF, true);
+
+        return new SyntaxTree(diagnostics.getDiagnostics(), expression, endOfFileToken);
     }
 
     private ExpressionNode parseExpression() throws Exception {

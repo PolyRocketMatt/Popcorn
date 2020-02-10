@@ -1,6 +1,7 @@
 package com.popcorn.compiler.lexical;
 
 import com.popcorn.node.Node;
+import com.popcorn.utils.enums.NodeType;
 
 public class Token extends Node {
 
@@ -35,6 +36,11 @@ public class Token extends Node {
     @Override
     public Node[] getChildren() {
         return new Node[0];
+    }
+
+    @Override
+    public NodeType getNodeType() {
+        return NodeType.TOKEN_NODE;
     }
 
     @Override

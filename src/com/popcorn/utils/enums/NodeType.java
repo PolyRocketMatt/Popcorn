@@ -1,11 +1,11 @@
 package com.popcorn.utils.enums;
 
 public enum NodeType {
-    BinOpNode,
-    UnaryOpNode,
-    LiteralNode,
-    ParenthesizedNode,
-    TokenNode,
-    VariableNode,
-    AssignmentNode,
+
+    BINARY_OPERATOR_NODE,
+    UNARY_OPERATOR_NODE,
+    PARENTHESIZED_EXPRESSION_NODE,
+    LITERAL_NODE,
+    TOKEN_NODE
+
 }
