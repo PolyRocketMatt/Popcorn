@@ -36,6 +36,8 @@ public class PopcornParser {
         ExpressionNode expression = parseExpression();
         Token endOfFileToken = match(TokenType.EOF, true);
 
+        diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
+
         return new SyntaxTree(diagnostics.getDiagnostics(), expression, endOfFileToken);
     }
 

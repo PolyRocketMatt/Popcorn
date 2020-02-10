@@ -111,7 +111,7 @@ public class TokenStream {
     }
 
     public Token match(TokenType type, boolean addDiagnostic) {
-        if (current().getNodeType().equals(type))
+        if (current().getType().equals(type))
             return get();
 
         if (addDiagnostic)
@@ -124,8 +124,9 @@ public class TokenStream {
         for (TokenType type : types) {
             Token optional = match(type, false);
 
-            if (optional.getValue() != null)
+            if (optional.getValue() != null) {
                 return optional;
+            }
         }
 
         diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(types));
