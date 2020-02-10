@@ -1,12 +1,9 @@
 package com.popcorn.utils.utilities;
 
-import com.popcorn.compiler.exception.conversion.InternalValueException;
-import com.popcorn.compiler.exception.conversion.InvalidOperatorException;
-import com.popcorn.compiler.exception.conversion.InvalidTypeException;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.utils.enums.BinaryOperatorType;
-import com.popcorn.utils.enums.UnaryOperatorType;
 
+import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,10 +82,9 @@ public class ConversionUtils {
         }
     }
 
-    public static DataType literalToDataType(TokenType type) throws InvalidTypeException {
+    public static DataType toInternalType(TokenType type) throws Exception {
         if (isLiteral(type)) {
             switch (type) {
-                default:
                 case INT_LITERAL:
                     return DataType.INT;
                 case FLOAT_LITERAL:
@@ -97,53 +93,17 @@ public class ConversionUtils {
                     return DataType.BOOL;
                 case STRING_LITERAL:
                     return DataType.STRING;
-            }
-        }
-
-        throw new InvalidTypeException("Inconvertible literal {0}", PrintUtils.toPrintable(type));
-    }
-
-    public static Object toInternalValue(DataType type, String value) throws InternalValueException {
-        switch (type) {
-            case INT:
-                try {
-                    return Integer.parseInt(value);
-                } catch (NumberFormatException ex) {
-                    throw new InternalValueException("{0} is not a valid integer", value);
-                }
-            case FLOAT:
-                try {
-                    return Float.parseFloat(value);
-                } catch (NumberFormatException ex) {
-                    throw new InternalValueException("{0 is not a valid float", value);
-                }
-            case BOOL:
-                return Boolean.parseBoolean(value);
-            case STRING:
-                return value;
-            default:
-                throw new InternalValueException("{0} isn't a valid type");
-        }
-    }
-
-    public static UnaryOperatorType toUnaryOpType(TokenType type) throws InvalidOperatorException {
-        if (isUnaryOperator(type)) {
-            switch (type) {
                 default:
-                case PLUS:
-                    return UnaryOperatorType.IDENTITY;
-                case MINUS:
-                    return UnaryOperatorType.NEGATION;
+                    throw new Exception(MessageFormat.format("Unexpected literal {0}", PrintUtils.toPrintable(type)));
             }
         }
 
-        throw new InvalidOperatorException("Invalid unary operator {0}", PrintUtils.toPrintable(type));
+        throw new Exception(MessageFormat.format("Type {0} is not a literal", PrintUtils.toPrintable(type)));
     }
 
-    public static BinaryOperatorType toBinaryOpType(TokenType type) throws InvalidOperatorException {
+    public static BinaryOperatorType toBinaryOperator(TokenType type) throws Exception {
         if (isBinaryOperator(type)) {
             switch (type) {
-                default:
                 case PLUS:
                     return BinaryOperatorType.ADDITION;
                 case MINUS:
@@ -152,28 +112,12 @@ public class ConversionUtils {
                     return BinaryOperatorType.MULTIPLICATION;
                 case F_SLASH:
                     return BinaryOperatorType.DIVISION;
-            }
-        }
-
-        throw new InvalidOperatorException("Invalid unary operator {0}", PrintUtils.toPrintable(type));
-    }
-
-    public static DataType toType(TokenType type) throws InvalidTypeException {
-        if (isType(type)) {
-            switch (type) {
                 default:
-                case INT:
-                    return DataType.INT;
-                case FLOAT:
-                    return DataType.FLOAT;
-                case BOOL:
-                    return DataType.BOOL;
-                case STRING:
-                    return DataType.STRING;
+                    throw new Exception(MessageFormat.format("Unexpected binary operator {0}", PrintUtils.toPrintable(type)));
             }
         }
 
-        throw new InvalidTypeException("{0} is not a type", PrintUtils.toPrintable(type));
+        throw new Exception(MessageFormat.format("Type {0} is not a binary operator", PrintUtils.toPrintable(type)));
     }
 
 }

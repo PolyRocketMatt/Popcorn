@@ -203,6 +203,26 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/node/ExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/node/Node.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/node/expressions/BinaryExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/node/expressions/LiteralExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/popcode/InstructionType.java">
           <value>
             <set />
@@ -268,6 +288,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/diagnostics/Diagnostic.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/diagnostics/DiagnosticsBag.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/BinaryOperatorType.java">
           <value>
             <set />
@@ -309,6 +339,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/utilities/TypeUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/LiteralValue.java">
           <value>
             <set />
           </value>

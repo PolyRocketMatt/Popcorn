@@ -1,7 +1,7 @@
 package com.popcorn.compiler.lexical;
 
+import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
-import com.popcorn.utils.Diagnostics;
 import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedList;
@@ -9,24 +9,24 @@ import java.util.List;
 
 public class TokenStream {
 
-    private Diagnostics diagnostics;
+    private DiagnosticsBag diagnostics;
 
     private LinkedList<Token> tokens;
     private int index;
 
-    public TokenStream(Diagnostics diagnostics) {
-        this.diagnostics = diagnostics;
+    public TokenStream() {
+        this.diagnostics = new DiagnosticsBag();
         this.tokens = new LinkedList<>();
         this.index = 0;
     }
 
-    public TokenStream(Diagnostics diagnostics, List<Token> tokens) {
-        this.diagnostics = diagnostics;
+    public TokenStream(DiagnosticsBag diagnostics, List<Token> tokens) {
+        this.diagnostics = new DiagnosticsBag();
         this.tokens = ConversionUtils.toLinkedList(tokens);
         this.index = 0;
     }
 
-    public Diagnostics getDiagnostics() {
+    public DiagnosticsBag getDiagnostics() {
         return diagnostics;
     }
 
@@ -38,7 +38,7 @@ public class TokenStream {
         return index;
     }
 
-    public static TokenStream fromStream(Diagnostics diagnostics, TokenStream stream) {
+    public static TokenStream fromStream(DiagnosticsBag diagnostics, TokenStream stream) {
         return new TokenStream(diagnostics, stream.getTokens());
     }
 
@@ -115,7 +115,7 @@ public class TokenStream {
             return get();
 
         if (addDiagnostic)
-            diagnostics.add("Unexpected token {0}, expected {1}", current().getType(), type);
+            diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(type));
 
         return new Token(type, null, current().getLine(), current().getColumn());
     }
@@ -128,7 +128,7 @@ public class TokenStream {
                 return optional;
         }
 
-        diagnostics.add("Unexpected token {0}, expected type of {1}", current().getType(), PrintUtils.toPrintable(types));
+        diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(types));
 
         return new Token(types[0], null, current().getLine(), current().getColumn());
     }

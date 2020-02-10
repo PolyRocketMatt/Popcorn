@@ -1,6 +1,6 @@
 package com.popcorn.compiler.lexical;
 
-import com.popcorn.utils.Diagnostics;
+import com.popcorn.utils.diagnostics.DiagnosticsBag;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,11 +13,11 @@ public class Tokenizer {
     private TokenStream stream;
     private LinkedList<TokenData> tokenData;
 
-    private Diagnostics diagnostics;
+    private DiagnosticsBag diagnostics;
 
-    public Tokenizer(Diagnostics diagnostics) {
+    public Tokenizer() {
         this.tokenData = new LinkedList<>();
-        this.diagnostics = diagnostics;
+        this.diagnostics = new DiagnosticsBag();
 
         add(TokenType.FLOAT_LITERAL, "\\d+.\\d+");
         add(TokenType.INT_LITERAL, "\\d+");
@@ -71,8 +71,8 @@ public class Tokenizer {
         add(TokenType.IDENTIFIER, "[a-zA-Z]([a-zA-Z0-9]*)?");
     }
 
-    public static Tokenizer getTokenizer(Diagnostics diagnostics, String source) {
-        Tokenizer tokenizer = new Tokenizer(diagnostics);
+    public static Tokenizer getTokenizer(String source) {
+        Tokenizer tokenizer = new Tokenizer();
         tokenizer.setSource(source);
 
         return tokenizer;
@@ -98,15 +98,12 @@ public class Tokenizer {
         return tokenData;
     }
 
-    public Diagnostics getDiagnostics() {
+    public DiagnosticsBag getDiagnostics() {
         return diagnostics;
     }
 
     public void tokenize() {
-        this.stream = new TokenStream(diagnostics);
-
-        stream.add(new Token(TokenType.SOF, "SOF", 0, 0));
-
+        this.stream = new TokenStream();
         int lineIndex = 1;
         for (String line : source.split("\n")) {
             if (line.startsWith("//")) {
@@ -124,6 +121,7 @@ public class Tokenizer {
                         if (matcher.find()) {
                             String value = matcher.group().trim();
                             Token token = new Token(data.getType(), value, lineIndex, length - remaining);
+
                             line = matcher.replaceFirst("").trim();
                             stream.add(token);
                             match = true;
@@ -133,7 +131,7 @@ public class Tokenizer {
                     }
 
                     if (!match) {
-                        diagnostics.add("Bad character input {0}, not a valid token", line);
+                        diagnostics.reportInvalidInput("Bad character input {0}, not a valid token", lineIndex, length - remaining);
 
                         break;
                     }
@@ -142,7 +140,7 @@ public class Tokenizer {
         }
 
         stream.add(new Token(TokenType.EOF, "EOF", ++lineIndex, 0));
-        diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
+        diagnostics.addBag(stream.getDiagnostics());
     }
 
 }

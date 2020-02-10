@@ -2,8 +2,8 @@ package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
-import com.popcorn.compiler.node.Node;
-import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
+import com.popcorn.node.Node;
+import com.popcorn.node.expressions.LiteralExpressionNode;
 
 public class PrintUtils {
 
@@ -150,12 +150,12 @@ public class PrintUtils {
 
         Node lastNode;
 
-        if (!node.getSubNodes().isEmpty())
-            lastNode = node.getSubNodes().getLast();
+        if (node.getChildren().length != 0)
+            lastNode = node.getChildren()[node.getChildren().length - 1];
         else
             lastNode = null;
 
-        for (Node child : node.getSubNodes()) {
+        for (Node child : node.getChildren()) {
             if (lastNode != null)
                 prettyPrint(child, indent, child == lastNode);
             else
