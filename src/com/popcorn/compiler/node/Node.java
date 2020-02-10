@@ -1,4 +1,4 @@
-package com.popcorn.node;
+package com.popcorn.compiler.node;
 
 import com.popcorn.utils.enums.NodeType;
 

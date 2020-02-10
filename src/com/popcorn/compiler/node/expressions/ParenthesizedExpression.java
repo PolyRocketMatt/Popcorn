@@ -1,8 +1,8 @@
-package com.popcorn.node.expressions;
+package com.popcorn.compiler.node.expressions;
 
 import com.popcorn.compiler.lexical.Token;
-import com.popcorn.node.ExpressionNode;
-import com.popcorn.node.Node;
+import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 
 public class ParenthesizedExpression extends ExpressionNode {

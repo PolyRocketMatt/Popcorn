@@ -2,8 +2,6 @@ package com.popcorn.terminal;
 
 import com.popcorn.compiler.Compilation;
 import com.popcorn.compiler.lexical.Tokenizer;
-import com.popcorn.compiler.parser.PopcornParser;
-import com.popcorn.node.Node;
 import com.popcorn.utils.Filters;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;

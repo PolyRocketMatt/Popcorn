@@ -1,6 +1,6 @@
 package com.popcorn.compiler.lexical;
 
-import com.popcorn.node.Node;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 
 public class Token extends Node {

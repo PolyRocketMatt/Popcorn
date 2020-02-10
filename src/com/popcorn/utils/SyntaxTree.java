@@ -3,7 +3,7 @@ package com.popcorn.utils;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.Tokenizer;
 import com.popcorn.compiler.parser.PopcornParser;
-import com.popcorn.node.ExpressionNode;
+import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.utils.diagnostics.Diagnostic;
 
 import java.util.List;

@@ -6,11 +6,11 @@ import com.popcorn.compiler.binding.node.expressions.BoundLiteralExpressionNode;
 import com.popcorn.compiler.binding.node.expressions.BoundUnaryExpressionNode;
 import com.popcorn.compiler.binding.operators.BoundBinaryOperator;
 import com.popcorn.compiler.binding.operators.BoundUnaryOperator;
-import com.popcorn.node.ExpressionNode;
-import com.popcorn.node.expressions.BinaryExpressionNode;
-import com.popcorn.node.expressions.LiteralExpressionNode;
-import com.popcorn.node.expressions.ParenthesizedExpression;
-import com.popcorn.node.expressions.UnaryExpressionNode;
+import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
+import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
+import com.popcorn.compiler.node.expressions.ParenthesizedExpression;
+import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 
 public class Binder {
