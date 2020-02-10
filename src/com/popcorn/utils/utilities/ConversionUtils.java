@@ -2,6 +2,7 @@ package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.utils.enums.BinaryOperatorType;
+import com.popcorn.utils.enums.UnaryOperatorType;
 
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -99,6 +100,21 @@ public class ConversionUtils {
         }
 
         throw new Exception(MessageFormat.format("Type {0} is not a literal", PrintUtils.toPrintable(type)));
+    }
+
+    public static UnaryOperatorType toUnaryOperator(TokenType type) throws Exception {
+        if (isUnaryOperator(type)) {
+            switch (type) {
+                case PLUS:
+                    return UnaryOperatorType.IDENTITY;
+                case MINUS:
+                    return UnaryOperatorType.NEGATION;
+                default:
+                    throw new Exception(MessageFormat.format("Unexpected unary operator {0}", PrintUtils.toPrintable(type)));
+            }
+        }
+
+        throw new Exception(MessageFormat.format("Type {0} is not a unary operator", PrintUtils.toPrintable(type)));
     }
 
     public static BinaryOperatorType toBinaryOperator(TokenType type) throws Exception {

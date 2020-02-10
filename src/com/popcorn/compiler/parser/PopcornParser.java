@@ -6,6 +6,7 @@ import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.node.ExpressionNode;
 import com.popcorn.node.expressions.BinaryExpressionNode;
 import com.popcorn.node.expressions.LiteralExpressionNode;
+import com.popcorn.node.expressions.UnaryExpressionNode;
 import com.popcorn.utils.SyntaxRules;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
@@ -34,7 +35,17 @@ public class PopcornParser {
     }
 
     private ExpressionNode parseBinaryExpression(int parentPrecedence) throws Exception {
-        ExpressionNode left = parsePrimitiveExpression();
+        ExpressionNode left;
+
+        int unaryOperatorPrecedence = SyntaxRules.getUnaryOperatorPrecedence(current().getType());
+        if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence) {
+            Token operatorToken = get();
+            ExpressionNode operand = parseBinaryExpression(unaryOperatorPrecedence);
+
+            left = new UnaryExpressionNode(operatorToken, operand);
+        } else {
+            left = parsePrimitiveExpression();
+        }
 
         while (true) {
             int precedence = SyntaxRules.getBinaryOperatorPrecedence(current().getType());
