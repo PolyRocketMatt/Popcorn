@@ -15,6 +15,10 @@ public class BoundUnaryOperator implements Operator {
         return type;
     }
 
+    public BoundUnaryOperatorKind getOperatorKind() {
+        return operatorKind;
+    }
+
     private BoundUnaryOperator(TokenType tokenType, BoundUnaryOperatorKind operatorKind, ConversionUtils.DataType operandType, ConversionUtils.DataType type) {
         this.tokenType = tokenType;
         this.operatorKind = operatorKind;

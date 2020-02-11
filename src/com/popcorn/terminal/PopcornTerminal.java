@@ -7,6 +7,7 @@ import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.PrintUtils;
+import com.popcorn.utils.values.LiteralValue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -57,11 +58,17 @@ public class PopcornTerminal {
                                     System.out.println(diagnostic.getMessage());
                                 }
                             } else {
-                                PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
+                                if (isPrint)
+                                    PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
+
+                                LiteralValue result = compilation.evaluate();
+
+                                System.out.println(result.getType());
+                                System.out.println(result.getValue());
                             }
 
                         } catch (Exception ex) {
-                            System.out.println(ex.getMessage());
+                            ex.printStackTrace();
                         }
                     }
                 }

@@ -1,6 +1,7 @@
 package com.popcorn.compiler.lexical;
 
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
+import com.popcorn.utils.utilities.ConversionUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -124,7 +125,8 @@ public class Tokenizer {
                     for (TokenData data : tokenData) {
                         Matcher matcher = data.getPattern().matcher(line);
                         if (matcher.find()) {
-                            String value = matcher.group().trim();
+                            String group = matcher.group().trim();
+                            Object value = ConversionUtils.toValidRepresentation(data.getType(), group);
                             Token token = new Token(data.getType(), value, lineIndex, length - remaining);
 
                             line = matcher.replaceFirst("").trim();

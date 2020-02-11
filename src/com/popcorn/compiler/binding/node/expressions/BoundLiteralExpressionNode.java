@@ -13,6 +13,10 @@ public class BoundLiteralExpressionNode extends BoundExpressionNode {
         this.value = value;
     }
 
+    public LiteralValue getValue() {
+        return value;
+    }
+
     @Override
     public ConversionUtils.DataType getType() {
         return value.getType();

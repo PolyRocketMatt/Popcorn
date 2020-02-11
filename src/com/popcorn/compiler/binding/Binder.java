@@ -17,7 +17,9 @@ public class Binder {
 
     private DiagnosticsBag diagnostics;
 
-    public Binder() { }
+    public Binder() {
+        diagnostics = new DiagnosticsBag();
+    }
 
     public DiagnosticsBag getDiagnostics() {
         return diagnostics;

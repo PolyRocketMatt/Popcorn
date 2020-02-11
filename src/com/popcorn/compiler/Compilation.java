@@ -2,8 +2,12 @@ package com.popcorn.compiler;
 
 import com.popcorn.compiler.binding.Binder;
 import com.popcorn.compiler.binding.node.BoundExpressionNode;
+import com.popcorn.compiler.binding.node.BoundNode;
+import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
+import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.values.LiteralValue;
 
 import java.util.List;
 
@@ -32,5 +36,18 @@ public class Compilation {
         diagnostics.addAll(binder.getDiagnostics().getDiagnostics());
 
         return binder.bindExpression(tree.getRoot());
+    }
+
+    public LiteralValue evaluate() {
+        try {
+            BoundNode root = getBoundRoot();
+            Interpreter interpreter = new Interpreter(root);
+
+            return interpreter.evaluate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new LiteralValue(ConversionUtils.DataType.INT, -1);
     }
 }

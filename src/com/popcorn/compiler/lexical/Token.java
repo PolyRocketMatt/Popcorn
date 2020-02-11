@@ -6,11 +6,11 @@ import com.popcorn.utils.enums.NodeType;
 public class Token extends Node {
 
     private final TokenType type;
-    private final String value;
+    private final Object value;
     private final int line;
     private final int column;
 
-    public Token(TokenType type, String value, int line, int column) {
+    public Token(TokenType type, Object value, int line, int column) {
         this.type = type;
         this.value = value;
         this.line = line;
@@ -21,7 +21,7 @@ public class Token extends Node {
         return type;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

@@ -223,6 +223,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/interpreter/Interpreter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/interpreter/PopcornInterpreter.java">
           <value>
             <set />

@@ -48,17 +48,17 @@ public class DiagnosticsBag {
         report(type, message, tokenType);
     }
 
-    public void reportUndefinedUnaryOperator(String text, ConversionUtils.DataType dataType) {
+    public void reportUndefinedUnaryOperator(Object object, ConversionUtils.DataType dataType) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
         String message = "Unary operator {0} is not defined for type {1}";
 
-        report(type, message, text, dataType);
+        report(type, message, object, dataType);
     }
 
-    public void reportUndefinedBinaryOperator(String text, ConversionUtils.DataType leftType, ConversionUtils.DataType rightType) {
+    public void reportUndefinedBinaryOperator(Object object, ConversionUtils.DataType leftType, ConversionUtils.DataType rightType) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
         String message = "Binary operator {0} is not defined for types {1} and {2}";
 
-        report(type, message, text, leftType, rightType);
+        report(type, message, object, leftType, rightType);
     }
 }

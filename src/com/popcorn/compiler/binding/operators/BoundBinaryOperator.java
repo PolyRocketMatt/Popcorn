@@ -16,6 +16,10 @@ public class BoundBinaryOperator implements Operator {
         return type;
     }
 
+    public BoundBinaryOperatorKind getOperatorKind() {
+        return operatorKind;
+    }
+
     private BoundBinaryOperator(TokenType tokenType, BoundBinaryOperatorKind operatorKind,
                                 ConversionUtils.DataType leftType, ConversionUtils.DataType rightType, ConversionUtils.DataType type) {
         this.tokenType = tokenType;

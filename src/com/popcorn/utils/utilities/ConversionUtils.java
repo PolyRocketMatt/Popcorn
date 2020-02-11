@@ -37,6 +37,44 @@ public class ConversionUtils {
         return new LinkedList<>(list);
     }
 
+    public static int toIntegerRepresentation(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ex) {
+            System.out.println(value + " is not a valid int32");
+        }
+
+        return -1;
+    }
+
+    public static float toFloatRespresentation(String value) {
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException ex) {
+            System.out.println(value + " is not a valid int32");
+        }
+
+        return -1f;
+    }
+
+    public static boolean toBooleanRepresentation(String value) {
+        return Boolean.parseBoolean(value);
+    }
+
+    public static Object toValidRepresentation(TokenType type, String value) {
+        switch (type) {
+            case INT_LITERAL:
+                return toIntegerRepresentation(value);
+            case FLOAT_LITERAL:
+                return toFloatRespresentation(value);
+            case BOOL_LITERAL:
+                return toBooleanRepresentation(value);
+            case STRING_LITERAL:
+            default:
+                return value;
+        }
+    }
+
     public static boolean isLiteral(TokenType type) {
         switch (type) {
             case INT_LITERAL:
