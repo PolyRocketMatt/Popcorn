@@ -30,6 +30,9 @@ public class Interpreter {
         if (node  instanceof BoundLiteralExpressionNode)
             return ((BoundLiteralExpressionNode) node).getValue();
 
+        if (node instanceof BoundNameExpressionNode)
+            return variables.get(((BoundNameExpressionNode) node).getVariable());
+
         if (node instanceof BoundAssignmentExpressionNode) {
             if (!variables.containsKey(((BoundAssignmentExpressionNode) node).getVariable())) {
                 throw new Exception(MessageFormat.format("Variable {0} is not defined", ((BoundAssignmentExpressionNode) node).getVariable().getName()));
@@ -47,7 +50,7 @@ public class Interpreter {
 
             switch (((BoundUnaryExpressionNode) node).getOperator().getOperatorKind()) {
                 case IDENTITY:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedOperand.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, evaluatedOperand.getValue());
                 case NEGATION:
                     return new LiteralValue(ConversionUtils.DataType.INT, -(int) evaluatedOperand.getValue());
                 case LOGICAL_NEGATION:

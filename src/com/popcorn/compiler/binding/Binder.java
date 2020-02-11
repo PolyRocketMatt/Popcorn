@@ -35,6 +35,8 @@ public class Binder {
         switch (node.getNodeType()) {
             case LITERAL_NODE:
                 return bindLiteralExpression((LiteralExpressionNode) node);
+            case NAME_NODE:
+                return bindNameExpression((NameExpressionNode) node);
             case ASSIGNMENT_NODE:
                 return bindAssignmentExpression((AssignmentExpressionNode) node);
             case PARENTHESIZED_EXPRESSION_NODE:
@@ -89,6 +91,20 @@ public class Binder {
 
             return new BoundAssignmentExpressionNode(symbolization, boundExpression);
         }
+    }
+
+    private BoundExpressionNode bindNameExpression(NameExpressionNode node) {
+        String name = (String) node.getIdentifierToken().getValue();
+        VariableSymbol symbolization = variables.stream()
+                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+
+        if (symbolization == null) {
+            diagnostics.reportUndefinedIdentifier(name);
+
+            return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+        }
+
+        return new BoundNameExpressionNode(symbolization);
     }
 
     private BoundExpressionNode bindParenthesizedExpression(ParenthesizedExpression node) throws Exception {

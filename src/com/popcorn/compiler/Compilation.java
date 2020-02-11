@@ -47,7 +47,7 @@ public class Compilation {
     }
 
     // TODO: 10/02/2020 Make type checker more accessible
-    // TODO: 11/02/2020 Fix clear binder diagnostics 
+    // TODO: 11/02/2020 Fix clear binder diagnostics
     public BoundNode createBoundNode() throws Exception {
         BoundNode boundNode = binder.bindExpression(tree.getRoot());
 
