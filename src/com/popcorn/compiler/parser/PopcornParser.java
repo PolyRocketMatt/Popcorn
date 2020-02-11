@@ -4,10 +4,7 @@ import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
-import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
-import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
-import com.popcorn.compiler.node.expressions.ParenthesizedExpression;
-import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
+import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
@@ -42,6 +39,30 @@ public class PopcornParser {
     }
 
     private ExpressionNode parseExpression() throws Exception {
+        return parseAssignmentExpression();
+    }
+
+    private ExpressionNode parseAssignmentExpression() throws Exception {
+        if (ConversionUtils.isType(peek(0).getType()) &&
+                peek(1).getType() == TokenType.IDENTIFIER &&
+                peek(2).getType() == TokenType.EQUAL) {
+            ConversionUtils.DataType typeToken = ConversionUtils.toInternalType(get().getType());
+            Token identifierToken = get();
+            Token equalsToken = get();
+            ExpressionNode expression = parseAssignmentExpression();
+            match(TokenType.SEMI_COLON, true);
+
+            return new AssignmentExpressionNode(typeToken, identifierToken, equalsToken, expression);
+        } else if (peek(0).getType() == TokenType.IDENTIFIER &&
+                peek(1).getType() == TokenType.EQUAL) {
+            Token identifierToken = get();
+            Token equalsToken = get();
+            ExpressionNode expression = parseAssignmentExpression();
+            match(TokenType.SEMI_COLON, true);
+
+            return new AssignmentExpressionNode(identifierToken, equalsToken, expression);
+        }
+
         return parseBinaryExpression(0);
     }
 
@@ -81,6 +102,10 @@ public class PopcornParser {
                     Token closedParenthesisToken = match(TokenType.CPAREN, true);
 
                     return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
+                case IDENTIFIER:
+                    Token identifierToken = get();
+
+                    return new NameExpressionNode(identifierToken);
                 default:
                     Token literal = matchAny(ConversionUtils.getLiterals());
                     ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());

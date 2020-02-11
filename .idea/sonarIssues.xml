@@ -93,6 +93,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundAssignmentExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundBinaryExpressionNode.java">
           <value>
             <set />
@@ -108,7 +113,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundNameExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundUnaryExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundVariableExpressionNode.java">
           <value>
             <set />
           </value>
@@ -183,12 +198,22 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/AssignmentExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/BinaryExpressionNode.java">
           <value>
             <set />
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/LiteralExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/NameExpressionNode.java">
           <value>
             <set />
           </value>
@@ -309,6 +334,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/terminal/PopcornTerminal.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/tests/LexerTests.java">
           <value>
             <set />
           </value>
@@ -454,6 +484,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/LiteralValue.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/PopcornValue.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/VariableSymbol.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/VariableValue.java">
           <value>
             <set />
           </value>

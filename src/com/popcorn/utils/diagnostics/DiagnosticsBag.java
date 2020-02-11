@@ -61,4 +61,11 @@ public class DiagnosticsBag {
 
         report(type, message, object, leftType, rightType);
     }
+
+    public void reportUndefinedIdentifier(String identifier) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Variable {0} does not exist";
+
+        report(type, message, identifier);
+    }
 }

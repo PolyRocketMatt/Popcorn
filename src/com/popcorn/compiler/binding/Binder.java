@@ -1,34 +1,45 @@
 package com.popcorn.compiler.binding;
 
 import com.popcorn.compiler.binding.node.BoundExpressionNode;
-import com.popcorn.compiler.binding.node.expressions.BoundBinaryExpressionNode;
-import com.popcorn.compiler.binding.node.expressions.BoundLiteralExpressionNode;
-import com.popcorn.compiler.binding.node.expressions.BoundUnaryExpressionNode;
+import com.popcorn.compiler.binding.node.expressions.*;
 import com.popcorn.compiler.binding.operators.BoundBinaryOperator;
 import com.popcorn.compiler.binding.operators.BoundUnaryOperator;
 import com.popcorn.compiler.node.ExpressionNode;
-import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
-import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
-import com.popcorn.compiler.node.expressions.ParenthesizedExpression;
-import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
+import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
+import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.values.LiteralValue;
+import com.popcorn.utils.values.VariableSymbol;
+
+import java.util.ArrayList;
 
 public class Binder {
 
     private DiagnosticsBag diagnostics;
+    private ArrayList<VariableSymbol> variables;
 
-    public Binder() {
+    public Binder(ArrayList<VariableSymbol> variables) {
         diagnostics = new DiagnosticsBag();
+
+        this.variables = variables;
     }
 
     public DiagnosticsBag getDiagnostics() {
         return diagnostics;
     }
 
+    public ArrayList<VariableSymbol> getVariables() {
+        return variables;
+    }
+
     public BoundExpressionNode bindExpression(ExpressionNode node) throws Exception {
         switch (node.getNodeType()) {
             case LITERAL_NODE:
                 return bindLiteralExpression((LiteralExpressionNode) node);
+            case NAME_NODE:
+                return bindNameExpression((NameExpressionNode) node);
+            case ASSIGNMENT_NODE:
+                return bindAssignmentExpression((AssignmentExpressionNode) node);
             case PARENTHESIZED_EXPRESSION_NODE:
                 return bindParenthesizedExpression((ParenthesizedExpression) node);
             case UNARY_OPERATOR_NODE:
@@ -42,6 +53,34 @@ public class Binder {
 
     private BoundExpressionNode bindLiteralExpression(LiteralExpressionNode node) {
         return new BoundLiteralExpressionNode(node.getValue());
+    }
+
+    private BoundExpressionNode bindNameExpression(NameExpressionNode node) {
+        String name = (String) node.getIdentifierToken().getValue();
+        VariableSymbol variable = variables.stream()
+                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+
+        if (variable == null) {
+            diagnostics.reportUndefinedIdentifier(name);
+
+            return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.INT, 0));
+        }
+
+        return new BoundVariableExpressionNode(variable);
+    }
+
+    private BoundExpressionNode bindAssignmentExpression(AssignmentExpressionNode node) throws Exception {
+        String name = (String) node.getIdentifierToken().getValue();
+        BoundExpressionNode boundExpression = bindExpression(node.getExpression());
+        VariableSymbol existingVariable = variables.stream()
+                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+
+        if (existingVariable != null)
+            variables.remove(existingVariable);
+        VariableSymbol actualVariable = new VariableSymbol(name, boundExpression.getType());
+
+        //variables.get(actualVariable) = null;
+        return new BoundAssignmentExpressionNode(actualVariable, boundExpression);
     }
 
     private BoundExpressionNode bindParenthesizedExpression(ParenthesizedExpression node) throws Exception {

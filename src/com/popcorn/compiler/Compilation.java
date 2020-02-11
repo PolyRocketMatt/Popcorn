@@ -8,16 +8,21 @@ import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
+import com.popcorn.utils.values.VariableSymbol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Compilation {
 
     private List<Diagnostic> diagnostics;
+    private ArrayList<VariableSymbol> variables;
+    private Binder binder;
     private SyntaxTree tree;
 
     public Compilation(SyntaxTree tree) {
         this.diagnostics = tree.getDiagnostics();
+        this.variables = new ArrayList<>();
         this.tree = tree;
     }
 
@@ -31,8 +36,7 @@ public class Compilation {
 
     // TODO: 10/02/2020 Make type checker more accessible
     public BoundExpressionNode getBoundRoot() throws Exception {
-        Binder binder = new Binder();
-
+        binder = new Binder(variables);
         diagnostics.addAll(binder.getDiagnostics().getDiagnostics());
 
         return binder.bindExpression(tree.getRoot());
@@ -41,7 +45,7 @@ public class Compilation {
     public LiteralValue evaluate() {
         try {
             BoundNode root = getBoundRoot();
-            Interpreter interpreter = new Interpreter(root);
+            Interpreter interpreter = new Interpreter(root, binder.getVariables());
 
             return interpreter.evaluate();
         } catch (Exception ex) {
