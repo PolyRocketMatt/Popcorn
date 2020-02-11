@@ -5,6 +5,7 @@ import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
+import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
@@ -61,7 +62,7 @@ public class Compilation {
             //Update the interpreter variables
             for (VariableSymbol symbol : binder.getVariables()) {
                 if (!interpreter.getVariables().containsKey(symbol)) {
-                    interpreter.getVariables().put(symbol, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+                    interpreter.getVariables().put(symbol, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
                 }
             }
 
@@ -79,6 +80,6 @@ public class Compilation {
             ex.printStackTrace();
         }
 
-        return new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, -1);
+        return new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null);
     }
 }

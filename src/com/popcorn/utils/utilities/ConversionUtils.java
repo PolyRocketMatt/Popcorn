@@ -3,6 +3,7 @@ package com.popcorn.utils.utilities;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.utils.enums.BinaryOperatorType;
 import com.popcorn.utils.enums.UnaryOperatorType;
+import com.popcorn.utils.enums.ValueType;
 
 import java.text.MessageFormat;
 import java.util.LinkedList;
@@ -19,7 +20,7 @@ public class ConversionUtils {
         NOT_DEFINED
     }
 
-    private static final TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
+    private static final TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL };
     private static final TokenType[] types = { TokenType.VOID, TokenType.INT, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
     private static final TokenType[] unaryOperators = { TokenType.PLUS, TokenType.MINUS };
 
@@ -225,6 +226,30 @@ public class ConversionUtils {
         }
 
         return BinaryOperatorType.NON_EXISTENT;
+    }
+
+    public static ValueType toValueType(TokenType type) {
+        if (isLiteral(type)) {
+            switch (type) {
+                case INT:
+                    return ValueType.INT;
+
+                case FLOAT:
+                    return ValueType.FLOAT;
+
+                case BOOL:
+                    return ValueType.BOOL;
+
+                case STRING:
+                    return ValueType.STRING;
+
+                case NULL:
+                default:
+                    return ValueType.NULL;
+            }
+        }
+
+        return ValueType.NULL;
     }
 
 }

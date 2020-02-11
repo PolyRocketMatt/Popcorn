@@ -2,6 +2,7 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
+import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.rules.EqualityRules;
 import com.popcorn.utils.values.LiteralValue;
@@ -33,6 +34,10 @@ public class Interpreter {
         if (node instanceof BoundNameExpressionNode)
             return variables.get(((BoundNameExpressionNode) node).getVariable());
 
+        if (node instanceof BoundNullExpressionNode) {
+            return ((BoundNullExpressionNode) node).getNullValue();
+        }
+
         if (node instanceof BoundAssignmentExpressionNode) {
             if (!variables.containsKey(((BoundAssignmentExpressionNode) node).getVariable())) {
                 throw new Exception(MessageFormat.format("Variable {0} is not defined", ((BoundAssignmentExpressionNode) node).getVariable().getName()));
@@ -50,11 +55,11 @@ public class Interpreter {
 
             switch (((BoundUnaryExpressionNode) node).getOperator().getOperatorKind()) {
                 case IDENTITY:
-                    return new LiteralValue(ConversionUtils.DataType.INT, evaluatedOperand.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, evaluatedOperand.getValue());
                 case NEGATION:
-                    return new LiteralValue(ConversionUtils.DataType.INT, -(int) evaluatedOperand.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, -(int) evaluatedOperand.getValue());
                 case LOGICAL_NEGATION:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, !(boolean) evaluatedOperand.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, !(boolean) evaluatedOperand.getValue());
                 default:
                     throw new Exception(MessageFormat.format("Unexpected unary operator {0}", ((BoundUnaryExpressionNode) node).getOperator().getOperatorKind()));
             }
@@ -66,23 +71,23 @@ public class Interpreter {
 
             switch (((BoundBinaryExpressionNode) node).getOperator().getOperatorKind()) {
                 case ADDITION:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() + (int) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, (int) evaluatedLeft.getValue() + (int) evaluatedRight.getValue());
                 case SUBTRACTION:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() - (int) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, (int) evaluatedLeft.getValue() - (int) evaluatedRight.getValue());
                 case MULTIPLICATION:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() * (int) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, (int) evaluatedLeft.getValue() * (int) evaluatedRight.getValue());
                 case DIVISION:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() / (int) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, (int) evaluatedLeft.getValue() / (int) evaluatedRight.getValue());
                 case MODULO:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() % (int) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, (int) evaluatedLeft.getValue() % (int) evaluatedRight.getValue());
                 case LOGICAL_AND:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, (boolean) evaluatedLeft.getValue() && (boolean) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, (boolean) evaluatedLeft.getValue() && (boolean) evaluatedRight.getValue());
                 case LOGICAL_OR:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, (boolean) evaluatedLeft.getValue() || (boolean) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, (boolean) evaluatedLeft.getValue() || (boolean) evaluatedRight.getValue());
                 case LOGICAL_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
                 case LOGICAL_NOT_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, !EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, !EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
             }
         }
 

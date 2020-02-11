@@ -64,8 +64,7 @@ public class PopcornTerminal {
                                 compilation.setTree(SyntaxTree.parse(instruction));
 
                             LiteralValue value = compilation.evaluate();
-
-                            System.out.println(value.getValue());
+                            System.out.println(value.getValue().toString());
 
                             // TODO: 10/02/2020 Implement proper error reporting!
                             if (!compilation.getDiagnostics().isEmpty()) {

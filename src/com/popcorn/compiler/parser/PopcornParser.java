@@ -5,11 +5,13 @@ import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.expressions.*;
+import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
+import com.popcorn.utils.values.NullValue;
 
 public class PopcornParser {
 
@@ -98,15 +100,22 @@ public class PopcornParser {
                     Token closedParenthesisToken = match(TokenType.CPAREN, true);
 
                     return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
+
+                case NULL:
+                    Token nullToken = get();
+
+                    return new NullExpressionNode(nullToken, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, new NullValue()));
+
                 case IDENTIFIER:
                     Token identifierToken = get();
 
                     return new NameExpressionNode(identifierToken);
+
                 default:
                     Token literal = matchAny(ConversionUtils.getLiterals());
                     ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());
 
-                    return new LiteralExpressionNode(new LiteralValue(type, literal.getValue()));
+                    return new LiteralExpressionNode(new LiteralValue(type, ConversionUtils.toValueType(literal.getType()), literal.getValue()));
             }
         } catch (Exception ex) {
             diagnostics.reportUnexpectedLiteralException(current().getType());

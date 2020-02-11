@@ -7,6 +7,7 @@ import com.popcorn.compiler.binding.operators.BoundUnaryOperator;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
+import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
@@ -37,6 +38,8 @@ public class Binder {
                 return bindLiteralExpression((LiteralExpressionNode) node);
             case NAME_NODE:
                 return bindNameExpression((NameExpressionNode) node);
+            case NULL_NODE:
+                return bindNullExpression((NullExpressionNode) node);
             case ASSIGNMENT_NODE:
                 return bindAssignmentExpression((AssignmentExpressionNode) node);
             case PARENTHESIZED_EXPRESSION_NODE:
@@ -54,6 +57,24 @@ public class Binder {
         return new BoundLiteralExpressionNode(node.getValue());
     }
 
+    private BoundExpressionNode bindNameExpression(NameExpressionNode node) {
+        String name = (String) node.getIdentifierToken().getValue();
+        VariableSymbol symbolization = variables.stream()
+                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+
+        if (symbolization == null) {
+            diagnostics.reportUndefinedIdentifier(name);
+
+            return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+        }
+
+        return new BoundNameExpressionNode(symbolization);
+    }
+
+    private BoundExpressionNode bindNullExpression(NullExpressionNode node) {
+        return new BoundNullExpressionNode(node.getNullValue());
+    }
+
     private BoundExpressionNode bindAssignmentExpression(AssignmentExpressionNode node) throws Exception {
         if (node.getType() != ConversionUtils.DataType.NOT_DEFINED) {
             String name = (String) node.getIdentifierToken().getValue();
@@ -63,7 +84,7 @@ public class Binder {
             if (variables.stream().anyMatch(variableSymbol -> variableSymbol.getName().equals(name))) {
                 diagnostics.reportAlreadyDefinedIdentifier(name);
 
-                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
             }
 
             VariableSymbol symbolization = new VariableSymbol(name, type);
@@ -80,31 +101,17 @@ public class Binder {
             if (symbolization == null) {
                 diagnostics.reportUndefinedIdentifier(name);
 
-                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
             }
 
             if (boundExpression.getType() != symbolization.getType()) {
                 diagnostics.reportIncorrectType(name, symbolization.getType(), boundExpression.getType());
 
-                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
             }
 
             return new BoundAssignmentExpressionNode(symbolization, boundExpression);
         }
-    }
-
-    private BoundExpressionNode bindNameExpression(NameExpressionNode node) {
-        String name = (String) node.getIdentifierToken().getValue();
-        VariableSymbol symbolization = variables.stream()
-                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
-
-        if (symbolization == null) {
-            diagnostics.reportUndefinedIdentifier(name);
-
-            return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
-        }
-
-        return new BoundNameExpressionNode(symbolization);
     }
 
     private BoundExpressionNode bindParenthesizedExpression(ParenthesizedExpression node) throws Exception {

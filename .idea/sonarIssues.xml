@@ -118,6 +118,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundNullExpression.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundNullExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/expressions/BoundUnaryExpressionNode.java">
           <value>
             <set />
@@ -214,6 +224,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/NameExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/NullExpressionNode.java">
           <value>
             <set />
           </value>
@@ -448,6 +463,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/enums/ValueType.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/rules/EqualityRules.java">
           <value>
             <set />
@@ -484,6 +504,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/LiteralValue.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/values/NullValue.java">
           <value>
             <set />
           </value>

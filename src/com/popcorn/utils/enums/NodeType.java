@@ -9,5 +9,6 @@ public enum NodeType {
     TOKEN_NODE,
     NAME_NODE,
     ASSIGNMENT_NODE,
+    NULL_NODE
 
 }

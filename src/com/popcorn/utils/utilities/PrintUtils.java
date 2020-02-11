@@ -179,7 +179,7 @@ public class PrintUtils {
         for (Map.Entry entry : variables.entrySet()) {
             String name = ((VariableSymbol) entry.getKey()).getName();
             ConversionUtils.DataType type = ((VariableSymbol) entry.getKey()).getType();
-            Object value = ((LiteralValue) entry.getValue()).getValue();
+            Object value = ((LiteralValue) entry.getValue()).getValue().toString();
 
             int typeMargin = NAMES - name.length();
             int valueMargin = TYPES - type.toString().length();
