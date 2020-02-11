@@ -75,3 +75,15 @@ U
 %src/com/popcorn/utils/SyntaxTree.java,2\e\2e666ff146b8367f435827b415e20913de6faffb
 ]
 -src/com/popcorn/terminal/PopcornTerminal.java,5\5\5579993047488311161c989e96d5d4dcb0d6a907
+„
+Tsrc/com/popcorn/compiler/binding/node/expressions/BoundAssignmentExpressionNode.java,b\d\bd876faa55a71d54d1c9a7dd1007a063b554d99f
+‚
+Rsrc/com/popcorn/compiler/binding/node/expressions/BoundVariableExpressionNode.java,2\6\265ac7107fab8540f7d473995f7499f5728b6b21
+w
+Gsrc/com/popcorn/compiler/node/expressions/AssignmentExpressionNode.java,e\a\ea93644d6f1be9e9a6304e141455a40da12b2791
+q
+Asrc/com/popcorn/compiler/node/expressions/NameExpressionNode.java,a\3\a34350b67ae158607592176275fbc638af4a3fdb
+`
+0src/com/popcorn/utils/values/VariableSymbol.java,1\b\1bd568dd2571e727ea643fb8242dcd6f157478ff
+\
+,src/com/popcorn/interpreter/Interpreter.java,6\e\6e5947f0aa634d585814e31f4991443380d101b7

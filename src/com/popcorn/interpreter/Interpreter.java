@@ -2,50 +2,44 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
-import com.popcorn.compiler.node.expressions.AssignmentExpressionNode;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.rules.EqualityRules;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Interpreter {
 
-    private BoundNode root;
     private HashMap<VariableSymbol, LiteralValue> variables;
 
-    public Interpreter(BoundNode root, ArrayList<VariableSymbol> variableSymbols) {
-        this.root = root;
+    public Interpreter() {
         this.variables = new HashMap<>();
-
-        for (VariableSymbol symbol : variableSymbols)
-            variables.put(symbol, null);
     }
 
-    public BoundNode getRoot() {
-        return root;
+    public HashMap<VariableSymbol, LiteralValue> getVariables() {
+        return variables;
     }
 
-    public LiteralValue evaluate() throws Exception {
-        return evaluateExpression(root);
+    public LiteralValue evaluate(BoundNode node) throws Exception {
+        return evaluateExpression(node);
     }
 
     private LiteralValue evaluateExpression(BoundNode node) throws Exception {
         if (node  instanceof BoundLiteralExpressionNode)
             return ((BoundLiteralExpressionNode) node).getValue();
 
-        if (node instanceof BoundVariableExpressionNode)
-            return variables.get(((BoundVariableExpressionNode) node).getVariable());
-
         if (node instanceof BoundAssignmentExpressionNode) {
-            LiteralValue value = evaluateExpression(((BoundAssignmentExpressionNode) node).getExpression());
+            if (!variables.containsKey(((BoundAssignmentExpressionNode) node).getVariable())) {
+                throw new Exception(MessageFormat.format("Variable {0} is not defined", ((BoundAssignmentExpressionNode) node).getVariable().getName()));
+            }
 
-            variables.put(((BoundAssignmentExpressionNode) node).getVariable(), value);
+            LiteralValue evaluatedAssignment = evaluateExpression(((BoundAssignmentExpressionNode) node).getExpression());
 
-            return value;
+            variables.replace(((BoundAssignmentExpressionNode) node).getVariable(), evaluatedAssignment);
+
+            return evaluatedAssignment;
         }
 
         if (node instanceof BoundUnaryExpressionNode) {

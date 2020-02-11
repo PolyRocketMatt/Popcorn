@@ -14,7 +14,9 @@ public class ConversionUtils {
         INT,
         FLOAT,
         BOOL,
-        STRING
+        STRING,
+
+        NOT_DEFINED
     }
 
     private static final TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };

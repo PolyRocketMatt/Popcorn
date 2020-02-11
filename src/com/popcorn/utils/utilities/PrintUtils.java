@@ -5,6 +5,11 @@ import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
+import com.popcorn.utils.values.LiteralValue;
+import com.popcorn.utils.values.VariableSymbol;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PrintUtils {
 
@@ -162,5 +167,35 @@ public class PrintUtils {
             else
                 prettyPrint(child, indent, false);
         }
+    }
+
+    private static final int NAMES = 25;
+    private static final int TYPES = 9;
+
+    public static void prettyPrint(HashMap<VariableSymbol, LiteralValue> variables) {
+        System.out.println("Variable Name            |   Type   |   Value");
+        System.out.println("---------------------------------------------");
+
+        for (Map.Entry entry : variables.entrySet()) {
+            String name = ((VariableSymbol) entry.getKey()).getName();
+            ConversionUtils.DataType type = ((VariableSymbol) entry.getKey()).getType();
+            Object value = ((LiteralValue) entry.getValue()).getValue();
+
+            int typeMargin = NAMES - name.length();
+            int valueMargin = TYPES - type.toString().length();
+
+            StringBuilder leftIndent = new StringBuilder("");
+            StringBuilder middleIndent = new StringBuilder("");
+
+            for (int i = 0; i < typeMargin; i++)
+                leftIndent.append(" ");
+            for (int i = 0; i < valueMargin; i++)
+                middleIndent.append(" ");
+
+            String finalString = name + leftIndent + "| " + type.toString() + middleIndent + "| " + value.toString();
+            System.out.println(finalString);
+        }
+
+        System.out.println("---------------------------------------------");
     }
 }

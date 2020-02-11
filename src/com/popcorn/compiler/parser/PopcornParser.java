@@ -43,24 +43,20 @@ public class PopcornParser {
     }
 
     private ExpressionNode parseAssignmentExpression() throws Exception {
-        if (ConversionUtils.isType(peek(0).getType()) &&
-                peek(1).getType() == TokenType.IDENTIFIER &&
-                peek(2).getType() == TokenType.EQUAL) {
-            ConversionUtils.DataType typeToken = ConversionUtils.toInternalType(get().getType());
-            Token identifierToken = get();
-            Token equalsToken = get();
-            ExpressionNode expression = parseAssignmentExpression();
-            match(TokenType.SEMI_COLON, true);
+        if (ConversionUtils.isType(current().getType())) {
+            ConversionUtils.DataType type = ConversionUtils.toInternalType(get().getType());
+            Token identifierToken = match(TokenType.IDENTIFIER, true);
+            Token equalsToken = match(TokenType.EQUAL, true);
+            ExpressionNode value = parseAssignmentExpression();
 
-            return new AssignmentExpressionNode(typeToken, identifierToken, equalsToken, expression);
-        } else if (peek(0).getType() == TokenType.IDENTIFIER &&
+            return new AssignmentExpressionNode(type, identifierToken, equalsToken, value);
+        } else if (current().getType() == TokenType.IDENTIFIER &&
                 peek(1).getType() == TokenType.EQUAL) {
-            Token identifierToken = get();
-            Token equalsToken = get();
-            ExpressionNode expression = parseAssignmentExpression();
-            match(TokenType.SEMI_COLON, true);
+            Token identifierToken = match(TokenType.IDENTIFIER, true);
+            Token equalsToken = match(TokenType.EQUAL, true);
+            ExpressionNode value = parseAssignmentExpression();
 
-            return new AssignmentExpressionNode(identifierToken, equalsToken, expression);
+            return new AssignmentExpressionNode(identifierToken, equalsToken, value);
         }
 
         return parseBinaryExpression(0);

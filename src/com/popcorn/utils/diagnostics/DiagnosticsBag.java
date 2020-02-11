@@ -62,10 +62,24 @@ public class DiagnosticsBag {
         report(type, message, object, leftType, rightType);
     }
 
+    public void reportAlreadyDefinedIdentifier(String identifier) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "{0} has already been defined";
+
+        report(type, message, identifier);
+    }
+
     public void reportUndefinedIdentifier(String identifier) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
         String message = "Variable {0} does not exist";
 
         report(type, message, identifier);
+    }
+
+    public void reportIncorrectType(String identifier, ConversionUtils.DataType expected, ConversionUtils.DataType actual) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Can't assign type {0} to variable {1}, expected expression of type {2}";
+
+        report(type, message, actual, identifier, expected);
     }
 }

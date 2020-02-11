@@ -21,7 +21,7 @@ public class AssignmentExpressionNode extends ExpressionNode {
     }
 
     public AssignmentExpressionNode(Token identifierToken, Token equalsToken, ExpressionNode expression) {
-        this.type = null;
+        this.type = ConversionUtils.DataType.NOT_DEFINED;
         this.identifierToken = identifierToken;
         this.equalsToken = equalsToken;
         this.expression = expression;

@@ -18,10 +18,9 @@ public class Binder {
     private DiagnosticsBag diagnostics;
     private ArrayList<VariableSymbol> variables;
 
-    public Binder(ArrayList<VariableSymbol> variables) {
+    public Binder() {
         diagnostics = new DiagnosticsBag();
-
-        this.variables = variables;
+        variables = new ArrayList<>();
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -36,8 +35,6 @@ public class Binder {
         switch (node.getNodeType()) {
             case LITERAL_NODE:
                 return bindLiteralExpression((LiteralExpressionNode) node);
-            case NAME_NODE:
-                return bindNameExpression((NameExpressionNode) node);
             case ASSIGNMENT_NODE:
                 return bindAssignmentExpression((AssignmentExpressionNode) node);
             case PARENTHESIZED_EXPRESSION_NODE:
@@ -55,32 +52,43 @@ public class Binder {
         return new BoundLiteralExpressionNode(node.getValue());
     }
 
-    private BoundExpressionNode bindNameExpression(NameExpressionNode node) {
-        String name = (String) node.getIdentifierToken().getValue();
-        VariableSymbol variable = variables.stream()
-                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
-
-        if (variable == null) {
-            diagnostics.reportUndefinedIdentifier(name);
-
-            return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.INT, 0));
-        }
-
-        return new BoundVariableExpressionNode(variable);
-    }
-
     private BoundExpressionNode bindAssignmentExpression(AssignmentExpressionNode node) throws Exception {
-        String name = (String) node.getIdentifierToken().getValue();
-        BoundExpressionNode boundExpression = bindExpression(node.getExpression());
-        VariableSymbol existingVariable = variables.stream()
-                .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+        if (node.getType() != ConversionUtils.DataType.NOT_DEFINED) {
+            String name = (String) node.getIdentifierToken().getValue();
+            ConversionUtils.DataType type = node.getType();
+            BoundExpressionNode boundExpression = bindExpression(node.getExpression());
 
-        if (existingVariable != null)
-            variables.remove(existingVariable);
-        VariableSymbol actualVariable = new VariableSymbol(name, boundExpression.getType());
+            if (variables.stream().anyMatch(variableSymbol -> variableSymbol.getName().equals(name))) {
+                diagnostics.reportAlreadyDefinedIdentifier(name);
 
-        //variables.get(actualVariable) = null;
-        return new BoundAssignmentExpressionNode(actualVariable, boundExpression);
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+            }
+
+            VariableSymbol symbolization = new VariableSymbol(name, type);
+
+            variables.add(symbolization);
+
+            return new BoundAssignmentExpressionNode(symbolization, boundExpression);
+        } else {
+            String name = (String) node.getIdentifierToken().getValue();
+            BoundExpressionNode boundExpression = bindExpression(node.getExpression());
+            VariableSymbol symbolization = variables.stream()
+                    .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
+
+            if (symbolization == null) {
+                diagnostics.reportUndefinedIdentifier(name);
+
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+            }
+
+            if (boundExpression.getType() != symbolization.getType()) {
+                diagnostics.reportIncorrectType(name, symbolization.getType(), boundExpression.getType());
+
+                return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, 0));
+            }
+
+            return new BoundAssignmentExpressionNode(symbolization, boundExpression);
+        }
     }
 
     private BoundExpressionNode bindParenthesizedExpression(ParenthesizedExpression node) throws Exception {

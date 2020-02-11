@@ -11,6 +11,7 @@ import com.popcorn.utils.values.LiteralValue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class PopcornTerminal {
@@ -28,11 +29,18 @@ public class PopcornTerminal {
             Scanner scanner = new Scanner(System.in);
             String instruction = scanner.nextLine();
 
+            Compilation compilation = null;
+
             boolean isPrint = false;
+            boolean isTable = false;
 
             while (!instruction.equals("exit")) {
                 if (instruction.equals("tree")) {
                     isPrint = !isPrint;
+                    System.out.println("Printing Tree: " + isPrint);
+                } else if (instruction.equals("table")) {
+                    isTable = !isTable;
+                    System.out.println("Printing Tables: " + isTable);
                 } else {
                     // TODO: 02/02/2020 Implement compiler
                     Tokenizer tokenizer = Tokenizer.getTokenizer(instruction);
@@ -50,19 +58,26 @@ public class PopcornTerminal {
                         }
                     } else {
                         try {
-                            Compilation compilation = new Compilation(SyntaxTree.parse(instruction));
+                            if (compilation == null)
+                                compilation = new Compilation(Objects.requireNonNull(SyntaxTree.parse(instruction)));
+                            else
+                                compilation.setTree(SyntaxTree.parse(instruction));
+
+                            LiteralValue value = compilation.evaluate();
 
                             // TODO: 10/02/2020 Implement proper error reporting!
                             if (!compilation.getDiagnostics().isEmpty()) {
                                 for (Diagnostic diagnostic : compilation.getDiagnostics()) {
                                     System.out.println(diagnostic.getMessage());
                                 }
+
+                                //Clearing current diagnostics
+                                compilation.getDiagnostics().clear();
                             } else {
                                 if (isPrint)
                                     PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
-
-                                LiteralValue result = compilation.evaluate();
-                                System.out.println(result.getValue());
+                                if (isTable)
+                                    PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
                             }
 
                         } catch (Exception ex) {
