@@ -1,4 +1,4 @@
-package com.popcorn.utils;
+package com.popcorn.utils.rules;
 
 import com.popcorn.compiler.lexical.TokenType;
 

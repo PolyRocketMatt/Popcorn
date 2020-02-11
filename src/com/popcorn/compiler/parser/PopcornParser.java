@@ -8,7 +8,7 @@ import com.popcorn.compiler.node.expressions.BinaryExpressionNode;
 import com.popcorn.compiler.node.expressions.LiteralExpressionNode;
 import com.popcorn.compiler.node.expressions.ParenthesizedExpression;
 import com.popcorn.compiler.node.expressions.UnaryExpressionNode;
-import com.popcorn.utils.SyntaxRules;
+import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;

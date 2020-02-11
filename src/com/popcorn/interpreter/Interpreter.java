@@ -5,7 +5,7 @@ import com.popcorn.compiler.binding.node.expressions.BoundBinaryExpressionNode;
 import com.popcorn.compiler.binding.node.expressions.BoundLiteralExpressionNode;
 import com.popcorn.compiler.binding.node.expressions.BoundUnaryExpressionNode;
 import com.popcorn.utils.utilities.ConversionUtils;
-import com.popcorn.utils.utilities.EqualityUtils;
+import com.popcorn.utils.rules.EqualityRules;
 import com.popcorn.utils.values.LiteralValue;
 
 import java.text.MessageFormat;
@@ -65,9 +65,9 @@ public class Interpreter {
                 case LOGICAL_OR:
                     return new LiteralValue(ConversionUtils.DataType.BOOL, (boolean) evaluatedLeft.getValue() || (boolean) evaluatedRight.getValue());
                 case LOGICAL_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, EqualityUtils.isEqual(evaluatedLeft, evaluatedRight));
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
                 case LOGICAL_NOT_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.BOOL, !EqualityUtils.isEqual(evaluatedLeft, evaluatedRight));
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, !EqualityRules.isEqual(evaluatedLeft, evaluatedRight));
             }
         }
 

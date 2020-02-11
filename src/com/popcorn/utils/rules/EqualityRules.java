@@ -1,8 +1,8 @@
-package com.popcorn.utils.utilities;
+package com.popcorn.utils.rules;
 
 import com.popcorn.utils.values.LiteralValue;
 
-public class EqualityUtils {
+public class EqualityRules {
 
     public static boolean isEqual(LiteralValue left, LiteralValue right) {
         switch (left.getType()) {
