@@ -5,6 +5,7 @@ import com.popcorn.compiler.binding.node.expressions.BoundBinaryExpressionNode;
 import com.popcorn.compiler.binding.node.expressions.BoundLiteralExpressionNode;
 import com.popcorn.compiler.binding.node.expressions.BoundUnaryExpressionNode;
 import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.utilities.EqualityUtils;
 import com.popcorn.utils.values.LiteralValue;
 
 import java.text.MessageFormat;
@@ -60,13 +61,13 @@ public class Interpreter {
                 case MODULO:
                     return new LiteralValue(ConversionUtils.DataType.INT, (int) evaluatedLeft.getValue() % (int) evaluatedRight.getValue());
                 case LOGICAL_AND:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (boolean) evaluatedLeft.getValue() && (boolean) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, (boolean) evaluatedLeft.getValue() && (boolean) evaluatedRight.getValue());
                 case LOGICAL_OR:
-                    return new LiteralValue(ConversionUtils.DataType.INT, (boolean) evaluatedLeft.getValue() || (boolean) evaluatedRight.getValue());
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, (boolean) evaluatedLeft.getValue() || (boolean) evaluatedRight.getValue());
                 case LOGICAL_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.INT, evaluatedLeft == evaluatedRight);
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, EqualityUtils.isEqual(evaluatedLeft, evaluatedRight));
                 case LOGICAL_NOT_EQUALS:
-                    return new LiteralValue(ConversionUtils.DataType.INT, evaluatedLeft != evaluatedRight);
+                    return new LiteralValue(ConversionUtils.DataType.BOOL, !EqualityUtils.isEqual(evaluatedLeft, evaluatedRight));
             }
         }
 

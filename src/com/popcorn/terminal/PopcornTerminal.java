@@ -63,8 +63,8 @@ public class PopcornTerminal {
 
                                 LiteralValue result = compilation.evaluate();
 
-                                System.out.println(result.getType());
                                 System.out.println(result.getValue());
+                                //System.out.println(result.getType());
                             }
 
                         } catch (Exception ex) {
