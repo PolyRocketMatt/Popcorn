@@ -62,9 +62,7 @@ public class PopcornTerminal {
                                     PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
 
                                 LiteralValue result = compilation.evaluate();
-
                                 System.out.println(result.getValue());
-                                //System.out.println(result.getType());
                             }
 
                         } catch (Exception ex) {

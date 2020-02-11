@@ -49,8 +49,6 @@ b
 2src/com/popcorn/utils/enums/UnaryOperatorType.java,b\5\b5bccb539e3fb50ad8d6cd0cb9150975990eddce
 d
 4src/com/popcorn/utils/utilities/ConversionUtils.java,d\6\d6a464b1bca06c3deefd63b4b4dd05e36a0acb2d
-V
-&src/com/popcorn/utils/SyntaxRules.java,a\1\a10228111628e6524aaf66144143f87e438a9e7d
 Y
 )src/com/popcorn/compiler/Compilation.java,9\7\97f1e720cf42bbe141a5d947023d959cfbdf3a96
 a
