@@ -16,6 +16,7 @@ public class ConversionUtils {
         FLOAT,
         BOOL,
         STRING,
+        DYNAMIC,
 
         NOT_DEFINED
     }

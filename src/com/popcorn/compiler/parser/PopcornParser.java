@@ -71,7 +71,7 @@ public class PopcornParser {
             Token equalsToken = match(TokenType.EQUAL, true);
             ExpressionNode value = parseAssignmentExpression();
 
-            match(TokenType.SEMI_COLON, true);
+            //match(TokenType.SEMI_COLON, true);
 
             return new AssignmentExpressionNode(type, identifierToken, equalsToken, value);
         } else if (current().getType() == TokenType.IDENTIFIER &&
@@ -80,7 +80,7 @@ public class PopcornParser {
             Token equalsToken = match(TokenType.EQUAL, true);
             ExpressionNode value = parseAssignmentExpression();
 
-            match(TokenType.SEMI_COLON, true);
+            //match(TokenType.SEMI_COLON, true);
 
             return new AssignmentExpressionNode(identifierToken, equalsToken, value);
         }
