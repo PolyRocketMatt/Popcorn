@@ -1,6 +1,5 @@
 package com.popcorn.compiler.lexical;
 
-import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 

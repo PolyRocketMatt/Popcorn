@@ -2,8 +2,8 @@ package com.popcorn.utils;
 
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.Tokenizer;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.parser.PopcornParser;
-import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.utils.diagnostics.Diagnostic;
 
 import java.util.List;
@@ -11,12 +11,12 @@ import java.util.List;
 public class SyntaxTree {
 
     private List<Diagnostic> diagnostics;
-    private ExpressionNode root;
+    private List<Node> nodeCollection;
     private Token endOfFileToken;
 
-    public SyntaxTree(List<Diagnostic> diagnostics, ExpressionNode root, Token endOfFileToken) {
+    public SyntaxTree(List<Diagnostic> diagnostics, List<Node> root, Token endOfFileToken) {
         this.diagnostics = diagnostics;
-        this.root = root;
+        this.nodeCollection = root;
         this.endOfFileToken = endOfFileToken;
     }
 
@@ -24,8 +24,8 @@ public class SyntaxTree {
         return diagnostics;
     }
 
-    public ExpressionNode getRoot() {
-        return root;
+    public List<Node> getNodeCollection() {
+        return nodeCollection;
     }
 
     public Token getEndOfFileToken() {

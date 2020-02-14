@@ -2,6 +2,8 @@ package com.popcorn.compiler;
 
 import com.popcorn.compiler.binding.Binder;
 import com.popcorn.compiler.binding.node.BoundNode;
+import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
@@ -10,6 +12,7 @@ import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Compilation {
@@ -17,12 +20,14 @@ public class Compilation {
     private List<Diagnostic> diagnostics;
     private Interpreter interpreter;
     private Binder binder;
+    private List<LiteralValue> values;
     private SyntaxTree tree;
 
     public Compilation(SyntaxTree tree) {
         diagnostics = tree.getDiagnostics();
         interpreter = new Interpreter();
         binder = new Binder();
+        values = new ArrayList<>();
 
         this.tree = tree;
     }
@@ -39,6 +44,10 @@ public class Compilation {
         return binder;
     }
 
+    public List<LiteralValue> getValues() {
+        return values;
+    }
+
     public SyntaxTree getTree() {
         return tree;
     }
@@ -47,10 +56,18 @@ public class Compilation {
         this.tree = tree;
     }
 
+    public void exec() {
+        for (Node node : tree.getNodeCollection()) {
+            if (node instanceof ExpressionNode) {
+                values.add(evaluate((ExpressionNode) node));
+            }
+        }
+    }
+
     // TODO: 10/02/2020 Make type checker more accessible
     // TODO: 11/02/2020 Fix clear binder diagnostics
-    public BoundNode createBoundNode() throws Exception {
-        BoundNode boundNode = binder.bindExpression(tree.getRoot());
+    private BoundNode createBoundNode(ExpressionNode node) throws Exception {
+        BoundNode boundNode = binder.bindExpression(node);
 
         diagnostics.addAll(binder.getDiagnostics().getDiagnostics());
 
@@ -70,9 +87,9 @@ public class Compilation {
         }
     }
 
-    public LiteralValue evaluate() {
+    public LiteralValue evaluate(ExpressionNode unboundNode) {
         try {
-            BoundNode node = createBoundNode();
+            BoundNode node = createBoundNode(unboundNode);
 
             if (node != null) {
                 LiteralValue value = interpreter.evaluate(node);

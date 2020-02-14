@@ -4,6 +4,7 @@ import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.rules.SyntaxRules;
@@ -13,14 +14,21 @@ import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.NullValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PopcornParser {
 
     private DiagnosticsBag diagnostics;
     private TokenStream stream;
 
+    private List<Node> nodeCollection;
+
     public PopcornParser(DiagnosticsBag diagnostics, TokenStream stream) {
         this.diagnostics = diagnostics;
         this.stream = stream;
+
+        nodeCollection = new ArrayList<>();
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -31,19 +39,31 @@ public class PopcornParser {
         return stream;
     }
 
+    public List<Node> getNodeCollection() {
+        return nodeCollection;
+    }
+
     public SyntaxTree parse() throws Exception {
         ExpressionNode expression = parseExpression();
+        nodeCollection.add(expression);
+
+        while (current().getType() != TokenType.EOF) {
+            expression = parseExpression();
+            nodeCollection.add(expression);
+        }
+
         Token endOfFileToken = match(TokenType.EOF, true);
 
         diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
 
-        return new SyntaxTree(diagnostics.getDiagnostics(), expression, endOfFileToken);
+        return new SyntaxTree(diagnostics.getDiagnostics(), nodeCollection, endOfFileToken);
     }
 
     private ExpressionNode parseExpression() throws Exception {
         return parseAssignmentExpression();
     }
 
+    // TODO: 14/02/2020 Add multi-variable assignments (a = b = c)
     private ExpressionNode parseAssignmentExpression() throws Exception {
         if (ConversionUtils.isType(current().getType())) {
             ConversionUtils.DataType type = ConversionUtils.toInternalType(get().getType());
@@ -51,12 +71,16 @@ public class PopcornParser {
             Token equalsToken = match(TokenType.EQUAL, true);
             ExpressionNode value = parseAssignmentExpression();
 
+            match(TokenType.SEMI_COLON, true);
+
             return new AssignmentExpressionNode(type, identifierToken, equalsToken, value);
         } else if (current().getType() == TokenType.IDENTIFIER &&
                 peek(1).getType() == TokenType.EQUAL) {
             Token identifierToken = match(TokenType.IDENTIFIER, true);
             Token equalsToken = match(TokenType.EQUAL, true);
             ExpressionNode value = parseAssignmentExpression();
+
+            match(TokenType.SEMI_COLON, true);
 
             return new AssignmentExpressionNode(identifierToken, equalsToken, value);
         }

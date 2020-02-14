@@ -2,8 +2,6 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
-import com.popcorn.compiler.binding.operators.BoundBinaryOperator;
-import com.popcorn.compiler.binding.operators.BoundUnaryOperator;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.enums.BoundBinaryOperatorKind;
 import com.popcorn.utils.enums.BoundUnaryOperatorKind;
@@ -13,7 +11,6 @@ import com.popcorn.utils.rules.EqualityRules;
 import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 
 public class Interpreter {
