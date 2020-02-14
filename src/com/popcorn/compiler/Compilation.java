@@ -57,7 +57,7 @@ public class Compilation {
     }
 
     public void exec() {
-        for (Node node : tree.getNodeCollection()) {
+        for (Node node : tree.getParentNode().getNodes()) {
             if (node instanceof ExpressionNode) {
                 values.add(evaluate((ExpressionNode) node));
             }

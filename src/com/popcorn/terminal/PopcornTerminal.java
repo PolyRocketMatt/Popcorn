@@ -2,7 +2,6 @@ package com.popcorn.terminal;
 
 import com.popcorn.compiler.Compilation;
 import com.popcorn.compiler.lexical.Tokenizer;
-import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.Filters;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
@@ -10,6 +9,7 @@ import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.PrintUtils;
 import com.popcorn.utils.values.LiteralValue;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -34,15 +34,38 @@ public class PopcornTerminal {
 
             boolean isPrint = false;
             boolean isTable = false;
+            boolean isFile = false;
 
             while (!instruction.equals("exit")) {
+                if (isFile) {
+                    try {
+                        File file = new File(instruction);
+                        Scanner fileScanner = new Scanner(file);
+                        StringBuilder source = new StringBuilder("");
+
+                        while (fileScanner.hasNextLine()) {
+                            source.append(fileScanner.nextLine());
+                        }
+                    } catch (Exception ex) { }
+                }
+
+                boolean isFinished = false;
+
                 if (instruction.equals("tree")) {
                     isPrint = !isPrint;
+                    isFinished = true;
                     System.out.println("Printing Tree: " + isPrint);
                 } else if (instruction.equals("table")) {
                     isTable = !isTable;
+                    isFinished = true;
                     System.out.println("Printing Tables: " + isTable);
-                } else {
+                } else if (instruction.startsWith("file")) {
+                    isFile = !isFile;
+                    instruction = "";
+                    System.out.println("Expecting File: " + isFile);
+                }
+
+                if (!isFinished) {
                     // TODO: 02/02/2020 Implement compiler
                     Tokenizer tokenizer = Tokenizer.getTokenizer(instruction);
 
@@ -85,12 +108,8 @@ public class PopcornTerminal {
                                     //Clearing current diagnostics
                                     compilation.getDiagnostics().clear();
                                 } else {
-                                    if (isPrint) {
-                                        for (Node node : compilation.getTree().getNodeCollection())
-                                            PrintUtils.prettyPrint(node, "", true);
-                                        }
-
-
+                                    if (isPrint)
+                                        PrintUtils.prettyPrint(compilation.getTree().getParentNode(), "", true);
                                     if (isTable)
                                         PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
                                 }
