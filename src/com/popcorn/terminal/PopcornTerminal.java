@@ -48,41 +48,45 @@ public class PopcornTerminal {
                     tokenizer.tokenize();
                     diagnostics.getDiagnostics().addAll(tokenizer.getDiagnostics().getDiagnostics());
 
-                    ArrayList<String> messages = new ArrayList<>();
-                    diagnostics.getDiagnostics().forEach(diagnostic -> messages.add(diagnostic.getMessage()));
-                    LinkedHashSet<String> filtered = Filters.filterDuplicates(messages);
-
-                    if (!filtered.isEmpty()) {
-                        for (String err : filtered) {
-                            System.out.println(err);
-                        }
+                    if (true) {
+                        System.out.println(tokenizer.getStream().toString());
                     } else {
-                        try {
-                            if (compilation == null)
-                                compilation = new Compilation(Objects.requireNonNull(SyntaxTree.parse(instruction)));
-                            else
-                                compilation.setTree(SyntaxTree.parse(instruction));
+                        ArrayList<String> messages = new ArrayList<>();
+                        diagnostics.getDiagnostics().forEach(diagnostic -> messages.add(diagnostic.getMessage()));
+                        LinkedHashSet<String> filtered = Filters.filterDuplicates(messages);
 
-                            LiteralValue value = compilation.evaluate();
-                            System.out.println(value.getValue().toString());
+                        if (!filtered.isEmpty()) {
+                            for (String err : filtered) {
+                                System.out.println(err);
+                            }
+                        } else {
+                            try {
+                                if (compilation == null)
+                                    compilation = new Compilation(Objects.requireNonNull(SyntaxTree.parse(instruction)));
+                                else
+                                    compilation.setTree(SyntaxTree.parse(instruction));
 
-                            // TODO: 10/02/2020 Implement proper error reporting!
-                            if (!compilation.getDiagnostics().isEmpty()) {
-                                for (Diagnostic diagnostic : compilation.getDiagnostics()) {
-                                    System.out.println(diagnostic.getMessage());
+                                LiteralValue value = compilation.evaluate();
+                                System.out.println(value.getValue().toString());
+
+                                // TODO: 10/02/2020 Implement proper error reporting!
+                                if (!compilation.getDiagnostics().isEmpty()) {
+                                    for (Diagnostic diagnostic : compilation.getDiagnostics()) {
+                                        System.out.println(diagnostic.getMessage());
+                                    }
+
+                                    //Clearing current diagnostics
+                                    compilation.getDiagnostics().clear();
+                                } else {
+                                    if (isPrint)
+                                        PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
+                                    if (isTable)
+                                        PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
                                 }
 
-                                //Clearing current diagnostics
-                                compilation.getDiagnostics().clear();
-                            } else {
-                                if (isPrint)
-                                    PrintUtils.prettyPrint(compilation.getTree().getRoot(), "", true);
-                                if (isTable)
-                                    PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
                             }
-
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
                         }
                     }
                 }

@@ -77,8 +77,6 @@ U
 -src/com/popcorn/terminal/PopcornTerminal.java,5\5\5579993047488311161c989e96d5d4dcb0d6a907
 „
 Tsrc/com/popcorn/compiler/binding/node/expressions/BoundAssignmentExpressionNode.java,b\d\bd876faa55a71d54d1c9a7dd1007a063b554d99f
-‚
-Rsrc/com/popcorn/compiler/binding/node/expressions/BoundVariableExpressionNode.java,2\6\265ac7107fab8540f7d473995f7499f5728b6b21
 w
 Gsrc/com/popcorn/compiler/node/expressions/AssignmentExpressionNode.java,e\a\ea93644d6f1be9e9a6304e141455a40da12b2791
 q

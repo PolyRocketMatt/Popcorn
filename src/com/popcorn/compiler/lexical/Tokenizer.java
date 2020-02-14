@@ -1,5 +1,6 @@
 package com.popcorn.compiler.lexical;
 
+import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 
@@ -20,8 +21,7 @@ public class Tokenizer {
         this.tokenData = new LinkedList<>();
         this.diagnostics = new DiagnosticsBag();
 
-        add(TokenType.FLOAT_LITERAL, "\\d+.\\d+");
-        add(TokenType.INT_LITERAL, "\\d+");
+        add(TokenType.FLOAT_LITERAL, "-?\\d+(\\.\\d+)?");
         add(TokenType.STRING_LITERAL,"\"(.*)?\"");
         add(TokenType.BOOL_LITERAL, "true|false");
 
@@ -127,7 +127,18 @@ public class Tokenizer {
                         if (matcher.find()) {
                             String group = matcher.group().trim();
                             Object value = ConversionUtils.toValidRepresentation(data.getType(), group);
-                            Token token = new Token(data.getType(), value, lineIndex, length - remaining);
+                            Token token = null;
+
+                            if (data.getType() == TokenType.FLOAT_LITERAL) {
+                                if (group.contains(".")) {
+                                    token = new Token(TokenType.FLOAT_LITERAL, value, lineIndex, length - remaining);
+                                } else {
+                                    Integer intVal = Integer.parseInt(group);
+                                    token = new Token(TokenType.INT_LITERAL, intVal, lineIndex, length - remaining);
+                                }
+                            } else {
+                                token = new Token(data.getType(), value, lineIndex, length - remaining);
+                            }
 
                             line = matcher.replaceFirst("").trim();
                             stream.add(token);

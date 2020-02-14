@@ -82,4 +82,11 @@ public class DiagnosticsBag {
 
         report(type, message, actual, identifier, expected);
     }
+
+    public void reportIllegalCharacter(char character) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Illegal character {0}";
+
+        report(type, message, character);
+    }
 }
