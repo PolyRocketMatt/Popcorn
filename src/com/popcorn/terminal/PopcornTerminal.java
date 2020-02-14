@@ -48,7 +48,7 @@ public class PopcornTerminal {
                     tokenizer.tokenize();
                     diagnostics.getDiagnostics().addAll(tokenizer.getDiagnostics().getDiagnostics());
 
-                    if (true) {
+                    if (false) {
                         System.out.println(tokenizer.getStream().toString());
                     } else {
                         ArrayList<String> messages = new ArrayList<>();
@@ -67,7 +67,11 @@ public class PopcornTerminal {
                                     compilation.setTree(SyntaxTree.parse(instruction));
 
                                 LiteralValue value = compilation.evaluate();
-                                System.out.println(value.getValue().toString());
+
+                                if (value.getValue() == null)
+                                    System.out.println("null");
+                                else
+                                    System.out.println(value.getValue().toString());
 
                                 // TODO: 10/02/2020 Implement proper error reporting!
                                 if (!compilation.getDiagnostics().isEmpty()) {

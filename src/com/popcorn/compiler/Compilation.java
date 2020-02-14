@@ -74,8 +74,19 @@ public class Compilation {
         try {
             BoundNode node = createBoundNode();
 
-            if (node != null)
-                return interpreter.evaluate(node);
+            if (node != null) {
+                LiteralValue value = interpreter.evaluate(node);
+
+                if (interpreter.getDiagnostics().getDiagnostics().isEmpty()) {
+                    return value;
+                } else {
+                    for (Diagnostic diagnostic : interpreter.getDiagnostics().getDiagnostics()) {
+                        System.out.println(diagnostic.getMessage());
+                    }
+
+                    interpreter.getDiagnostics().getDiagnostics().clear();
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

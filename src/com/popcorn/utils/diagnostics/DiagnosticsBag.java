@@ -83,10 +83,17 @@ public class DiagnosticsBag {
         report(type, message, actual, identifier, expected);
     }
 
-    public void reportIllegalCharacter(char character) {
+    public void reportIncompatibleTypes(ConversionUtils.DataType leftType, ConversionUtils.DataType rightType) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
-        String message = "Illegal character {0}";
+        String message = "Incompatible types {0} and {1}";
 
-        report(type, message, character);
+        report(type, message, leftType, rightType);
+    }
+
+    public void reportDivisionByZero(){
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Illegal Arithmetic: Division by 0";
+
+        report(type, message);
     }
 }
