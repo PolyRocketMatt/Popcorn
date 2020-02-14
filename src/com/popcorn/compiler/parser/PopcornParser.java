@@ -4,8 +4,10 @@ import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.node.expressions.*;
+import com.popcorn.compiler.node.statements.IfStatementNode;
 import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
@@ -21,12 +23,14 @@ public class PopcornParser {
     private TokenStream stream;
 
     private ParentNode parentNode;
+    private Node statementNode;
 
     public PopcornParser(DiagnosticsBag diagnostics, TokenStream stream) {
         this.diagnostics = diagnostics;
         this.stream = stream;
 
         parentNode = new ParentNode();
+        statementNode = null;
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -42,19 +46,41 @@ public class PopcornParser {
     }
 
     public SyntaxTree parse() throws Exception {
-        ExpressionNode expression = parseExpression();
-        parentNode.getNodes().add(expression);
+        parentNode.getNodes().add(parseIfStatement());
 
         while (current().getType() != TokenType.EOF) {
-            expression = parseExpression();
-            parentNode.getNodes().add(expression);
+            parentNode.getNodes().add(parseIfStatement());
         }
 
-        Token endOfFileToken = match(TokenType.EOF, true);
+        Token endOfFileToken = match(TokenType.EOF);
 
         diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
 
         return new SyntaxTree(diagnostics.getDiagnostics(), parentNode, endOfFileToken);
+    }
+
+    private Node parseIfStatement() throws Exception {
+        if (current().getType() == TokenType.IF) {
+            next();
+            match(TokenType.OPAREN);
+            ExpressionNode expression = parseBinaryExpression(0);
+            match(TokenType.CPAREN);
+            match(TokenType.OBRACE);
+
+            IfStatementNode node = new IfStatementNode(expression);
+            statementNode = node;
+
+            // TODO: 15/02/2020 Implement variable level for access!
+            while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
+                node.add(parseExpression());
+            }
+
+            match(TokenType.CBRACE);
+
+            return node;
+        }
+
+        return parseExpression();
     }
 
     private ExpressionNode parseExpression() throws Exception {
@@ -65,15 +91,15 @@ public class PopcornParser {
     private ExpressionNode parseAssignmentExpression() throws Exception {
         if (ConversionUtils.isType(current().getType())) {
             ConversionUtils.DataType type = ConversionUtils.toInternalType(get().getType());
-            Token identifierToken = match(TokenType.IDENTIFIER, true);
-            Token equalsToken = match(TokenType.EQUAL, true);
+            Token identifierToken = match(TokenType.IDENTIFIER);
+            Token equalsToken = match(TokenType.EQUAL);
             ExpressionNode value = parseAssignmentExpression();
 
             return new AssignmentExpressionNode(type, identifierToken, equalsToken, value);
         } else if (current().getType() == TokenType.IDENTIFIER &&
                 peek(1).getType() == TokenType.EQUAL) {
-            Token identifierToken = match(TokenType.IDENTIFIER, true);
-            Token equalsToken = match(TokenType.EQUAL, true);
+            Token identifierToken = match(TokenType.IDENTIFIER);
+            Token equalsToken = match(TokenType.EQUAL);
             ExpressionNode value = parseAssignmentExpression();
 
             return new AssignmentExpressionNode(identifierToken, equalsToken, value);
@@ -115,7 +141,7 @@ public class PopcornParser {
                 case OPAREN:
                     Token openParenthesisToken = get();
                     ExpressionNode expression = parseBinaryExpression(0);
-                    Token closedParenthesisToken = match(TokenType.CPAREN, true);
+                    Token closedParenthesisToken = match(TokenType.CPAREN);
 
                     return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
 
@@ -171,8 +197,8 @@ public class PopcornParser {
         return stream.skip(offset);
     }
 
-    private Token match(TokenType type, boolean addDiagnostic) {
-        return stream.match(type, addDiagnostic);
+    private Token match(TokenType type) {
+        return stream.match(type, true);
     }
 
     private Token matchAny(TokenType[] types) {

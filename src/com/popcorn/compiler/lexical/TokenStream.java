@@ -114,8 +114,11 @@ public class TokenStream {
         if (current().getType().equals(type))
             return get();
 
-        if (addDiagnostic)
+        if (addDiagnostic) {
             diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(type));
+
+            return null;
+        }
 
         return new Token(type, null, current().getLine(), current().getColumn());
     }

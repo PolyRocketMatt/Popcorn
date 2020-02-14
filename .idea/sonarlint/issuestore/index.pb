@@ -85,3 +85,5 @@ Asrc/com/popcorn/compiler/node/expressions/NameExpressionNode.java,a\3\a34350b6
 0src/com/popcorn/utils/values/VariableSymbol.java,1\b\1bd568dd2571e727ea643fb8242dcd6f157478ff
 \
 ,src/com/popcorn/interpreter/Interpreter.java,6\e\6e5947f0aa634d585814e31f4991443380d101b7
+]
+-src/com/popcorn/compiler/node/ParentNode.java,9\2\92ff60de4f48895da3c0fc16e07afaf822a33000

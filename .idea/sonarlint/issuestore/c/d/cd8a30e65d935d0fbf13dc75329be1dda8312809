@@ -1,7 +1,7 @@
 
-^squid:UnusedPrivateMethodˆ",Remove this unused private "getNext" method.(äÔŒúÿÿÿÿ8­Šƒ.
-jsquid:S00112|"FDefine and throw a dedicated exception instead of using a generic one.(ƒûø·üÿÿÿÿ8¯úÀ„ƒ.
-[squid:UnusedPrivateMethodŒ")Remove this unused private "next" method.(ä§¦–ùÿÿÿÿ8­Šƒ.
-Vsquid:UnusedPrivateMethod˜")Remove this unused private "skip" method.(Ÿç†8­Šƒ.
-^squid:UnusedPrivateMethod”",Remove this unused private "peekAny" method.(«‡Ãıùÿÿÿÿ8­Šƒ.
-Zsquid:UnusedPrivateMethod¤"-Remove this unused private "rollback" method.(ÂèÎ®8­Šƒ.
+^squid:UnusedPrivateMethod¦",Remove this unused private "peekAny" method.(«‡Ãıùÿÿÿÿ8Á–°Ÿ„.
+[squid:UnusedPrivateMethod")Remove this unused private "next" method.(ä§¦–ùÿÿÿÿ8Á–°Ÿ„.
+Vsquid:UnusedPrivateMethodª")Remove this unused private "skip" method.(Ÿç†8Á–°Ÿ„.
+Zsquid:UnusedPrivateMethod¶"-Remove this unused private "rollback" method.(ÂèÎ®8Á–°Ÿ„.
+ksquid:S00112"FDefine and throw a dedicated exception instead of using a generic one.(ƒûø·üÿÿÿÿ8Á–°Ÿ„.
+^squid:UnusedPrivateMethodš",Remove this unused private "getNext" method.(äÔŒúÿÿÿÿ8Á–°Ÿ„.

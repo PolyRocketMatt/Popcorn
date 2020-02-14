@@ -213,6 +213,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/StatementNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/AssignmentExpressionNode.java">
           <value>
             <set />
@@ -249,6 +254,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/AssignmentStatementNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/ClosedCompoundNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/IfStatementNode.java">
           <value>
             <set />
           </value>
