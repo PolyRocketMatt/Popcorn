@@ -6,7 +6,7 @@ import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.values.LiteralValue;
 
-public class NullExpressionNode extends ExpressionNode {
+public class NullExpressionNode implements ExpressionNode {
 
     private Token nullToken;
     private LiteralValue nullValue;

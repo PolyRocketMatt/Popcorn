@@ -2,10 +2,10 @@ package com.popcorn.compiler.node;
 
 import com.popcorn.utils.enums.NodeType;
 
-public abstract class Node {
+public interface Node {
 
-    public abstract Node[] getChildren();
+    Node[] getChildren();
 
-    public abstract NodeType getNodeType();
+    NodeType getNodeType();
 
 }

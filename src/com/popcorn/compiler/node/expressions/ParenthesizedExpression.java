@@ -5,7 +5,7 @@ import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 
-public class ParenthesizedExpression extends ExpressionNode {
+public class ParenthesizedExpression implements ExpressionNode {
 
     private Token openParenthesisToken;
     private ExpressionNode expression;

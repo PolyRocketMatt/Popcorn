@@ -5,7 +5,7 @@ import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 
-public class NameExpressionNode extends ExpressionNode {
+public class NameExpressionNode implements ExpressionNode {
 
     private Token identifierToken;
 

@@ -5,7 +5,7 @@ import com.popcorn.utils.enums.NodeType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParentNode extends Node {
+public class ParentNode implements Node {
 
     private List<Node> nodes;
 

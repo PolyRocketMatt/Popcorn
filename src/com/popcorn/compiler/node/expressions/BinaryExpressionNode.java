@@ -7,7 +7,7 @@ import com.popcorn.utils.enums.BinaryOperatorType;
 import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.utilities.ConversionUtils;
 
-public class BinaryExpressionNode extends ExpressionNode {
+public class BinaryExpressionNode implements ExpressionNode {
 
     private ExpressionNode left;
     private Token operatorToken;

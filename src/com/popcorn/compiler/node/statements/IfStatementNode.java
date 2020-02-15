@@ -7,7 +7,7 @@ import com.popcorn.utils.enums.NodeType;
 
 import java.util.ArrayList;
 
-public class IfStatementNode extends StatementNode {
+public class IfStatementNode implements StatementNode {
 
     private ExpressionNode expression;
     private ArrayList<Node> body;

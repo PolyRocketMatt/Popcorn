@@ -3,7 +3,7 @@ package com.popcorn.compiler.lexical;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 
-public class Token extends Node {
+public class Token implements Node {
 
     private final TokenType type;
     private final Object value;

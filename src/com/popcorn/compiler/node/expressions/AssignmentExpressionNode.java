@@ -6,7 +6,7 @@ import com.popcorn.compiler.node.Node;
 import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.utilities.ConversionUtils;
 
-public class AssignmentExpressionNode extends ExpressionNode {
+public class AssignmentExpressionNode implements ExpressionNode {
 
     private ConversionUtils.DataType type;
     private Token identifierToken;

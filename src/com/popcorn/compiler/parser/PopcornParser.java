@@ -6,6 +6,7 @@ import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.ParentNode;
+import com.popcorn.compiler.node.StatementNode;
 import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.compiler.node.statements.IfStatementNode;
 import com.popcorn.exception.PopcornException;
@@ -24,12 +25,14 @@ public class PopcornParser {
     private TokenStream stream;
 
     private ParentNode parentNode;
+    private StatementNode statementNode;
 
     public PopcornParser(DiagnosticsBag diagnostics, TokenStream stream) {
         this.diagnostics = diagnostics;
         this.stream = stream;
 
         parentNode = new ParentNode();
+        statementNode = null;
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -68,10 +71,13 @@ public class PopcornParser {
 
             IfStatementNode node = new IfStatementNode(expression);
 
-            // TODO: 15/02/2020 Implement variable level for access!
             while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
                 node.add(parseExpression());
             }
+
+            if (statementNode != null)
+                node.setParentNode(statementNode);
+            statementNode = node;
 
             match(TokenType.CBRACE);
 

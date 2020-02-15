@@ -7,7 +7,7 @@ import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.enums.UnaryOperatorType;
 import com.popcorn.utils.utilities.ConversionUtils;
 
-public class UnaryExpressionNode extends ExpressionNode {
+public class UnaryExpressionNode implements ExpressionNode {
 
     private Token operatorToken;
     private UnaryOperatorType operatorType;
