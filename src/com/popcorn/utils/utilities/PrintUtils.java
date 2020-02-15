@@ -1,6 +1,5 @@
 package com.popcorn.utils.utilities;
 
-import com.popcorn.compiler.binding.node.BoundExpressionNode;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.Node;
@@ -12,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PrintUtils {
+
+    private PrintUtils() {}
 
     public static String toPrintable(TokenType[] types) {
         StringBuilder builder = new StringBuilder("{");
@@ -176,16 +177,16 @@ public class PrintUtils {
         System.out.println("Variable Name            |   Type   |   Value");
         System.out.println("---------------------------------------------");
 
-        for (Map.Entry entry : variables.entrySet()) {
-            String name = ((VariableSymbol) entry.getKey()).getName();
-            ConversionUtils.DataType type = ((VariableSymbol) entry.getKey()).getType();
-            Object value = ((LiteralValue) entry.getValue()).getValue().toString();
+        variables.forEach((key, keyValue) -> {
+            String name = key.getName();
+            ConversionUtils.DataType type = key.getType();
+            Object value = keyValue.getValue().toString();
 
             int typeMargin = NAMES - name.length();
             int valueMargin = TYPES - type.toString().length();
 
-            StringBuilder leftIndent = new StringBuilder("");
-            StringBuilder middleIndent = new StringBuilder("");
+            StringBuilder leftIndent = new StringBuilder();
+            StringBuilder middleIndent = new StringBuilder();
 
             for (int i = 0; i < typeMargin; i++)
                 leftIndent.append(" ");
@@ -194,7 +195,7 @@ public class PrintUtils {
 
             String finalString = name + leftIndent + "| " + type.toString() + middleIndent + "| " + value.toString();
             System.out.println(finalString);
-        }
+        });
 
         System.out.println("---------------------------------------------");
     }

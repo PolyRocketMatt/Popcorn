@@ -19,7 +19,9 @@ public class UnaryExpressionNode extends ExpressionNode {
 
         try {
             this.operatorType = ConversionUtils.toUnaryOperator(operatorToken.getType());
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            this.operatorType = UnaryOperatorType.NON_EXISTENT;
+        }
     }
 
     public Token getOperatorToken() {

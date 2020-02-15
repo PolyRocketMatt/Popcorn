@@ -4,6 +4,8 @@ import com.popcorn.utils.values.LiteralValue;
 
 public class EqualityRules {
 
+    private EqualityRules() {}
+
     public static boolean isEqual(LiteralValue left, LiteralValue right) {
         switch (left.getType()) {
             case INT:
@@ -26,9 +28,12 @@ public class EqualityRules {
                 String rightStringVal = (String) right.getValue();
 
                 return leftStringVal.equals(rightStringVal);
-        }
 
-        return false;
+            default:
+            case NOT_DEFINED:
+            case DYNAMIC:
+                return false;
+        }
     }
 
 }

@@ -4,8 +4,5 @@ public enum UnaryOperatorType {
 
     IDENTITY,
     NEGATION,
-    LOGICAL_NEGATION,
-
-    NON_EXISTENT,
-
+    LOGICAL_NEGATION, NON_EXISTENT,
 }

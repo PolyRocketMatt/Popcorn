@@ -2,8 +2,8 @@ package com.popcorn.compiler.binding.node;
 
 import com.popcorn.utils.enums.BoundNodeKind;
 
-public abstract class BoundNode {
+public interface BoundNode {
 
-    public abstract BoundNodeKind getKind();
+    BoundNodeKind getKind();
 
 }

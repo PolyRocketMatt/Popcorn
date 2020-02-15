@@ -40,10 +40,6 @@ public class Compilation {
         return interpreter;
     }
 
-    public Binder getBinder() {
-        return binder;
-    }
-
     public List<LiteralValue> getValues() {
         return values;
     }

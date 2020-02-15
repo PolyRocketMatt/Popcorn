@@ -17,16 +17,8 @@ public class ParenthesizedExpression extends ExpressionNode {
         this.closedParenthesisToken = closedParenthesisToken;
     }
 
-    public Token getOpenParenthesisToken() {
-        return openParenthesisToken;
-    }
-
     public ExpressionNode getExpression() {
         return expression;
-    }
-
-    public Token getClosedParenthesisToken() {
-        return closedParenthesisToken;
     }
 
     @Override

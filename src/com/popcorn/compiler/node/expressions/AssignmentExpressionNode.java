@@ -35,10 +35,6 @@ public class AssignmentExpressionNode extends ExpressionNode {
         return identifierToken;
     }
 
-    public Token getEqualsToken() {
-        return equalsToken;
-    }
-
     public ExpressionNode getExpression() {
         return expression;
     }

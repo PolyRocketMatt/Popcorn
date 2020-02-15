@@ -2,6 +2,7 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
+import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.enums.BoundBinaryOperatorKind;
 import com.popcorn.utils.enums.BoundUnaryOperatorKind;
@@ -31,11 +32,11 @@ public class Interpreter {
         return variables;
     }
 
-    public LiteralValue evaluate(BoundNode node) throws Exception {
+    public LiteralValue evaluate(BoundNode node) throws PopcornException {
         return evaluateExpression(node);
     }
 
-    private LiteralValue evaluateExpression(BoundNode node) throws Exception {
+    private LiteralValue evaluateExpression(BoundNode node) throws PopcornException {
         if (node  instanceof BoundLiteralExpressionNode)
             return ((BoundLiteralExpressionNode) node).getValue();
 
@@ -83,7 +84,7 @@ public class Interpreter {
                 case FLOAT:
                     switch (operatorKind) {
                         case IDENTITY:
-                            return new LiteralValue(ConversionUtils.DataType.FLOAT, ValueType.FLOAT, (float) evaluatedOperand.getValue());
+                            return new LiteralValue(ConversionUtils.DataType.FLOAT, ValueType.FLOAT, evaluatedOperand.getValue());
 
                         case NEGATION:
                             return new LiteralValue(ConversionUtils.DataType.FLOAT, ValueType.FLOAT, -(float) evaluatedOperand.getValue());
@@ -93,7 +94,7 @@ public class Interpreter {
                             diagnostics.reportUndefinedUnaryOperator(operatorKind.toString(), dataType);
                             break;
                     }
-                    throw new Exception("Internal error occurred");
+                    throw new PopcornException("Could not perform unary operation {0} on type {1}", operatorKind, dataType);
 
                 case BOOL:
                     switch (operatorKind) {
@@ -106,7 +107,7 @@ public class Interpreter {
                         case LOGICAL_NEGATION:
                             return new LiteralValue(ConversionUtils.DataType.BOOL, ValueType.BOOL, !(boolean) evaluatedOperand.getValue());
                     }
-                    throw new Exception("Internal error occurred");
+                    throw new PopcornException("Could not perform unary operation {0} on type {1}", operatorKind, dataType);
 
                 case STRING:
                 default:

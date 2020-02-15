@@ -1,11 +1,12 @@
 package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.lexical.TokenType;
+import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.enums.BinaryOperatorType;
 import com.popcorn.utils.enums.UnaryOperatorType;
 import com.popcorn.utils.enums.ValueType;
 
-import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,18 +24,12 @@ public class ConversionUtils {
 
     private static final TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL };
     private static final TokenType[] types = { TokenType.VOID, TokenType.INT, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
-    private static final TokenType[] unaryOperators = { TokenType.PLUS, TokenType.MINUS };
+    private static final TokenType[] unaryOperators = { TokenType.PLUS, TokenType.MINUS, TokenType.EXCLAMATION };
+    private static final TokenType[] binaryOperators = { TokenType.PLUS, TokenType.MINUS, TokenType.ASTERISK, TokenType.F_SLASH, TokenType.MODULO,
+                                                            TokenType.DOUBLE_AMPERSAND, TokenType.DOUBLE_PIPE, TokenType.DOUBLE_EQUALS, TokenType.NOT_EQUALS };
 
     public static TokenType[] getLiterals() {
         return literals;
-    }
-
-    public static TokenType[] getTypes() {
-        return types;
-    }
-
-    public static TokenType[] getUnaryOperators() {
-        return unaryOperators;
     }
 
     public static <T> LinkedList<T> toLinkedList(List<T> list) {
@@ -51,7 +46,7 @@ public class ConversionUtils {
         return -1;
     }
 
-    public static float toFloatRespresentation(String value) {
+    public static float toFloatRepresentation(String value) {
         try {
             return Float.parseFloat(value);
         } catch (NumberFormatException ex) {
@@ -71,7 +66,7 @@ public class ConversionUtils {
                 return toIntegerRepresentation(value);
 
             case FLOAT_LITERAL:
-                return toFloatRespresentation(value);
+                return toFloatRepresentation(value);
 
             case BOOL_LITERAL:
                 return toBooleanRepresentation(value);
@@ -83,56 +78,22 @@ public class ConversionUtils {
     }
 
     public static boolean isLiteral(TokenType type) {
-        switch (type) {
-            case INT_LITERAL:
-            case FLOAT_LITERAL:
-            case BOOL_LITERAL:
-            case STRING_LITERAL:
-                return true;
-
-            default:
-                return false;
-        }
+        return Arrays.stream(literals).anyMatch(tokenType -> tokenType == type);
     }
 
     public static boolean isType(TokenType type) {
-        switch (type) {
-            case INT:
-            case FLOAT:
-            case BOOL:
-            case STRING:
-                return true;
-
-            default:
-                return false;
-        }
+        return Arrays.stream(types).anyMatch(tokenType -> tokenType == type);
     }
 
     public static boolean isUnaryOperator(TokenType type) {
-        switch (type) {
-            case PLUS:
-            case MINUS:
-                return true;
-
-            default:
-                return false;
-        }
+        return Arrays.stream(unaryOperators).anyMatch(tokenType -> tokenType == type);
     }
 
     public static boolean isBinaryOperator(TokenType type) {
-        switch (type) {
-            case PLUS:
-            case MINUS:
-            case ASTERISK:
-            case F_SLASH:
-                return true;
-
-            default:
-                return false;
-        }
+        return Arrays.stream(binaryOperators).anyMatch(tokenType -> tokenType == type);
     }
 
-    public static DataType toInternalType(TokenType type) throws Exception {
+    public static DataType toInternalType(TokenType type) throws PopcornException {
         if (isLiteral(type)) {
             switch (type) {
                 case INT_LITERAL:
@@ -148,7 +109,7 @@ public class ConversionUtils {
                     return DataType.STRING;
 
                 default:
-                    throw new Exception(MessageFormat.format("Unexpected literal {0}", PrintUtils.toPrintable(type)));
+                    throw new PopcornException("Unexpected literal {0}", PrintUtils.toPrintable(type));
             }
         }
 
@@ -167,14 +128,14 @@ public class ConversionUtils {
                     return DataType.STRING;
 
                 default:
-                    throw new Exception(MessageFormat.format("Unexpected type {0}", PrintUtils.toPrintable(type)));
+                    throw new PopcornException("Unexpected type {0}", PrintUtils.toPrintable(type));
             }
         }
 
-        throw new Exception(MessageFormat.format("Type {0} is not a literal", PrintUtils.toPrintable(type)));
+        throw new PopcornException("Type {0} is not a literal", PrintUtils.toPrintable(type));
     }
 
-    public static UnaryOperatorType toUnaryOperator(TokenType type) throws Exception {
+    public static UnaryOperatorType toUnaryOperator(TokenType type) throws PopcornException {
         if (isUnaryOperator(type)) {
             switch (type) {
                 case PLUS:
@@ -187,14 +148,14 @@ public class ConversionUtils {
                     return UnaryOperatorType.LOGICAL_NEGATION;
 
                 default:
-                    throw new Exception(MessageFormat.format("Unexpected unary operator {0}", PrintUtils.toPrintable(type)));
+                    throw new PopcornException("Unexpected unary operator {0}", PrintUtils.toPrintable(type));
             }
         }
 
-        return UnaryOperatorType.NON_EXISTENT;
+        throw new PopcornException("Unexpected unary operator {0}", PrintUtils.toPrintable(type));
     }
 
-    public static BinaryOperatorType toBinaryOperator(TokenType type) throws Exception {
+    public static BinaryOperatorType toBinaryOperator(TokenType type) throws PopcornException {
         if (isBinaryOperator(type)) {
             switch (type) {
                 case PLUS:
@@ -222,11 +183,11 @@ public class ConversionUtils {
                     return BinaryOperatorType.LOGICAL_NOT_EQUALS;
 
                 default:
-                    throw new Exception(MessageFormat.format("Unexpected binary operator {0}", PrintUtils.toPrintable(type)));
+                    throw new PopcornException("Unexpected binary operator {0}", PrintUtils.toPrintable(type));
             }
         }
 
-        return BinaryOperatorType.NON_EXISTENT;
+        throw new PopcornException("Unexpected binary operator {0}", PrintUtils.toPrintable(type));
     }
 
     public static ValueType toValueType(TokenType type) {

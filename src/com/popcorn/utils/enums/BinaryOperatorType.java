@@ -11,8 +11,5 @@ public enum BinaryOperatorType {
     LOGICAL_AND,
     LOGICAL_OR,
     LOGICAL_EQUALS,
-    LOGICAL_NOT_EQUALS,
-
-    NON_EXISTENT,
-
+    LOGICAL_NOT_EQUALS, NON_EXISTENT,
 }

@@ -21,7 +21,9 @@ public class BinaryExpressionNode extends ExpressionNode {
 
         try {
             this.operatorType = ConversionUtils.toBinaryOperator(operatorToken.getType());
-        } catch (Exception ex) {}
+        } catch (Exception ignored) {
+            this.operatorType = BinaryOperatorType.NON_EXISTENT;
+        }
     }
 
     public ExpressionNode getLeft() {

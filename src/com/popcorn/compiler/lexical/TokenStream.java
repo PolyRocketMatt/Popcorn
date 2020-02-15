@@ -1,16 +1,14 @@
 package com.popcorn.compiler.lexical;
 
+import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
-import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class TokenStream {
 
     private DiagnosticsBag diagnostics;
-
     private LinkedList<Token> tokens;
     private int index;
 
@@ -20,26 +18,8 @@ public class TokenStream {
         this.index = 0;
     }
 
-    public TokenStream(DiagnosticsBag diagnostics, List<Token> tokens) {
-        this.diagnostics = new DiagnosticsBag();
-        this.tokens = ConversionUtils.toLinkedList(tokens);
-        this.index = 0;
-    }
-
     public DiagnosticsBag getDiagnostics() {
         return diagnostics;
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public static TokenStream fromStream(DiagnosticsBag diagnostics, TokenStream stream) {
-        return new TokenStream(diagnostics, stream.getTokens());
     }
 
     public void add(Token token) {
@@ -110,31 +90,23 @@ public class TokenStream {
         }
     }
 
-    public Token match(TokenType type, boolean addDiagnostic) {
+    public Token match(TokenType type) throws PopcornException {
         if (current().getType().equals(type))
             return get();
 
-        if (addDiagnostic) {
-            diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(type));
-
-            return null;
-        }
-
-        return new Token(type, null, current().getLine(), current().getColumn());
+        throw new PopcornException("Unexpected token {0}, expected {1}", current().getType(), type);
     }
 
-    public Token matchAny(TokenType[] types) {
+    public Token matchAny(TokenType[] types) throws PopcornException {
         for (TokenType type : types) {
-            Token optional = match(type, false);
+            Token optional = match(type);
 
             if (optional.getValue() != null) {
                 return optional;
             }
         }
 
-        diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(types));
-
-        return new Token(types[0], null, current().getLine(), current().getColumn());
+        throw new PopcornException("Unexpected token {0}, expected one of {1}", current().getType(), types);
     }
 
     public void rollback(int offset) {

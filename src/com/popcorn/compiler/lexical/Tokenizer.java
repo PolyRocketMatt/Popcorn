@@ -4,21 +4,19 @@ import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tokenizer {
 
+    private DiagnosticsBag diagnostics;
     private String source;
     private TokenStream stream;
     private LinkedList<TokenData> tokenData;
 
-    private DiagnosticsBag diagnostics;
-
     public Tokenizer() {
-        this.tokenData = new LinkedList<>();
         this.diagnostics = new DiagnosticsBag();
+        this.tokenData = new LinkedList<>();
 
         add(TokenType.FLOAT_LITERAL, "-?\\d+(\\.\\d+)?");
         add(TokenType.STRING_LITERAL,"\"(.*)?\"");
@@ -91,16 +89,8 @@ public class Tokenizer {
         this.source = source;
     }
 
-    public String getSource() {
-        return source;
-    }
-
     public TokenStream getStream() {
         return stream;
-    }
-
-    public List<TokenData> getTokenData() {
-        return tokenData;
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -111,22 +101,21 @@ public class Tokenizer {
         this.stream = new TokenStream();
         int lineIndex = 1;
         for (String line : source.split("\n")) {
-            if (line.startsWith("//")) {
-                continue;
-            } else {
+            if (!line.startsWith("//")) {
                 line = line.trim();
                 lineIndex++;
+
                 int length = line.length();
                 while (!line.isEmpty()) {
                     int remaining = line.length();
                     boolean match = false;
-
                     for (TokenData data : tokenData) {
                         Matcher matcher = data.getPattern().matcher(line);
+
                         if (matcher.find()) {
                             String group = matcher.group().trim();
                             Object value = ConversionUtils.toValidRepresentation(data.getType(), group);
-                            Token token = null;
+                            Token token;
 
                             if (data.getType() == TokenType.FLOAT_LITERAL) {
                                 if (group.contains(".")) {
@@ -157,7 +146,6 @@ public class Tokenizer {
         }
 
         stream.add(new Token(TokenType.EOF, "EOF", ++lineIndex, 0));
-        diagnostics.addBag(stream.getDiagnostics());
     }
 
 }

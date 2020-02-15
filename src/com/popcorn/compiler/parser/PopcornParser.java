@@ -8,6 +8,7 @@ import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.compiler.node.statements.IfStatementNode;
+import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
@@ -23,14 +24,12 @@ public class PopcornParser {
     private TokenStream stream;
 
     private ParentNode parentNode;
-    private Node statementNode;
 
     public PopcornParser(DiagnosticsBag diagnostics, TokenStream stream) {
         this.diagnostics = diagnostics;
         this.stream = stream;
 
         parentNode = new ParentNode();
-        statementNode = null;
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -45,21 +44,21 @@ public class PopcornParser {
         return parentNode;
     }
 
-    public SyntaxTree parse() throws Exception {
+    public SyntaxTree parse() throws PopcornException {
         parentNode.getNodes().add(parseIfStatement());
 
         while (current().getType() != TokenType.EOF) {
             parentNode.getNodes().add(parseIfStatement());
         }
 
-        Token endOfFileToken = match(TokenType.EOF);
+        match(TokenType.EOF);
 
         diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
 
-        return new SyntaxTree(diagnostics.getDiagnostics(), parentNode, endOfFileToken);
+        return new SyntaxTree(diagnostics.getDiagnostics(), parentNode);
     }
 
-    private Node parseIfStatement() throws Exception {
+    private Node parseIfStatement() throws PopcornException {
         if (current().getType() == TokenType.IF) {
             next();
             match(TokenType.OPAREN);
@@ -68,7 +67,6 @@ public class PopcornParser {
             match(TokenType.OBRACE);
 
             IfStatementNode node = new IfStatementNode(expression);
-            statementNode = node;
 
             // TODO: 15/02/2020 Implement variable level for access!
             while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
@@ -83,12 +81,12 @@ public class PopcornParser {
         return parseExpression();
     }
 
-    private ExpressionNode parseExpression() throws Exception {
+    private ExpressionNode parseExpression() throws PopcornException {
         return parseAssignmentExpression();
     }
 
     // TODO: 14/02/2020 Add multi-variable assignments (a = b = c)
-    private ExpressionNode parseAssignmentExpression() throws Exception {
+    private ExpressionNode parseAssignmentExpression() throws PopcornException {
         if (ConversionUtils.isType(current().getType())) {
             ConversionUtils.DataType type = ConversionUtils.toInternalType(get().getType());
             Token identifierToken = match(TokenType.IDENTIFIER);
@@ -108,7 +106,7 @@ public class PopcornParser {
         return parseBinaryExpression(0);
     }
 
-    private ExpressionNode parseBinaryExpression(int parentPrecedence) throws Exception {
+    private ExpressionNode parseBinaryExpression(int parentPrecedence) throws PopcornException {
         ExpressionNode left;
 
         int unaryOperatorPrecedence = SyntaxRules.getUnaryOperatorPrecedence(current().getType());
@@ -135,7 +133,7 @@ public class PopcornParser {
         return left;
     }
 
-    private ExpressionNode parsePrimitiveExpression() throws Exception {
+    private ExpressionNode parsePrimitiveExpression() throws PopcornException {
         try {
             switch (current().getType()) {
                 case OPAREN:
@@ -156,6 +154,7 @@ public class PopcornParser {
                     return new NameExpressionNode(identifierToken);
 
                 default:
+                    // TODO: 15/02/2020 Add NPE catch
                     Token literal = matchAny(ConversionUtils.getLiterals());
                     ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());
 
@@ -165,7 +164,7 @@ public class PopcornParser {
             diagnostics.reportUnexpectedLiteralException(current().getType());
         }
 
-        throw new Exception("Unexpected parser exception while parsing literal");
+        throw new PopcornException("Couldn't not parse type {0} as a literal", current().getType());
     }
 
     // Wrapper Functions
@@ -177,10 +176,6 @@ public class PopcornParser {
         return stream.get();
     }
 
-    private Token getNext() {
-        return stream.getNext();
-    }
-
     private void next() {
         stream.next();
     }
@@ -189,24 +184,19 @@ public class PopcornParser {
         return stream.peek(offset);
     }
 
-    private int peekAny(TokenType type) {
-        return stream.peekAny(type);
-    }
-
-    private Token skip(int offset) {
-        return stream.skip(offset);
-    }
-
     private Token match(TokenType type) {
-        return stream.match(type, true);
+        try {
+            return stream.match(type);
+        } catch (PopcornException ex) {
+            return null;
+        }
     }
 
     private Token matchAny(TokenType[] types) {
-        return stream.matchAny(types);
+        try {
+            return stream.matchAny(types);
+        } catch (PopcornException ex) {
+            return null;
+        }
     }
-
-    private void rollback(int offset) {
-        stream.rollback(offset);
-    }
-
 }

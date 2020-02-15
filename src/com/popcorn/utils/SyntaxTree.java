@@ -1,9 +1,9 @@
 package com.popcorn.utils;
 
-import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.Tokenizer;
 import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.parser.PopcornParser;
+import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.Diagnostic;
 
 import java.util.List;
@@ -12,12 +12,10 @@ public class SyntaxTree {
 
     private List<Diagnostic> diagnostics;
     private ParentNode parentNode;
-    private Token endOfFileToken;
 
-    public SyntaxTree(List<Diagnostic> diagnostics, ParentNode root, Token endOfFileToken) {
+    public SyntaxTree(List<Diagnostic> diagnostics, ParentNode root) {
         this.diagnostics = diagnostics;
         this.parentNode = root;
-        this.endOfFileToken = endOfFileToken;
     }
 
     public List<Diagnostic> getDiagnostics() {
@@ -28,11 +26,7 @@ public class SyntaxTree {
         return parentNode;
     }
 
-    public Token getEndOfFileToken() {
-        return endOfFileToken;
-    }
-
-    public static SyntaxTree parse(String source) {
+    public static SyntaxTree parse(String source) throws PopcornException {
         try {
             Tokenizer tokenizer = new Tokenizer();
 
@@ -41,12 +35,10 @@ public class SyntaxTree {
 
             PopcornParser parser = new PopcornParser(tokenizer.getDiagnostics(), tokenizer.getStream());
 
-            // TODO: 10/02/2020 Do error reporting here! 
-            
+            // TODO: 10/02/2020 Do error reporting here!
             return parser.parse();
         } catch (Exception ex) {
-            System.out.println("Internal error");
-            return null;
+            throw new PopcornException("An exception occurred during lexical/syntactic analysis");
         }
     }
 }

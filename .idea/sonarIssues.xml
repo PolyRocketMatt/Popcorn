@@ -88,6 +88,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/BoundExpressionNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/binding/node/BoundNode.java">
           <value>
             <set />
@@ -243,6 +248,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/ParenthesizedExpression.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/expressions/ParenthesizedExpressionNode.java">
           <value>
             <set />
@@ -279,6 +289,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/parser/PopcornParser.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/exception/PopcornException.java">
           <value>
             <set />
           </value>
@@ -494,6 +509,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/utils/rules/EqualityUtils.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/utils/rules/SyntaxRules.java">
           <value>
             <set />
           </value>

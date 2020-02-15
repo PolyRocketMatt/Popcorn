@@ -19,10 +19,6 @@ public class DiagnosticsBag {
         return diagnostics;
     }
 
-    public void addBag(DiagnosticsBag bag) {
-        diagnostics.addAll(bag.diagnostics);
-    }
-
     private void report(Diagnostic.DiagnosticType type, String message, Object...objects) {
         diagnostics.add(new Diagnostic(MessageFormat.format(message, objects), type));
     }
@@ -31,7 +27,7 @@ public class DiagnosticsBag {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
         String message = "Invalid input \"{0}\" at line {1}, column {2}";
 
-        report(type, message, line, column);
+        report(type, message, input, line, column);
     }
 
     public void reportUnexpectedToken(TokenType unexpected, String expected) {

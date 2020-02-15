@@ -4,6 +4,8 @@ import com.popcorn.compiler.lexical.TokenType;
 
 public class SyntaxRules {
 
+    private SyntaxRules() {}
+
     public static int getBinaryOperatorPrecedence(TokenType type) {
         switch (type) {
             case ASTERISK:

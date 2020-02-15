@@ -87,3 +87,9 @@ Asrc/com/popcorn/compiler/node/expressions/NameExpressionNode.java,a\3\a34350b6
 ,src/com/popcorn/interpreter/Interpreter.java,6\e\6e5947f0aa634d585814e31f4991443380d101b7
 ]
 -src/com/popcorn/compiler/node/ParentNode.java,9\2\92ff60de4f48895da3c0fc16e07afaf822a33000
+p
+@src/com/popcorn/compiler/node/statements/ClosedCompoundNode.java,2\3\23d1cf628fa31a66d8aa63ae96b70eb7584a3a1e
+m
+=src/com/popcorn/compiler/node/statements/IfStatementNode.java,6\0\60e2fe30a8bb400414d34b3152c9718a6e5ff93d
+`
+0src/com/popcorn/compiler/node/StatementNode.java,f\c\fcf731a37b34a296a0fde68c74215a2c83042f65
