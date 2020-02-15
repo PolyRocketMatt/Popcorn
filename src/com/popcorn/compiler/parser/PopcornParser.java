@@ -51,7 +51,7 @@ public class PopcornParser {
         parentNode.getNodes().add(parseIfStatement());
 
         while (current().getType() != TokenType.EOF) {
-            parentNode.getNodes().add(parseIfStatement());
+            parentNode.getNodes().add(parseStatement());
         }
 
         match(TokenType.EOF);
@@ -61,30 +61,34 @@ public class PopcornParser {
         return new SyntaxTree(diagnostics.getDiagnostics(), parentNode);
     }
 
-    private Node parseIfStatement() throws PopcornException {
-        if (current().getType() == TokenType.IF) {
-            next();
-            match(TokenType.OPAREN);
-            ExpressionNode expression = parseBinaryExpression(0);
-            match(TokenType.CPAREN);
-            match(TokenType.OBRACE);
-
-            IfStatementNode node = new IfStatementNode(expression);
-
-            while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
-                node.add(parseExpression());
-            }
-
-            if (statementNode != null)
-                node.setParentNode(statementNode);
-            statementNode = node;
-
+    private Node parseStatement() throws PopcornException {
+        if (get().getType() == TokenType.IF) {
+            Node ifStatementNode = parseIfStatement();
             match(TokenType.CBRACE);
-
-            return node;
+            return ifStatementNode;
         }
 
         return parseExpression();
+    }
+
+    private Node parseIfStatement() throws PopcornException {
+        next();
+        match(TokenType.OPAREN);
+        ExpressionNode expression = parseBinaryExpression(0);
+        match(TokenType.CPAREN);
+        match(TokenType.OBRACE);
+
+        IfStatementNode node = new IfStatementNode(expression);
+
+        while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
+            node.add(parseExpression());
+        }
+
+        if (statementNode != null)
+            node.setParentNode(statementNode);
+        statementNode = node;
+
+        return node;
     }
 
     private ExpressionNode parseExpression() throws PopcornException {

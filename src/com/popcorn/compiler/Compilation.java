@@ -4,6 +4,7 @@ import com.popcorn.compiler.binding.Binder;
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
+import com.popcorn.exception.PopcornException;
 import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.Diagnostic;
@@ -54,33 +55,28 @@ public class Compilation {
 
     public void exec() {
         for (Node node : tree.getParentNode().getNodes()) {
-            if (node instanceof ExpressionNode) {
+            if (node instanceof ExpressionNode)
                 values.add(evaluate((ExpressionNode) node));
-            }
         }
     }
 
     // TODO: 10/02/2020 Make type checker more accessible
     // TODO: 11/02/2020 Fix clear binder diagnostics
-    private BoundNode createBoundNode(ExpressionNode node) throws Exception {
+    private BoundNode createBoundNode(ExpressionNode node) throws PopcornException {
         BoundNode boundNode = binder.bindExpression(node);
 
-        diagnostics.addAll(binder.getDiagnostics().getDiagnostics());
-
-        if (!diagnostics.isEmpty()) {
-            binder.getDiagnostics().getDiagnostics().clear();
-
-            return null;
-        } else {
-            //Update the interpreter variables
+        if (binder.getDiagnostics().getDiagnostics().isEmpty()) {
             for (VariableSymbol symbol : binder.getVariables()) {
-                if (!interpreter.getVariables().containsKey(symbol)) {
+                if (!interpreter.getVariables().containsKey(symbol))
                     interpreter.getVariables().put(symbol, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
-                }
             }
-
-            return boundNode;
+        } else {
+            for (Diagnostic diagnostic : binder.getDiagnostics().getDiagnostics())
+                System.out.println(diagnostic.getMessage());
+            binder.getDiagnostics().getDiagnostics().clear();
         }
+
+        return boundNode;
     }
 
     public LiteralValue evaluate(ExpressionNode unboundNode) {
@@ -93,15 +89,13 @@ public class Compilation {
                 if (interpreter.getDiagnostics().getDiagnostics().isEmpty()) {
                     return value;
                 } else {
-                    for (Diagnostic diagnostic : interpreter.getDiagnostics().getDiagnostics()) {
+                    for (Diagnostic diagnostic : interpreter.getDiagnostics().getDiagnostics())
                         System.out.println(diagnostic.getMessage());
-                    }
-
                     interpreter.getDiagnostics().getDiagnostics().clear();
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (PopcornException ex) {
+            System.out.println(ex.getMessage());
         }
 
         return new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null);
