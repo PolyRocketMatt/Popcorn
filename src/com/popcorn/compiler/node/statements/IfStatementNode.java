@@ -2,6 +2,7 @@ package com.popcorn.compiler.node.statements;
 
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
+import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.node.StatementNode;
 import com.popcorn.utils.enums.NodeType;
 
@@ -9,10 +10,12 @@ import java.util.ArrayList;
 
 public class IfStatementNode implements StatementNode {
 
+    private Node parentNode;
     private ExpressionNode expression;
     private ArrayList<Node> body;
 
     public IfStatementNode(ExpressionNode expression) {
+        this.parentNode = null;
         this.expression = expression;
         this.body = new ArrayList<>();
     }
@@ -23,6 +26,16 @@ public class IfStatementNode implements StatementNode {
 
     public void add(Node node) {
         body.add(node);
+    }
+
+    @Override
+    public Node getParentNode() {
+        return parentNode;
+    }
+
+    @Override
+    public void setParentNode(Node parentNode) {
+        this.parentNode = parentNode;
     }
 
     @Override

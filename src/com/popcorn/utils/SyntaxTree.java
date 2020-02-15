@@ -36,9 +36,19 @@ public class SyntaxTree {
 
             if (tokenizer.getDiagnostics().getDiagnostics().isEmpty()) {
                 PopcornParser parser = new PopcornParser(tokenizer.getDiagnostics(), tokenizer.getStream());
+                SyntaxTree tree = parser.parse();
 
-                // TODO: 10/02/2020 Do error reporting here!
-                return parser.parse();
+                if (parser.getStream().getDiagnostics().getDiagnostics().isEmpty() &&
+                    parser.getDiagnostics().getDiagnostics().isEmpty()) {
+                    return tree;
+                } else {
+                    for (Diagnostic diagnostic : parser.getStream().getDiagnostics().getDiagnostics())
+                        System.out.println(diagnostic.getMessage());
+                    for (Diagnostic diagnostic : parser.getDiagnostics().getDiagnostics())
+                        System.out.println(diagnostic.getMessage());
+
+                    return new SyntaxTree(new ArrayList<>(), new ParentNode());
+                }
             } else {
                 for (Diagnostic diagnostic : tokenizer.getDiagnostics().getDiagnostics())
                     System.out.println(diagnostic.getMessage());

@@ -48,27 +48,26 @@ public class PopcornParser {
     }
 
     public SyntaxTree parse() throws PopcornException {
-        parentNode.getNodes().add(parseIfStatement());
+        parentNode.getNodes().add(parseStatement());
 
         while (current().getType() != TokenType.EOF) {
             parentNode.getNodes().add(parseStatement());
         }
 
         match(TokenType.EOF);
-
-        diagnostics.getDiagnostics().addAll(stream.getDiagnostics().getDiagnostics());
-
         return new SyntaxTree(diagnostics.getDiagnostics(), parentNode);
     }
 
     private Node parseStatement() throws PopcornException {
-        if (get().getType() == TokenType.IF) {
+        if (current().getType() == TokenType.IF) {
+            next();
+
             Node ifStatementNode = parseIfStatement();
             match(TokenType.CBRACE);
             return ifStatementNode;
         }
 
-        return parseExpression();
+        return parseAssignmentExpression();
     }
 
     private Node parseIfStatement() throws PopcornException {
@@ -84,8 +83,12 @@ public class PopcornParser {
             node.add(parseExpression());
         }
 
+        // TODO: 15/02/2020 Maybe throw exception when parent is null
+        // TODO: 15/02/2020 Parent Node should (in future) always be function
         if (statementNode != null)
             node.setParentNode(statementNode);
+        else
+            node.setParentNode(parentNode);
         statementNode = node;
 
         return node;
@@ -153,11 +156,6 @@ public class PopcornParser {
 
                     return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
 
-                case NULL:
-                    Token nullToken = get();
-
-                    return new NullExpressionNode(nullToken, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, new NullValue()));
-
                 case IDENTIFIER:
                     Token identifierToken = get();
 
@@ -195,18 +193,10 @@ public class PopcornParser {
     }
 
     private Token match(TokenType type) {
-        try {
-            return stream.match(type);
-        } catch (PopcornException ex) {
-            return null;
-        }
+        return stream.match(type, true);
     }
 
     private Token matchAny(TokenType[] types) {
-        try {
-            return stream.matchAny(types);
-        } catch (PopcornException ex) {
-            return null;
-        }
+        return stream.matchAny(types);
     }
 }

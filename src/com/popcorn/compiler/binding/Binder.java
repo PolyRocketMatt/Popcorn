@@ -39,8 +39,6 @@ public class Binder {
                 return bindLiteralExpression((LiteralExpressionNode) node);
             case NAME_NODE:
                 return bindNameExpression((NameExpressionNode) node);
-            case NULL_NODE:
-                return bindNullExpression((NullExpressionNode) node);
             case ASSIGNMENT_NODE:
                 return bindAssignmentExpression((AssignmentExpressionNode) node);
             case PARENTHESIZED_EXPRESSION_NODE:
@@ -70,10 +68,6 @@ public class Binder {
         }
 
         return new BoundNameExpressionNode(symbolization);
-    }
-
-    private BoundExpressionNode bindNullExpression(NullExpressionNode node) {
-        return new BoundNullExpressionNode(node.getNullValue());
     }
 
     private BoundExpressionNode bindAssignmentExpression(AssignmentExpressionNode node) throws PopcornException {

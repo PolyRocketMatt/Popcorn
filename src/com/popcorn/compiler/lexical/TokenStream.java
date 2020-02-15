@@ -3,6 +3,7 @@ package com.popcorn.compiler.lexical;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedList;
 
@@ -90,27 +91,26 @@ public class TokenStream {
         }
     }
 
-    public Token match(TokenType type) throws PopcornException {
+    public Token match(TokenType type, boolean diagnose) {
         if (current().getType().equals(type))
             return get();
 
-        throw new PopcornException("Unexpected token {0}, expected {1}", current().getType(), type);
+        if (diagnose)
+            diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(type));
+        return new Token(type, null, current().getLine(), current().getColumn());
     }
 
-    public Token matchAny(TokenType[] types) throws PopcornException {
+    public Token matchAny(TokenType[] types) {
         for (TokenType type : types) {
-            Token optional = match(type);
+            Token optional = match(type, false);
 
             if (optional.getValue() != null) {
                 return optional;
             }
         }
 
-        throw new PopcornException("Unexpected token {0}, expected one of {1}", current().getType(), types);
-    }
-
-    public void rollback(int offset) {
-        index = Math.max(index - offset, 0);
+        diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(types));
+        return new Token(types[0], null, current().getLine(), current().getColumn());
     }
 
     @Override
