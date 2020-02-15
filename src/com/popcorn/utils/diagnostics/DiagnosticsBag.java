@@ -1,7 +1,10 @@
 package com.popcorn.utils.diagnostics;
 
 import com.popcorn.compiler.lexical.TokenType;
+import com.popcorn.utils.enums.BoundNodeKind;
+import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.utilities.PrintUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,11 +33,11 @@ public class DiagnosticsBag {
         report(type, message, input, line, column);
     }
 
-    public void reportUnexpectedToken(TokenType unexpected, String expected) {
+    public void reportUnexpectedToken(TokenType unexpected, TokenType[] expected) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
-        String message = "Unexpected token {0}, expected {1}";
+        String message = "Unexpected token \"{0}\", expected token(s) \"{1}\"";
 
-        report(type, message, unexpected, expected);
+        report(type, message, PrintUtils.toPrintable(unexpected), PrintUtils.toPrintable(expected));
     }
 
     public void reportUnexpectedLiteralException(TokenType tokenType) {
@@ -72,6 +75,20 @@ public class DiagnosticsBag {
         report(type, message, identifier);
     }
 
+    public void reportUndefinedInstruction(BoundNodeKind kind) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "{0} cannot be interpreted";
+
+        report(type, message, kind);
+    }
+
+    public void reportMissingExpression(NodeType nodeType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Missing expression for {0}";
+
+        report(type, message, nodeType);
+    }
+
     public void reportIncorrectType(String identifier, ConversionUtils.DataType expected, ConversionUtils.DataType actual) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
         String message = "Can't assign type {0} to variable {1}, expected expression of type {2}";
@@ -91,5 +108,12 @@ public class DiagnosticsBag {
         String message = "Illegal Arithmetic: Division by 0";
 
         report(type, message);
+    }
+
+    public void reportComparisonNotBoolean(ConversionUtils.DataType dataType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Illegal comparison, expression yields {0}, expected " + ConversionUtils.DataType.BOOL;
+
+        report(type, message, dataType);
     }
 }

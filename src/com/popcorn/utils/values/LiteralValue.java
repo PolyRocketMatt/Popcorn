@@ -26,4 +26,13 @@ public class LiteralValue {
     public Object getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "LiteralValue{" +
+                "type=" + type +
+                ", valueType=" + valueType +
+                ", value=" + value +
+                '}';
+    }
 }

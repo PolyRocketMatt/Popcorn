@@ -1,22 +1,29 @@
 package com.popcorn.compiler.node.statements;
 
+import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
-import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.node.StatementNode;
 import com.popcorn.utils.enums.NodeType;
+import com.popcorn.utils.utilities.ConversionUtils;
 
 import java.util.ArrayList;
 
 public class IfStatementNode implements StatementNode {
 
     private Node parentNode;
+    private Token openParenthesisToken;
     private ExpressionNode expression;
+    private Token closedParenthesisToken;
+    private Token openBraceToken;
     private ArrayList<Node> body;
 
-    public IfStatementNode(ExpressionNode expression) {
+    public IfStatementNode(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken, Token openBraceToken) {
         this.parentNode = null;
+        this.openParenthesisToken = openParenthesisToken;
         this.expression = expression;
+        this.closedParenthesisToken = closedParenthesisToken;
+        this.openBraceToken = openBraceToken;
         this.body = new ArrayList<>();
     }
 
@@ -45,13 +52,15 @@ public class IfStatementNode implements StatementNode {
 
     @Override
     public Node[] getChildren() {
-        Node[] nodes = new Node[body.size() + 1];
+        Node[] parent = new Node[] {
+                openParenthesisToken,
+                expression,
+                closedParenthesisToken,
+                openParenthesisToken
+        };
+        Node[] children = body.toArray(new Node[body.size()]);
 
-        nodes[0] = expression;
-
-        for (int i = 1; i < nodes.length; i++)
-            nodes[i] = body.get(i);
-        return nodes;
+        return ConversionUtils.concatenateArrays(parent, children);
     }
 
     @Override

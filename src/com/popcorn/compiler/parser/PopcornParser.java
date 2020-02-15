@@ -9,15 +9,15 @@ import com.popcorn.compiler.node.ParentNode;
 import com.popcorn.compiler.node.StatementNode;
 import com.popcorn.compiler.node.expressions.*;
 import com.popcorn.compiler.node.statements.IfStatementNode;
+import com.popcorn.compiler.node.statements.PrintStatementNode;
 import com.popcorn.exception.PopcornException;
+import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.enums.ValueType;
 import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
-import com.popcorn.utils.values.NullValue;
-
 
 public class PopcornParser {
 
@@ -43,10 +43,6 @@ public class PopcornParser {
         return stream;
     }
 
-    public ParentNode getParentNode() {
-        return parentNode;
-    }
-
     public SyntaxTree parse() throws PopcornException {
         parentNode.getNodes().add(parseStatement());
 
@@ -59,28 +55,40 @@ public class PopcornParser {
     }
 
     private Node parseStatement() throws PopcornException {
-        if (current().getType() == TokenType.IF) {
-            next();
+        switch (current().getType()) {
+            case IF:
+                next();
 
-            Node ifStatementNode = parseIfStatement();
-            match(TokenType.CBRACE);
-            return ifStatementNode;
+                Node ifStatementNode = parseIfStatement();
+                match(TokenType.CBRACE);
+                return ifStatementNode;
+            case PRINT:
+                next();
+
+                return parsePrintStatement();
+            default:
+                return parseAssignmentExpression();
         }
-
-        return parseAssignmentExpression();
     }
 
     private Node parseIfStatement() throws PopcornException {
-        next();
-        match(TokenType.OPAREN);
-        ExpressionNode expression = parseBinaryExpression(0);
-        match(TokenType.CPAREN);
-        match(TokenType.OBRACE);
+        Token openParenthesisToken = match(TokenType.OPAREN);
+        ExpressionNode expression;
 
-        IfStatementNode node = new IfStatementNode(expression);
+        if (current().getType() != TokenType.EOF)
+            expression = parseBinaryExpression(0);
+        else {
+            diagnostics.reportMissingExpression(NodeType.IF_STATEMENT_NODE);
+            expression = new LiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+        }
 
-        while (current().getType() != TokenType.CBRACE || current().getType() != TokenType.EOF) {
-            node.add(parseExpression());
+        Token closedParenthesisToken = match(TokenType.CPAREN);
+        Token openBraceToken = match(TokenType.OBRACE);
+
+        IfStatementNode node = new IfStatementNode(openParenthesisToken, expression, closedParenthesisToken, openBraceToken);
+
+        while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
+            node.add(parseStatement());
         }
 
         // TODO: 15/02/2020 Maybe throw exception when parent is null
@@ -90,6 +98,32 @@ public class PopcornParser {
         else
             node.setParentNode(parentNode);
         statementNode = node;
+
+        return node;
+    }
+
+    private Node parsePrintStatement() throws PopcornException {
+        Token openParenthesisToken = match(TokenType.OPAREN);
+        ExpressionNode expression;
+
+        if (current().getType() != TokenType.EOF)
+            expression = parseBinaryExpression(0);
+        else {
+            diagnostics.reportMissingExpression(NodeType.PRINT_STATEMENT_NODE);
+            expression = new LiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+        }
+
+        Token closedParenthesisToken = match(TokenType.CPAREN);
+
+        PrintStatementNode node = new PrintStatementNode(openParenthesisToken, expression, closedParenthesisToken);
+
+        // TODO: 15/02/2020 Maybe throw exception when parent is null
+        // TODO: 15/02/2020 Parent Node should (in future) always be function
+        if (statementNode != null)
+            node.setParentNode(statementNode);
+        else
+            node.setParentNode(parentNode);
+        //No need to update statement node, this is a one line statement!
 
         return node;
     }

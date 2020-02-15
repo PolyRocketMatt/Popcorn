@@ -5,7 +5,7 @@ import com.popcorn.utils.enums.BoundNodeKind;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.VariableSymbol;
 
-public class BoundAssignmentExpressionNode extends BoundExpressionNode {
+public class BoundAssignmentExpressionNode implements BoundExpressionNode {
 
     private VariableSymbol variable;
     private BoundExpressionNode expression;

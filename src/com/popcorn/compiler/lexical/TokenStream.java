@@ -96,7 +96,7 @@ public class TokenStream {
             return get();
 
         if (diagnose)
-            diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(type));
+            diagnostics.reportUnexpectedToken(current().getType(), new TokenType[] { type });
         return new Token(type, null, current().getLine(), current().getColumn());
     }
 
@@ -109,7 +109,7 @@ public class TokenStream {
             }
         }
 
-        diagnostics.reportUnexpectedToken(current().getType(), PrintUtils.toPrintable(types));
+        diagnostics.reportUnexpectedToken(current().getType(), types);
         return new Token(types[0], null, current().getLine(), current().getColumn());
     }
 

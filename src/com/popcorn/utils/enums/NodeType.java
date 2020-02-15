@@ -10,5 +10,6 @@ public enum NodeType {
     NAME_NODE,
     ASSIGNMENT_NODE,
     IF_STATEMENT_NODE,
+    PRINT_STATEMENT_NODE
 
 }

@@ -5,7 +5,7 @@ import com.popcorn.utils.enums.BoundNodeKind;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
 
-public class BoundLiteralExpressionNode extends BoundExpressionNode {
+public class BoundLiteralExpressionNode implements BoundExpressionNode {
 
     private LiteralValue value;
 

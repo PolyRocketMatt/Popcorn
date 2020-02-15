@@ -8,25 +8,26 @@ import com.popcorn.utils.values.LiteralValue;
 import com.popcorn.utils.values.VariableSymbol;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class PrintUtils {
 
     private PrintUtils() {}
 
     public static String toPrintable(TokenType[] types) {
-        StringBuilder builder = new StringBuilder("{");
+        StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < types.length; i++) {
             TokenType type = types[i];
 
             if (i != types.length - 1)
-                builder.append(type.toString()).append(", ");
+                if (ConversionUtils.isLiteral(type))
+                    builder.append(type.toString()).append(", ");
+                else
+                    builder.append(PrintUtils.toPrintable(type)).append(", ");
             else
-                builder.append(type.toString());
+                builder.append(PrintUtils.toPrintable(type));
         }
 
-        builder.append("}");
         return builder.toString();
     }
 

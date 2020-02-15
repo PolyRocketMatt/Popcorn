@@ -5,7 +5,7 @@ import com.popcorn.compiler.binding.operators.BoundBinaryOperator;
 import com.popcorn.utils.enums.BoundNodeKind;
 import com.popcorn.utils.utilities.ConversionUtils;
 
-public class BoundBinaryExpressionNode extends BoundExpressionNode {
+public class BoundBinaryExpressionNode implements BoundExpressionNode {
 
     private BoundBinaryOperator operator;
     private BoundExpressionNode left;

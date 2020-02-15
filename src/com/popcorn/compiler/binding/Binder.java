@@ -1,11 +1,15 @@
 package com.popcorn.compiler.binding;
 
 import com.popcorn.compiler.binding.node.BoundExpressionNode;
+import com.popcorn.compiler.binding.node.BoundNode;
+import com.popcorn.compiler.binding.node.BoundStatementNode;
 import com.popcorn.compiler.binding.node.expressions.*;
+import com.popcorn.compiler.binding.node.statements.*;
 import com.popcorn.compiler.binding.operators.BoundBinaryOperator;
 import com.popcorn.compiler.binding.operators.BoundUnaryOperator;
-import com.popcorn.compiler.node.ExpressionNode;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.compiler.node.expressions.*;
+import com.popcorn.compiler.node.statements.*;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.enums.ValueType;
@@ -33,7 +37,7 @@ public class Binder {
         return variables;
     }
 
-    public BoundExpressionNode bindExpression(ExpressionNode node) throws PopcornException {
+    public BoundNode bindNode(Node node) throws PopcornException {
         switch (node.getNodeType()) {
             case LITERAL_NODE:
                 return bindLiteralExpression((LiteralExpressionNode) node);
@@ -47,6 +51,10 @@ public class Binder {
                 return bindUnaryExpression((UnaryExpressionNode) node);
             case BINARY_OPERATOR_NODE:
                 return bindBinaryExpression((BinaryExpressionNode) node);
+            case IF_STATEMENT_NODE:
+                return bindIfStatement((IfStatementNode) node);
+            case PRINT_STATEMENT_NODE:
+                return bindPrintStatement((PrintStatementNode) node);
             default:
                 throw new PopcornException("Unexpected syntax {0}", node.getNodeType());
         }
@@ -74,7 +82,7 @@ public class Binder {
         String name = (String) node.getIdentifierToken().getValue();
         if (node.getType() != ConversionUtils.DataType.NOT_DEFINED) {
             ConversionUtils.DataType type = node.getType();
-            BoundExpressionNode boundExpression = bindExpression(node.getExpression());
+            BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
 
             if (variables.stream().anyMatch(variableSymbol -> variableSymbol.getName().equals(name))) {
                 diagnostics.reportAlreadyDefinedIdentifier(name);
@@ -88,7 +96,7 @@ public class Binder {
 
             return new BoundAssignmentExpressionNode(symbolization, boundExpression);
         } else {
-            BoundExpressionNode boundExpression = bindExpression(node.getExpression());
+            BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
             VariableSymbol symbolization = variables.stream()
                     .filter(variableSymbol -> variableSymbol.getName().equals(name)).findFirst().orElse(null);
 
@@ -109,11 +117,11 @@ public class Binder {
     }
 
     private BoundExpressionNode bindParenthesizedExpression(ParenthesizedExpression node) throws PopcornException {
-        return bindExpression(node.getExpression());
+        return (BoundExpressionNode) bindNode(node.getExpression());
     }
 
     private BoundExpressionNode bindUnaryExpression(UnaryExpressionNode node) throws PopcornException {
-        BoundExpressionNode boundOperand = bindExpression(node.getOperand());
+        BoundExpressionNode boundOperand = (BoundExpressionNode) bindNode(node.getOperand());
         BoundUnaryOperator boundOperator = BoundUnaryOperator.bind(node.getOperatorToken().getType(), boundOperand.getType());
 
         if (boundOperator == null) {
@@ -125,8 +133,8 @@ public class Binder {
     }
 
     private BoundExpressionNode bindBinaryExpression(BinaryExpressionNode node) throws PopcornException {
-        BoundExpressionNode boundLeft = bindExpression(node.getLeft());
-        BoundExpressionNode boundRight = bindExpression(node.getRight());
+        BoundExpressionNode boundLeft = (BoundExpressionNode) bindNode(node.getLeft());
+        BoundExpressionNode boundRight = (BoundExpressionNode) bindNode(node.getRight());
         BoundBinaryOperator boundOperator = BoundBinaryOperator.bind(node.getOperatorToken().getType(), boundLeft.getType(), boundRight.getType());
 
         if (boundOperator == null) {
@@ -135,5 +143,20 @@ public class Binder {
         }
 
         return new BoundBinaryExpressionNode(boundOperator, boundLeft, boundRight);
+    }
+
+    private BoundStatementNode bindIfStatement(IfStatementNode node) throws PopcornException {
+        BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
+        ArrayList<BoundNode> boundNodes = new ArrayList<>();
+
+        for (Node bodyNode : node.getBody())
+            boundNodes.add(bindNode(bodyNode));
+        return new BoundIfStatementNode(boundExpression, boundNodes);
+    }
+
+    private BoundStatementNode bindPrintStatement(PrintStatementNode node) throws PopcornException {
+        BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
+
+        return new BoundPrintStatementNode(boundExpression);
     }
 }

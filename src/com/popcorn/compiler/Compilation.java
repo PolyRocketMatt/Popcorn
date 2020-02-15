@@ -2,7 +2,6 @@ package com.popcorn.compiler;
 
 import com.popcorn.compiler.binding.Binder;
 import com.popcorn.compiler.binding.node.BoundNode;
-import com.popcorn.compiler.node.ExpressionNode;
 import com.popcorn.compiler.node.Node;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.interpreter.Interpreter;
@@ -55,15 +54,14 @@ public class Compilation {
 
     public void exec() {
         for (Node node : tree.getParentNode().getNodes()) {
-            if (node instanceof ExpressionNode)
-                values.add(evaluate((ExpressionNode) node));
+            values.add(evaluate(node));
         }
     }
 
     // TODO: 10/02/2020 Make type checker more accessible
     // TODO: 11/02/2020 Fix clear binder diagnostics
-    private BoundNode createBoundNode(ExpressionNode node) throws PopcornException {
-        BoundNode boundNode = binder.bindExpression(node);
+    private BoundNode createBoundNode(Node node) throws PopcornException {
+        BoundNode boundNode = binder.bindNode(node);
 
         if (binder.getDiagnostics().getDiagnostics().isEmpty()) {
             for (VariableSymbol symbol : binder.getVariables()) {
@@ -79,7 +77,7 @@ public class Compilation {
         return boundNode;
     }
 
-    public LiteralValue evaluate(ExpressionNode unboundNode) {
+    public LiteralValue evaluate(Node unboundNode) {
         try {
             BoundNode node = createBoundNode(unboundNode);
 

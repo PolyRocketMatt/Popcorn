@@ -137,7 +137,7 @@ public class Tokenizer {
                     }
 
                     if (!match) {
-                        diagnostics.reportInvalidInput("Bad character input {0}, not a valid token", lineIndex, length - remaining);
+                        diagnostics.reportInvalidInput("" + line.charAt(0), lineIndex, length - remaining);
 
                         break;
                     }
