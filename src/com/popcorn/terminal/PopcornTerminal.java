@@ -41,28 +41,32 @@ public class PopcornTerminal {
                         tokenizer.setSource(instruction);
                         tokenizer.tokenize();
 
-                        if (tokenizer.getDiagnostics().getDiagnostics().isEmpty()) {
-                            if (compilation == null)
-                                compilation = new Compilation(Objects.requireNonNull(SyntaxTree.parse(instruction)));
-                            else
-                                compilation.setTree(SyntaxTree.parse(instruction));
-                            compilation.exec();
-
-                            // TODO: 10/02/2020 Implement proper error reporting!
-                            if (compilation.getDiagnostics().isEmpty()) {
-                                if (isPrint)
-                                    PrintUtils.prettyPrint(compilation.getTree().getParentNode(), "", true);
-                                if (isTable)
-                                    PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
-                            } else {
-                                for (Diagnostic diagnostic : compilation.getDiagnostics())
-                                    System.out.println(diagnostic.getMessage());
-                                compilation.getDiagnostics().clear();
-                            }
+                        if (false) {
+                            System.out.println(tokenizer.getStream().toString());
                         } else {
-                            for (Diagnostic diagnostic : tokenizer.getDiagnostics().getDiagnostics())
-                                System.out.println(diagnostic.getMessage());
-                            tokenizer.getDiagnostics().getDiagnostics().clear();
+                            if (tokenizer.getDiagnostics().getDiagnostics().isEmpty()) {
+                                if (compilation == null)
+                                    compilation = new Compilation(Objects.requireNonNull(SyntaxTree.parse(instruction)));
+                                else
+                                    compilation.setTree(SyntaxTree.parse(instruction));
+                                compilation.exec();
+
+                                // TODO: 10/02/2020 Implement proper error reporting!
+                                if (compilation.getDiagnostics().isEmpty()) {
+                                    if (isPrint)
+                                        PrintUtils.prettyPrint(compilation.getTree().getParentNode(), "", true);
+                                    if (isTable)
+                                        PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
+                                } else {
+                                    for (Diagnostic diagnostic : compilation.getDiagnostics())
+                                        System.out.println(diagnostic.getMessage());
+                                    compilation.getDiagnostics().clear();
+                                }
+                            } else {
+                                for (Diagnostic diagnostic : tokenizer.getDiagnostics().getDiagnostics())
+                                    System.out.println(diagnostic.getMessage());
+                                tokenizer.getDiagnostics().getDiagnostics().clear();
+                            }
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();

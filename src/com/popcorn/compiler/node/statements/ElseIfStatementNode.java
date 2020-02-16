@@ -27,6 +27,14 @@ public class ElseIfStatementNode implements StatementNode {
         this.body = new ArrayList<>();
     }
 
+    public ExpressionNode getExpression() {
+        return expression;
+    }
+
+    public void add(Node node) {
+        body.add(node);
+    }
+
     @Override
     public StatementNode getParentNode() {
         return parentNode;

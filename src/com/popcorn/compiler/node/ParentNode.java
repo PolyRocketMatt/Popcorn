@@ -38,6 +38,6 @@ public class ParentNode implements StatementNode {
 
     @Override
     public NodeType getNodeType() {
-        return null;
+        return NodeType.PARENT_NODE;
     }
 }

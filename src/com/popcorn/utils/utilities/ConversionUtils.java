@@ -24,7 +24,7 @@ public class ConversionUtils {
     }
 
     private static final TokenType[] literals = { TokenType.INT_LITERAL, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL, TokenType.NULL };
-    private static final TokenType[] types = { TokenType.VOID, TokenType.INT, TokenType.FLOAT_LITERAL, TokenType.BOOL_LITERAL, TokenType.STRING_LITERAL };
+    private static final TokenType[] types = { TokenType.VOID, TokenType.INT, TokenType.FLOAT, TokenType.BOOL, TokenType.STRING };
     private static final TokenType[] unaryOperators = { TokenType.PLUS, TokenType.MINUS, TokenType.EXCLAMATION };
     private static final TokenType[] binaryOperators = { TokenType.PLUS, TokenType.MINUS, TokenType.ASTERISK, TokenType.F_SLASH, TokenType.MODULO,
                                                             TokenType.DOUBLE_AMPERSAND, TokenType.DOUBLE_PIPE, TokenType.DOUBLE_EQUALS, TokenType.NOT_EQUALS };

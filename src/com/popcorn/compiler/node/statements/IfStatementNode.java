@@ -17,6 +17,7 @@ public class IfStatementNode implements StatementNode {
     private Token closedParenthesisToken;
     private Token openBraceToken;
     private ArrayList<Node> body;
+    private ArrayList<ElseIfStatementNode> elseIfStatementNodes;
     private ElseStatementNode elseStatementNode;
 
     public IfStatementNode(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken, Token openBraceToken) {
@@ -26,6 +27,7 @@ public class IfStatementNode implements StatementNode {
         this.closedParenthesisToken = closedParenthesisToken;
         this.openBraceToken = openBraceToken;
         this.body = new ArrayList<>();
+        this.elseIfStatementNodes = new ArrayList<>();
         this.elseStatementNode = null;
     }
 
@@ -37,12 +39,18 @@ public class IfStatementNode implements StatementNode {
         body.add(node);
     }
 
+    public void addClause(ElseIfStatementNode node) { elseIfStatementNodes.add(node); }
+
     public ElseStatementNode getElseStatementNode() {
         return elseStatementNode;
     }
 
     public void setElseStatementNode(ElseStatementNode elseStatementNode) {
         this.elseStatementNode = elseStatementNode;
+    }
+
+    public ArrayList<ElseIfStatementNode> getElseIfStatementNodes() {
+        return elseIfStatementNodes;
     }
 
     @Override

@@ -125,6 +125,7 @@ public class Tokenizer {
                                     token = new Token(TokenType.INT_LITERAL, intVal, lineIndex, length - remaining);
                                 }
                             } else {
+                                // TODO: 16/02/2020 Fix string issue (double quotes)
                                 token = new Token(data.getType(), value, lineIndex, length - remaining);
                             }
 
