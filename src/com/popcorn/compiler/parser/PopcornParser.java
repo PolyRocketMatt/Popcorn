@@ -104,17 +104,14 @@ public class PopcornParser {
 
         IfStatementNode node = new IfStatementNode(openParenthesisToken, expression, closedParenthesisToken, openBraceToken);
 
+        StatementNode nodeParent = statementNode;
+        statementNode = node;
+
         while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
             node.add(parseStatement());
         }
 
-        // TODO: 15/02/2020 Maybe throw exception when parent is null
-        // TODO: 15/02/2020 Parent Node should (in future) always be function
-        if (statementNode != null)
-            node.setParentNode(statementNode);
-        else
-            node.setParentNode(parentNode);
-        statementNode = node;
+        node.setParentNode(nodeParent);
 
         return node;
     }
@@ -123,17 +120,14 @@ public class PopcornParser {
         Token openBraceToken = match(TokenType.OBRACE);
         ElseStatementNode node = new ElseStatementNode(openBraceToken);
 
+        StatementNode nodeParent = statementNode;
+        statementNode = node;
+
         while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
             node.add(parseStatement());
         }
 
-        // TODO: 15/02/2020 Maybe throw exception when parent is null
-        // TODO: 15/02/2020 Parent Node should (in future) always be function
-        if (statementNode != null)
-            node.setParentNode(statementNode);
-        else
-            node.setParentNode(parentNode);
-        //No need to update statement node!
+        node.setParentNode(nodeParent);
         
         return node;
     }
