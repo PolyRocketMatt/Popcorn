@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class PrintStatementNode implements StatementNode {
 
-    private Node parentNode;
+    private StatementNode parentNode;
     private Token openParenthesisToken;
     private ExpressionNode expression;
     private Token closedParenthesisToken;
@@ -27,7 +27,7 @@ public class PrintStatementNode implements StatementNode {
     }
 
     @Override
-    public Node getParentNode() {
+    public StatementNode getParentNode() {
         return parentNode;
     }
 
@@ -39,7 +39,7 @@ public class PrintStatementNode implements StatementNode {
     }
 
     @Override
-    public void setParentNode(Node parentNode) {
+    public void setParentNode(StatementNode parentNode) {
         this.parentNode = parentNode;
     }
 

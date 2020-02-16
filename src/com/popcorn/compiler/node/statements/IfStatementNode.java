@@ -11,12 +11,13 @@ import java.util.ArrayList;
 
 public class IfStatementNode implements StatementNode {
 
-    private Node parentNode;
+    private StatementNode parentNode;
     private Token openParenthesisToken;
     private ExpressionNode expression;
     private Token closedParenthesisToken;
     private Token openBraceToken;
     private ArrayList<Node> body;
+    private ElseStatementNode elseStatementNode;
 
     public IfStatementNode(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken, Token openBraceToken) {
         this.parentNode = null;
@@ -25,6 +26,7 @@ public class IfStatementNode implements StatementNode {
         this.closedParenthesisToken = closedParenthesisToken;
         this.openBraceToken = openBraceToken;
         this.body = new ArrayList<>();
+        this.elseStatementNode = null;
     }
 
     public ExpressionNode getExpression() {
@@ -35,13 +37,21 @@ public class IfStatementNode implements StatementNode {
         body.add(node);
     }
 
+    public ElseStatementNode getElseStatementNode() {
+        return elseStatementNode;
+    }
+
+    public void setElseStatementNode(ElseStatementNode elseStatementNode) {
+        this.elseStatementNode = elseStatementNode;
+    }
+
     @Override
-    public Node getParentNode() {
+    public StatementNode getParentNode() {
         return parentNode;
     }
 
     @Override
-    public void setParentNode(Node parentNode) {
+    public void setParentNode(StatementNode parentNode) {
         this.parentNode = parentNode;
     }
 
@@ -56,9 +66,13 @@ public class IfStatementNode implements StatementNode {
                 openParenthesisToken,
                 expression,
                 closedParenthesisToken,
-                openParenthesisToken
+                openBraceToken,
         };
         Node[] children = body.toArray(new Node[body.size()]);
+
+        if (elseStatementNode != null) {
+            parent = ConversionUtils.concatenateArrays(parent, new Node[] { elseStatementNode });
+        }
 
         return ConversionUtils.concatenateArrays(parent, children);
     }

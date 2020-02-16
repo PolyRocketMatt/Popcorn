@@ -2,6 +2,7 @@ package com.popcorn.compiler.binding;
 
 import com.popcorn.compiler.binding.node.BoundExpressionNode;
 import com.popcorn.compiler.binding.node.BoundNode;
+import com.popcorn.compiler.binding.node.BoundSkipNode;
 import com.popcorn.compiler.binding.node.BoundStatementNode;
 import com.popcorn.compiler.binding.node.expressions.*;
 import com.popcorn.compiler.binding.node.statements.*;
@@ -53,8 +54,12 @@ public class Binder {
                 return bindBinaryExpression((BinaryExpressionNode) node);
             case IF_STATEMENT_NODE:
                 return bindIfStatement((IfStatementNode) node);
+            case ELSE_STATEMENT_NODE:
+                return bindElseStatement((ElseStatementNode) node);
             case PRINT_STATEMENT_NODE:
                 return bindPrintStatement((PrintStatementNode) node);
+            case SKIP_NODE:
+                return new BoundSkipNode();
             default:
                 throw new PopcornException("Unexpected syntax {0}", node.getNodeType());
         }
@@ -148,10 +153,22 @@ public class Binder {
     private BoundStatementNode bindIfStatement(IfStatementNode node) throws PopcornException {
         BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
         ArrayList<BoundNode> boundNodes = new ArrayList<>();
+        BoundElseStatementNode boundElseStatement = null;
 
         for (Node bodyNode : node.getBody())
             boundNodes.add(bindNode(bodyNode));
-        return new BoundIfStatementNode(boundExpression, boundNodes);
+        if (node.getElseStatementNode() != null)
+            boundElseStatement = (BoundElseStatementNode) bindNode(node.getElseStatementNode());
+
+        return new BoundIfStatementNode(boundExpression, boundNodes, boundElseStatement);
+    }
+
+    private BoundStatementNode bindElseStatement(ElseStatementNode node) throws PopcornException {
+        ArrayList<BoundNode> boundNodes = new ArrayList<>();
+
+        for (Node bodyNode : node.getBody())
+            boundNodes.add(bindNode(bodyNode));
+        return new BoundElseStatementNode(boundNodes);
     }
 
     private BoundStatementNode bindPrintStatement(PrintStatementNode node) throws PopcornException {

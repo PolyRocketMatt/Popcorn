@@ -215,16 +215,27 @@ public class ConversionUtils {
         return ValueType.NULL;
     }
 
-    public static <T> T[] concatenateArrays(T[] a, T[] b) {
-        int aLen = a.length;
-        int bLen = b.length;
+    @SafeVarargs
+    public static <T> T[] concatenateArrays(T[]... arrays) {
+        int finalLength = 0;
+        for (T[] array : arrays) {
+            finalLength += array.length;
+        }
 
-        @SuppressWarnings("unchecked")
-        T[] c = (T[]) Array.newInstance(a.getClass().getComponentType(), aLen + bLen);
-        System.arraycopy(a, 0, c, 0, aLen);
-        System.arraycopy(b, 0, c, aLen, bLen);
+        T[] dest = null;
 
-        return c;
+        int destPos = 0;
+        for (T[] array : arrays) {
+            if (dest == null) {
+                dest = Arrays.copyOf(array, finalLength);
+                destPos = array.length;
+            } else {
+                System.arraycopy(array, 0, dest, destPos, array.length);
+                destPos += array.length;
+            }
+        }
+
+        return dest;
     }
 
 }

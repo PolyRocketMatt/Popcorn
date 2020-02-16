@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public interface StatementNode extends Node {
 
-    Node getParentNode();
+    StatementNode getParentNode();
 
     ArrayList<Node> getBody();
 
-    void setParentNode(Node node);
+    void setParentNode(StatementNode node);
 
 }

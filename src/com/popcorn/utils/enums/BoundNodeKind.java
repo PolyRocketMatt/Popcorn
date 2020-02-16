@@ -8,6 +8,9 @@ public enum BoundNodeKind {
     ASSIGNMENT_EXPRESSION,
     NAME_EXPRESSION,
     IF_STATEMENT,
-    PRINT_STATEMENT
+    ELSE_STATEMENT,
+    PRINT_STATEMENT,
+
+    SKIP
 
 }

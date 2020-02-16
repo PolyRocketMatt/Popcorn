@@ -2,6 +2,7 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
+import com.popcorn.compiler.binding.node.statements.BoundElseStatementNode;
 import com.popcorn.compiler.binding.node.statements.BoundIfStatementNode;
 import com.popcorn.compiler.binding.node.statements.BoundPrintStatementNode;
 import com.popcorn.exception.PopcornException;
@@ -470,8 +471,14 @@ public class Interpreter {
                     diagnostics.reportComparisonNotBoolean(evaluatedComparison.getType());
                 } else {
                     if ((boolean) evaluatedComparison.getValue()) {
-                        for (BoundNode bodyNode : ((BoundIfStatementNode) node).getBoundNodes()) {
+                        for (BoundNode bodyNode : ((BoundIfStatementNode) node).getBoundNodes())
                             evaluate(bodyNode);
+                    } else {
+                        if (((BoundIfStatementNode) node).getBoundElseStatement() != null) {
+                            BoundElseStatementNode elseStatement = ((BoundIfStatementNode) node).getBoundElseStatement();
+
+                            for (BoundNode bodyNode : elseStatement.getBoundNodes())
+                                evaluate(bodyNode);
                         }
                     }
                 }
@@ -483,6 +490,9 @@ public class Interpreter {
                 System.out.println(evaluatePrintExpression.getValue());
 
                 return evaluatePrintExpression;
+
+            case SKIP:
+                break;
 
             default:
                 diagnostics.reportUndefinedInstruction(node.getKind());

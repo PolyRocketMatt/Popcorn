@@ -1,2 +1,3 @@
 
-Hsquid:S1172"2Remove this unused method parameter "diagnostics".(¯°@
+ssquid:UselessImportCheck"CRemove this unused import 'com.popcorn.utils.utilities.PrintUtils'.(ê¢´ªûÿÿÿÿ8Ë‘ÅÆ„.
+nsquid:UselessImportCheck"CRemove this unused import 'com.popcorn.exception.PopcornException'.(ìÚç8ÛÑÄ„.

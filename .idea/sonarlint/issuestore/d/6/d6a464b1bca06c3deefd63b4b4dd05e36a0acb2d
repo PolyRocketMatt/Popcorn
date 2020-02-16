@@ -1,9 +1,2 @@
 
-^squid:S00112‡"FDefine and throw a dedicated exception instead of using a generic one.(†’é6
-ksquid:S00112Å"FDefine and throw a dedicated exception instead of using a generic one.(²¶¶šúÿÿÿÿ8Ã¾€…ƒ.
-ksquid:S00112á"FDefine and throw a dedicated exception instead of using a generic one.(Á‰»Çûÿÿÿÿ8°Ÿ€…ƒ.
-fsquid:S00112®"FDefine and throw a dedicated exception instead of using a generic one.(ý·Ø…8¸Ç¨…ƒ.
-fsquid:S00112ª"FDefine and throw a dedicated exception instead of using a generic one.(™…îÝ8ÂÖ´ ƒ.
-ksquid:S00112±"FDefine and throw a dedicated exception instead of using a generic one.(â¹ÈØþÿÿÿÿ8¤Ù§Ÿ„.
-_squid:S00112—"FDefine and throw a dedicated exception instead of using a generic one.(Ä”®¤
-fsquid:S00112¾"FDefine and throw a dedicated exception instead of using a generic one.(ò¦„¼8¤ãª…ƒ.
+_squid:UselessImportCheck	"4Remove this unused import 'java.lang.reflect.Array'.(‡¡É˜8ÿ§”È„.

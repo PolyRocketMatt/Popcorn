@@ -3,11 +3,9 @@ package com.popcorn.compiler.parser;
 import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
-import com.popcorn.compiler.node.ExpressionNode;
-import com.popcorn.compiler.node.Node;
-import com.popcorn.compiler.node.ParentNode;
-import com.popcorn.compiler.node.StatementNode;
+import com.popcorn.compiler.node.*;
 import com.popcorn.compiler.node.expressions.*;
+import com.popcorn.compiler.node.statements.ElseStatementNode;
 import com.popcorn.compiler.node.statements.IfStatementNode;
 import com.popcorn.compiler.node.statements.PrintStatementNode;
 import com.popcorn.exception.PopcornException;
@@ -58,10 +56,29 @@ public class PopcornParser {
         switch (current().getType()) {
             case IF:
                 next();
-
                 Node ifStatementNode = parseIfStatement();
                 match(TokenType.CBRACE);
+
                 return ifStatementNode;
+
+            case ELSE:
+                next();
+                Node elseStatementNode = parseElseStatement();
+                match(TokenType.CBRACE);
+
+                if (statementNode.getNodeType() == NodeType.IF_STATEMENT_NODE) {
+                    if (((IfStatementNode) statementNode).getElseStatementNode() == null) {
+                        ((IfStatementNode) statementNode).setElseStatementNode((ElseStatementNode) elseStatementNode);
+
+                        statementNode = statementNode.getParentNode();
+                    } else {
+                        diagnostics.reportAlreadyDefinedClause(TokenType.ELSE);
+                    }
+                } else {
+                    diagnostics.reportInvalidClause(TokenType.ELSE);
+                }
+                return new SkipNode();
+
             case PRINT:
                 next();
 
@@ -102,6 +119,25 @@ public class PopcornParser {
         return node;
     }
 
+    private Node parseElseStatement() throws PopcornException {
+        Token openBraceToken = match(TokenType.OBRACE);
+        ElseStatementNode node = new ElseStatementNode(openBraceToken);
+
+        while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
+            node.add(parseStatement());
+        }
+
+        // TODO: 15/02/2020 Maybe throw exception when parent is null
+        // TODO: 15/02/2020 Parent Node should (in future) always be function
+        if (statementNode != null)
+            node.setParentNode(statementNode);
+        else
+            node.setParentNode(parentNode);
+        //No need to update statement node!
+        
+        return node;
+    }
+
     private Node parsePrintStatement() throws PopcornException {
         Token openParenthesisToken = match(TokenType.OPAREN);
         ExpressionNode expression;
@@ -114,7 +150,6 @@ public class PopcornParser {
         }
 
         Token closedParenthesisToken = match(TokenType.CPAREN);
-
         PrintStatementNode node = new PrintStatementNode(openParenthesisToken, expression, closedParenthesisToken);
 
         // TODO: 15/02/2020 Maybe throw exception when parent is null

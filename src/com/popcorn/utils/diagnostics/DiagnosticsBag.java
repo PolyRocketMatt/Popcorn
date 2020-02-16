@@ -1,5 +1,6 @@
 package com.popcorn.utils.diagnostics;
 
+import com.popcorn.compiler.lexical.Token;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.utils.enums.BoundNodeKind;
 import com.popcorn.utils.enums.NodeType;
@@ -33,11 +34,11 @@ public class DiagnosticsBag {
         report(type, message, input, line, column);
     }
 
-    public void reportUnexpectedToken(TokenType unexpected, TokenType[] expected) {
+    public void reportUnexpectedToken(Token unexpected, TokenType[] expected) {
         Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
-        String message = "Unexpected token \"{0}\", expected token(s) \"{1}\"";
+        String message = "Unexpected token \"{0}\", expected token(s) \"{1}\" at line {2}, column {3}";
 
-        report(type, message, PrintUtils.toPrintable(unexpected), PrintUtils.toPrintable(expected));
+        report(type, message, PrintUtils.toPrintable(unexpected.getType()), PrintUtils.toPrintable(expected), unexpected.getLine(), unexpected.getLine());
     }
 
     public void reportUnexpectedLiteralException(TokenType tokenType) {
@@ -115,5 +116,19 @@ public class DiagnosticsBag {
         String message = "Illegal comparison, expression yields {0}, expected " + ConversionUtils.DataType.BOOL;
 
         report(type, message, dataType);
+    }
+
+    public void reportAlreadyDefinedClause(TokenType clauseType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Clause of type {0} is already defined";
+
+        report(type, message, clauseType);
+    }
+
+    public void reportInvalidClause(TokenType clauseType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Clause of type {0} is illegal";
+
+        report(type, message, clauseType);
     }
 }
