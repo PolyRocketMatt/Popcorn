@@ -117,3 +117,9 @@ p
 +src/com/popcorn/compiler/node/SkipNode.java,d\d\dd08ff89916395dc81f5f2a190255a618a95db97
 o
 ?src/com/popcorn/compiler/node/statements/ElseStatementNode.java,7\9\799768573f011fa8eeb7d336a3b3ac50b9b2fc88
+|
+Lsrc/com/popcorn/compiler/binding/node/statements/BoundElseStatementNode.java,a\5\a529d9c91696855f5643d7fcfe014e29a8b44649
+h
+8src/com/popcorn/compiler/binding/node/BoundSkipNode.java,2\2\224fdf015e605f0853cc3c8de2f4dfe2a0d79991
+q
+Asrc/com/popcorn/compiler/node/statements/ElseIfStatementNode.java,f\b\fb1c67bf1349192925edbdaebc98d9355ed56870

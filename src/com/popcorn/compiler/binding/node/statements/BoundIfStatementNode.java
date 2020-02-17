@@ -11,11 +11,13 @@ public class BoundIfStatementNode implements BoundStatementNode {
 
     private BoundExpressionNode boundExpression;
     private ArrayList<BoundNode> boundNodes;
+    private ArrayList<BoundElseIfStatementNode> elseIfStatementNodes;
     private BoundElseStatementNode boundElseStatement;
 
-    public BoundIfStatementNode(BoundExpressionNode boundExpression, ArrayList<BoundNode> boundNodes, BoundElseStatementNode boundElseStatement) {
+    public BoundIfStatementNode(BoundExpressionNode boundExpression, ArrayList<BoundNode> boundNodes, ArrayList<BoundElseIfStatementNode> elseIfStatementNodes, BoundElseStatementNode boundElseStatement) {
         this.boundExpression = boundExpression;
         this.boundNodes = boundNodes;
+        this.elseIfStatementNodes = elseIfStatementNodes;
         this.boundElseStatement = boundElseStatement;
     }
 
@@ -25,6 +27,10 @@ public class BoundIfStatementNode implements BoundStatementNode {
 
     public ArrayList<BoundNode> getBoundNodes() {
         return boundNodes;
+    }
+
+    public ArrayList<BoundElseIfStatementNode> getElseIfStatementNodes() {
+        return elseIfStatementNodes;
     }
 
     public BoundElseStatementNode getBoundElseStatement() {

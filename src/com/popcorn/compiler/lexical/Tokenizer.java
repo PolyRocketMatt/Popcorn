@@ -64,8 +64,8 @@ public class Tokenizer {
         add(TokenType.FOR, "for");
         add(TokenType.WHILE, "while");
         add(TokenType.IF, "if");
-        add(TokenType.ELSE, "else");
         add(TokenType.ELSE_IF, "elseif");
+        add(TokenType.ELSE, "else");
         add(TokenType.TYPE_OF, "typeof");
         add(TokenType.VOID, "void");
         add(TokenType.PRINT, "print");

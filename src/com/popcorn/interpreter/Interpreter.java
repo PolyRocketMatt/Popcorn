@@ -2,6 +2,7 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
+import com.popcorn.compiler.binding.node.statements.BoundElseIfStatementNode;
 import com.popcorn.compiler.binding.node.statements.BoundElseStatementNode;
 import com.popcorn.compiler.binding.node.statements.BoundIfStatementNode;
 import com.popcorn.compiler.binding.node.statements.BoundPrintStatementNode;
@@ -474,11 +475,34 @@ public class Interpreter {
                         for (BoundNode bodyNode : ((BoundIfStatementNode) node).getBoundNodes())
                             evaluate(bodyNode);
                     } else {
-                        if (((BoundIfStatementNode) node).getBoundElseStatement() != null) {
-                            BoundElseStatementNode elseStatement = ((BoundIfStatementNode) node).getBoundElseStatement();
+                        boolean hasFoundElse = false;
 
-                            for (BoundNode bodyNode : elseStatement.getBoundNodes())
-                                evaluate(bodyNode);
+                        System.out.println("Yey");
+
+                        if (!((BoundIfStatementNode) node).getElseIfStatementNodes().isEmpty()) {
+                            for (BoundElseIfStatementNode elseIfNode : ((BoundIfStatementNode) node).getElseIfStatementNodes()) {
+                                LiteralValue evaluatedElseComparison = evaluateExpression(elseIfNode.getBoundExpression());
+
+                                if (evaluatedElseComparison.getType() != ConversionUtils.DataType.BOOL) {
+                                    diagnostics.reportComparisonNotBoolean(evaluatedComparison.getType());
+                                } else {
+                                    if ((boolean) evaluatedElseComparison.getValue()) {
+                                        hasFoundElse = true;
+                                        for (BoundNode bodyNode : elseIfNode.getBoundNodes())
+                                            evaluate(bodyNode);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!hasFoundElse) {
+                            if (((BoundIfStatementNode) node).getBoundElseStatement() != null) {
+                                BoundElseStatementNode elseStatement = ((BoundIfStatementNode) node).getBoundElseStatement();
+
+                                for (BoundNode bodyNode : elseStatement.getBoundNodes())
+                                    evaluate(bodyNode);
+                            }
                         }
                     }
                 }
@@ -487,7 +511,9 @@ public class Interpreter {
 
             case PRINT_STATEMENT:
                 LiteralValue evaluatePrintExpression = evaluateExpression(((BoundPrintStatementNode) node).getBoundExpression());
-                System.out.println(evaluatePrintExpression.getValue());
+                String value = evaluatePrintExpression.getValue().toString();
+                String representedValue = value.substring(1, value.length() - 1);
+                System.out.println(representedValue);
 
                 return evaluatePrintExpression;
 

@@ -60,7 +60,7 @@ public class PopcornParser {
                 Node ifStatementNode = parseIfStatement();
                 match(TokenType.CBRACE);
 
-                if (current().getType() != TokenType.ELSE) {
+                if (current().getType() != TokenType.ELSE_IF && current().getType() != TokenType.ELSE) {
                     statementNode = ((IfStatementNode) ifStatementNode).getParentNode();
                 }
 
@@ -76,8 +76,7 @@ public class PopcornParser {
                 } else {
                     diagnostics.reportInvalidClause(TokenType.ELSE_IF);
                 }
-                return new SkipNode();
-
+                return elseIfStatementNode;
             case ELSE:
                 next();
                 Node elseStatementNode = parseElseStatement();

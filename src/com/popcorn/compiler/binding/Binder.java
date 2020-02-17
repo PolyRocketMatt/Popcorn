@@ -54,6 +54,8 @@ public class Binder {
                 return bindBinaryExpression((BinaryExpressionNode) node);
             case IF_STATEMENT_NODE:
                 return bindIfStatement((IfStatementNode) node);
+            case ELSE_IF_STATEMENT_NODE:
+                return bindElseIfStatement((ElseIfStatementNode) node);
             case ELSE_STATEMENT_NODE:
                 return bindElseStatement((ElseStatementNode) node);
             case PRINT_STATEMENT_NODE:
@@ -153,14 +155,26 @@ public class Binder {
     private BoundStatementNode bindIfStatement(IfStatementNode node) throws PopcornException {
         BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
         ArrayList<BoundNode> boundNodes = new ArrayList<>();
+        ArrayList<BoundElseIfStatementNode> boundElseIfStatementNodes = new ArrayList<>();
         BoundElseStatementNode boundElseStatement = null;
 
         for (Node bodyNode : node.getBody())
             boundNodes.add(bindNode(bodyNode));
+        for (Node elseIfNode : node.getElseIfStatementNodes())
+            boundNodes.add(bindNode(elseIfNode));
         if (node.getElseStatementNode() != null)
             boundElseStatement = (BoundElseStatementNode) bindNode(node.getElseStatementNode());
 
-        return new BoundIfStatementNode(boundExpression, boundNodes, boundElseStatement);
+        return new BoundIfStatementNode(boundExpression, boundNodes, boundElseIfStatementNodes, boundElseStatement);
+    }
+
+    private BoundStatementNode bindElseIfStatement(ElseIfStatementNode node) throws PopcornException {
+        BoundExpressionNode boundExpression = (BoundExpressionNode) bindNode(node.getExpression());
+        ArrayList<BoundNode> boundNodes = new ArrayList<>();
+
+        for (Node bodyNode : node.getBody())
+            boundNodes.add(bindNode(bodyNode));
+        return new BoundElseIfStatementNode(boundExpression, boundNodes);
     }
 
     private BoundStatementNode bindElseStatement(ElseStatementNode node) throws PopcornException {
