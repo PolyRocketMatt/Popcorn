@@ -243,6 +243,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/ObjectNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/ParentNode.java">
           <value>
             <set />
@@ -319,6 +324,16 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/IfStatementNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/ObjectNode.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/com/popcorn/compiler/node/statements/ObjectStatementNode.java">
           <value>
             <set />
           </value>

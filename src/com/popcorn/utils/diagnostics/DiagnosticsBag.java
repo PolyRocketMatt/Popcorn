@@ -131,4 +131,11 @@ public class DiagnosticsBag {
 
         report(type, message, clauseType);
     }
+
+    public void reportExpectedObject(TokenType tokenType) {
+        Diagnostic.DiagnosticType type = Diagnostic.DiagnosticType.ERROR;
+        String message = "Expected object, found {0} instead!";
+
+        report(type, message, tokenType);
+    }
 }

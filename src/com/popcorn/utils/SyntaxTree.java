@@ -47,12 +47,12 @@ public class SyntaxTree {
                     for (Diagnostic diagnostic : parser.getDiagnostics().getDiagnostics())
                         System.out.println(diagnostic.getMessage());
 
-                    return new SyntaxTree(new ArrayList<>(), new ParentNode());
+                    return new SyntaxTree(new ArrayList<>(), new ParentNode(null));
                 }
             } else {
                 for (Diagnostic diagnostic : tokenizer.getDiagnostics().getDiagnostics())
                     System.out.println(diagnostic.getMessage());
-                return new SyntaxTree(new ArrayList<>(), new ParentNode());
+                return new SyntaxTree(new ArrayList<>(), new ParentNode(null));
             }
         } catch (Exception ex) {
             throw new PopcornException("An exception occurred during lexical/syntactic analysis");

@@ -3,18 +3,19 @@ package com.popcorn.compiler.node;
 import com.popcorn.utils.enums.NodeType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ParentNode implements StatementNode {
 
-    private List<Node> nodes;
+    private Node object;
 
-    public ParentNode() {
-        nodes = new ArrayList<>();
+    public ParentNode(Node object) { this.object = object; }
+
+    public Node getObject() {
+        return object;
     }
 
-    public List<Node> getNodes() {
-        return nodes;
+    public void setObject(Node object) {
+        this.object = object;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class ParentNode implements StatementNode {
     // TODO: 16/02/2020 Add all statements to this body
     @Override
     public ArrayList<Node> getBody() {
-        return new ArrayList<>();
+        return new ArrayList<Node>() {{ add(object); }};
     }
 
     @Override
@@ -33,7 +34,7 @@ public class ParentNode implements StatementNode {
 
     @Override
     public Node[] getChildren() {
-        return nodes.toArray(new Node[nodes.size()]);
+        return new Node[] { object };
     }
 
     @Override

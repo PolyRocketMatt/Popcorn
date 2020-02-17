@@ -3,6 +3,8 @@ package com.popcorn.compiler;
 import com.popcorn.compiler.binding.Binder;
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.node.Node;
+import com.popcorn.compiler.node.SkipNode;
+import com.popcorn.compiler.node.statements.ObjectStatementNode;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.interpreter.Interpreter;
 import com.popcorn.utils.SyntaxTree;
@@ -53,8 +55,10 @@ public class Compilation {
     }
 
     public void exec() {
-        for (Node node : tree.getParentNode().getNodes()) {
-            values.add(evaluate(node));
+        if (tree.getParentNode().getObject() instanceof ObjectStatementNode) {
+            for (Node node : ((ObjectStatementNode) tree.getParentNode().getObject()).getBody()) {
+                values.add(evaluate(node));
+            }
         }
     }
 

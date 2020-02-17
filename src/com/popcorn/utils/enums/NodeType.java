@@ -2,6 +2,8 @@ package com.popcorn.utils.enums;
 
 public enum NodeType {
 
+    OBJECT_STATEMENT_NODE,
+
     BINARY_OPERATOR_NODE,
     UNARY_OPERATOR_NODE,
     PARENTHESIZED_EXPRESSION_NODE,

@@ -5,10 +5,7 @@ import com.popcorn.compiler.lexical.TokenStream;
 import com.popcorn.compiler.lexical.TokenType;
 import com.popcorn.compiler.node.*;
 import com.popcorn.compiler.node.expressions.*;
-import com.popcorn.compiler.node.statements.ElseIfStatementNode;
-import com.popcorn.compiler.node.statements.ElseStatementNode;
-import com.popcorn.compiler.node.statements.IfStatementNode;
-import com.popcorn.compiler.node.statements.PrintStatementNode;
+import com.popcorn.compiler.node.statements.*;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.enums.NodeType;
 import com.popcorn.utils.enums.ValueType;
@@ -30,7 +27,7 @@ public class PopcornParser {
         this.diagnostics = diagnostics;
         this.stream = stream;
 
-        parentNode = new ParentNode();
+        parentNode = new ParentNode(null);
         statementNode = parentNode;
     }
 
@@ -43,14 +40,40 @@ public class PopcornParser {
     }
 
     public SyntaxTree parse() throws PopcornException {
-        parentNode.getNodes().add(parseStatement());
+        Node objectStatementNode = parseObject();
 
-        while (current().getType() != TokenType.EOF) {
-            parentNode.getNodes().add(parseStatement());
-        }
+        if (!(objectStatementNode instanceof SkipNode)) {
+            parentNode.setObject(objectStatementNode);
+        } else
+            parentNode.setObject(new SkipNode());
+
+        parentNode.setObject(objectStatementNode);
 
         match(TokenType.EOF);
         return new SyntaxTree(diagnostics.getDiagnostics(), parentNode);
+    }
+
+    private Node parseObject() throws PopcornException {
+        Token match = match(TokenType.CLASS);
+        Token identifier = match(TokenType.IDENTIFIER);
+        match(TokenType.OPAREN);
+        match(TokenType.CPAREN);
+        match(TokenType.OBRACE);
+
+        if (identifier.getValue() != null) {
+            ObjectStatementNode node = new ObjectStatementNode(parentNode, identifier.getValue().toString());
+
+            while (current().getType() != TokenType.EOF) {
+                node.getBody().add(parseStatement());
+            }
+
+            match(TokenType.CBRACE);
+
+            return node;
+        } else
+            diagnostics.reportExpectedObject(match.getType());
+
+        return new SkipNode();
     }
 
     private Node parseStatement() throws PopcornException {

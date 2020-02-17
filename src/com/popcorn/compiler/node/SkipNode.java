@@ -2,7 +2,11 @@ package com.popcorn.compiler.node;
 
 import com.popcorn.utils.enums.NodeType;
 
+import java.util.ArrayList;
+
 public class SkipNode implements Node {
+
+    public ArrayList<Node> getBody() { return new ArrayList<>(); }
 
     @Override
     public Node[] getChildren() {
