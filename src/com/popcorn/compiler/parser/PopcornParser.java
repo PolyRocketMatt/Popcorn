@@ -76,7 +76,8 @@ public class PopcornParser {
                 } else {
                     diagnostics.reportInvalidClause(TokenType.ELSE_IF);
                 }
-                return elseIfStatementNode;
+
+                return new SkipNode();
             case ELSE:
                 next();
                 Node elseStatementNode = parseElseStatement();

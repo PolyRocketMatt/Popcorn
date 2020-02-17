@@ -473,12 +473,9 @@ public class Interpreter {
                 } else {
                     if ((boolean) evaluatedComparison.getValue()) {
                         for (BoundNode bodyNode : ((BoundIfStatementNode) node).getBoundNodes())
-                            evaluate(bodyNode);
+                            evaluateExpression(bodyNode);
                     } else {
                         boolean hasFoundElse = false;
-
-                        System.out.println("Yey");
-
                         if (!((BoundIfStatementNode) node).getElseIfStatementNodes().isEmpty()) {
                             for (BoundElseIfStatementNode elseIfNode : ((BoundIfStatementNode) node).getElseIfStatementNodes()) {
                                 LiteralValue evaluatedElseComparison = evaluateExpression(elseIfNode.getBoundExpression());
@@ -489,7 +486,7 @@ public class Interpreter {
                                     if ((boolean) evaluatedElseComparison.getValue()) {
                                         hasFoundElse = true;
                                         for (BoundNode bodyNode : elseIfNode.getBoundNodes())
-                                            evaluate(bodyNode);
+                                            evaluateExpression(bodyNode);
                                         break;
                                     }
                                 }
@@ -500,8 +497,10 @@ public class Interpreter {
                             if (((BoundIfStatementNode) node).getBoundElseStatement() != null) {
                                 BoundElseStatementNode elseStatement = ((BoundIfStatementNode) node).getBoundElseStatement();
 
-                                for (BoundNode bodyNode : elseStatement.getBoundNodes())
-                                    evaluate(bodyNode);
+                                for (BoundNode bodyNode : elseStatement.getBoundNodes()) {
+                                    evaluateExpression(bodyNode);
+                                }
+                                break;
                             }
                         }
                     }
@@ -512,8 +511,12 @@ public class Interpreter {
             case PRINT_STATEMENT:
                 LiteralValue evaluatePrintExpression = evaluateExpression(((BoundPrintStatementNode) node).getBoundExpression());
                 String value = evaluatePrintExpression.getValue().toString();
-                String representedValue = value.substring(1, value.length() - 1);
-                System.out.println(representedValue);
+
+                if (evaluatePrintExpression.getType() == ConversionUtils.DataType.STRING) {
+                    value = value.substring(1, value.length() - 1);
+                }
+
+                System.out.println(value);
 
                 return evaluatePrintExpression;
 

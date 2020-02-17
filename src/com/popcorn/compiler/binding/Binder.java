@@ -161,7 +161,7 @@ public class Binder {
         for (Node bodyNode : node.getBody())
             boundNodes.add(bindNode(bodyNode));
         for (Node elseIfNode : node.getElseIfStatementNodes())
-            boundNodes.add(bindNode(elseIfNode));
+            boundElseIfStatementNodes.add((BoundElseIfStatementNode) bindNode(elseIfNode));
         if (node.getElseStatementNode() != null)
             boundElseStatement = (BoundElseStatementNode) bindNode(node.getElseStatementNode());
 
