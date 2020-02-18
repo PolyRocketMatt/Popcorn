@@ -34,6 +34,11 @@ public class Token implements Node {
     }
 
     @Override
+    public Node getSuperNode() {
+        return null;
+    }
+
+    @Override
     public Node[] getChildren() {
         return new Node[0];
     }
@@ -41,6 +46,11 @@ public class Token implements Node {
     @Override
     public NodeType getNodeType() {
         return NodeType.TOKEN_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node node) {
+
     }
 
     @Override

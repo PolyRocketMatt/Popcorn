@@ -1,10 +1,10 @@
 package com.popcorn.utils.utilities;
 
 import com.popcorn.compiler.lexical.TokenType;
+import com.popcorn.compiler.node.Node;
 import com.popcorn.exception.PopcornException;
-import com.popcorn.utils.enums.BinaryOperatorType;
-import com.popcorn.utils.enums.UnaryOperatorType;
-import com.popcorn.utils.enums.ValueType;
+import com.popcorn.utils.enums.*;
+import com.popcorn.utils.values.VariableScope;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -213,6 +213,30 @@ public class ConversionUtils {
         }
 
         return ValueType.NULL;
+    }
+
+    public static VariableScope getAccordingVariableLevel(Node node) {
+        switch (node.getNodeType()) {
+            case OBJECT_STATEMENT_NODE:
+                return new VariableScope(VariableLevel.OBJECT, VariableLevel.OBJECT.getLevel());
+            case IF_STATEMENT_NODE:
+            case ELSE_IF_STATEMENT_NODE:
+            case ELSE_STATEMENT_NODE:
+                VariableLevel level = VariableLevel.LOCAL;
+                Node superNode = node.getSuperNode();
+
+                // TODO: 18/02/2020 This should be updated when functions are implemented!
+                int index = 0;
+                while (superNode.getSuperNode().getNodeType() != NodeType.OBJECT_STATEMENT_NODE) {
+                    index++;
+                    superNode = superNode.getSuperNode();
+                }
+
+                return new VariableScope(level, index);
+
+            default:
+                return new VariableScope(VariableLevel.ILLEGAL, VariableLevel.ILLEGAL.getLevel());
+        }
     }
 
     @SafeVarargs

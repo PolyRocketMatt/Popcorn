@@ -13,6 +13,7 @@ import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
+import com.popcorn.utils.utilities.PrintUtils;
 import com.popcorn.utils.values.LiteralValue;
 
 public class PopcornParser {
@@ -21,14 +22,14 @@ public class PopcornParser {
     private TokenStream stream;
 
     private ParentNode parentNode;
-    private StatementNode statementNode;
+    private Node superNode;
 
     public PopcornParser(DiagnosticsBag diagnostics, TokenStream stream) {
         this.diagnostics = diagnostics;
         this.stream = stream;
 
         parentNode = new ParentNode(null);
-        statementNode = parentNode;
+        superNode = parentNode;
     }
 
     public DiagnosticsBag getDiagnostics() {
@@ -39,6 +40,7 @@ public class PopcornParser {
         return stream;
     }
 
+    // TODO: 18/02/2020 FIX SUPER NODE STRUCTURE
     public SyntaxTree parse() throws PopcornException {
         Node objectStatementNode = parseObject();
 
@@ -63,8 +65,10 @@ public class PopcornParser {
         if (identifier.getValue() != null) {
             ObjectStatementNode node = new ObjectStatementNode(parentNode, identifier.getValue().toString());
 
-            while (current().getType() != TokenType.EOF) {
-                node.getBody().add(parseStatement());
+            while (current().getType() != TokenType.CBRACE) {
+                Node statement = parseStatement();
+
+                node.getBody().add(statement);
             }
 
             match(TokenType.CBRACE);
@@ -84,7 +88,7 @@ public class PopcornParser {
                 match(TokenType.CBRACE);
 
                 if (current().getType() != TokenType.ELSE_IF && current().getType() != TokenType.ELSE) {
-                    statementNode = ((IfStatementNode) ifStatementNode).getParentNode();
+                    superNode = ((IfStatementNode) ifStatementNode).getSuperNode();
                 }
 
                 return ifStatementNode;
@@ -94,8 +98,8 @@ public class PopcornParser {
                 Node elseIfStatementNode = parseElseIfStatement();
                 match(TokenType.CBRACE);
 
-                if (statementNode.getNodeType() == NodeType.IF_STATEMENT_NODE) {
-                    ((IfStatementNode) statementNode).addClause((ElseIfStatementNode) elseIfStatementNode);
+                if (superNode.getNodeType() == NodeType.IF_STATEMENT_NODE) {
+                    ((IfStatementNode) superNode).addClause((ElseIfStatementNode) elseIfStatementNode);
                 } else {
                     diagnostics.reportInvalidClause(TokenType.ELSE_IF);
                 }
@@ -106,11 +110,11 @@ public class PopcornParser {
                 Node elseStatementNode = parseElseStatement();
                 match(TokenType.CBRACE);
 
-                if (statementNode.getNodeType() == NodeType.IF_STATEMENT_NODE) {
-                    if (((IfStatementNode) statementNode).getElseStatementNode() == null) {
-                        ((IfStatementNode) statementNode).setElseStatementNode((ElseStatementNode) elseStatementNode);
+                if (superNode.getNodeType() == NodeType.IF_STATEMENT_NODE) {
+                    if (((IfStatementNode) superNode).getElseStatementNode() == null) {
+                        ((IfStatementNode) superNode).setElseStatementNode((ElseStatementNode) elseStatementNode);
 
-                        statementNode = statementNode.getParentNode();
+                        superNode = superNode.getSuperNode();
                     } else {
                         diagnostics.reportAlreadyDefinedClause(TokenType.ELSE);
                     }
@@ -136,7 +140,7 @@ public class PopcornParser {
             expression = parseBinaryExpression(0);
         else {
             diagnostics.reportMissingExpression(NodeType.IF_STATEMENT_NODE);
-            expression = new LiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+            expression = new LiteralExpressionNode(superNode, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
         }
 
         Token closedParenthesisToken = match(TokenType.CPAREN);
@@ -144,14 +148,14 @@ public class PopcornParser {
 
         IfStatementNode node = new IfStatementNode(openParenthesisToken, expression, closedParenthesisToken, openBraceToken);
 
-        StatementNode nodeParent = statementNode;
-        statementNode = node;
+        Node nodeParent = superNode;
+        superNode = node;
 
         while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
             node.add(parseStatement());
         }
 
-        node.setParentNode(nodeParent);
+        node.setSuperNode(nodeParent);
 
         return node;
     }
@@ -164,7 +168,7 @@ public class PopcornParser {
             expression = parseBinaryExpression(0);
         else {
             diagnostics.reportMissingExpression(NodeType.ELSE_IF_STATEMENT_NODE);
-            expression = new LiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+            expression = new LiteralExpressionNode(superNode, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
         }
 
         Token closedParenthesisToken = match(TokenType.CPAREN);
@@ -172,15 +176,15 @@ public class PopcornParser {
 
         ElseIfStatementNode node = new ElseIfStatementNode(openParenthesisToken, expression, closedParenthesisToken, openBraceToken);
 
-        StatementNode nodeParent = statementNode;
-        statementNode = node;
+        Node nodeParent = superNode;
+        superNode = node;
 
         while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
             node.add(parseStatement());
         }
 
-        node.setParentNode(nodeParent);
-        statementNode = nodeParent;
+        node.setSuperNode(nodeParent);
+        superNode = nodeParent;
 
         return node;
     }
@@ -189,15 +193,15 @@ public class PopcornParser {
         Token openBraceToken = match(TokenType.OBRACE);
         ElseStatementNode node = new ElseStatementNode(openBraceToken);
 
-        StatementNode nodeParent = statementNode;
-        statementNode = node;
+        Node nodeParent = superNode;
+        superNode = node;
 
         while (current().getType() != TokenType.CBRACE && current().getType() != TokenType.EOF) {
             node.add(parseStatement());
         }
 
-        node.setParentNode(nodeParent);
-        statementNode = nodeParent;
+        node.setSuperNode(nodeParent);
+        superNode = nodeParent;
         
         return node;
     }
@@ -210,7 +214,7 @@ public class PopcornParser {
             expression = parseBinaryExpression(0);
         else {
             diagnostics.reportMissingExpression(NodeType.PRINT_STATEMENT_NODE);
-            expression = new LiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
+            expression = new LiteralExpressionNode(superNode, new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
         }
 
         Token closedParenthesisToken = match(TokenType.CPAREN);
@@ -218,10 +222,10 @@ public class PopcornParser {
 
         // TODO: 15/02/2020 Maybe throw exception when parent is null
         // TODO: 15/02/2020 Parent Node should (in future) always be function
-        if (statementNode != null)
-            node.setParentNode(statementNode);
+        if (superNode != null)
+            node.setSuperNode(superNode);
         else
-            node.setParentNode(parentNode);
+            node.setSuperNode(parentNode);
         //No need to update statement node, this is a one line statement!
 
         return node;
@@ -233,20 +237,28 @@ public class PopcornParser {
 
     // TODO: 14/02/2020 Add multi-variable assignments (a = b = c)
     private ExpressionNode parseAssignmentExpression() throws PopcornException {
+        AssignmentExpressionNode node;
+        
         if (ConversionUtils.isType(current().getType())) {
             ConversionUtils.DataType type = ConversionUtils.toInternalType(get().getType());
             Token identifierToken = match(TokenType.IDENTIFIER);
             Token equalsToken = match(TokenType.EQUAL);
             ExpressionNode value = parseAssignmentExpression();
-
-            return new AssignmentExpressionNode(type, identifierToken, equalsToken, value);
+            
+            node = new AssignmentExpressionNode(superNode, type, identifierToken, equalsToken, value);
+            value.setSuperNode(node);
+            
+            return node;
         } else if (current().getType() == TokenType.IDENTIFIER &&
                 peek(1).getType() == TokenType.EQUAL) {
             Token identifierToken = match(TokenType.IDENTIFIER);
             Token equalsToken = match(TokenType.EQUAL);
             ExpressionNode value = parseAssignmentExpression();
-
-            return new AssignmentExpressionNode(identifierToken, equalsToken, value);
+            
+            node = new AssignmentExpressionNode(superNode, identifierToken, equalsToken, value);
+            value.setSuperNode(node);
+            
+            return node;
         }
 
         return parseBinaryExpression(0);
@@ -260,7 +272,7 @@ public class PopcornParser {
             Token operatorToken = get();
             ExpressionNode operand = parseBinaryExpression(unaryOperatorPrecedence);
 
-            left = new UnaryExpressionNode(operatorToken, operand);
+            left = new UnaryExpressionNode(superNode, operatorToken, operand);
         } else {
             left = parsePrimitiveExpression();
         }
@@ -273,7 +285,7 @@ public class PopcornParser {
             Token operatorToken = get();
             ExpressionNode right = parseBinaryExpression(precedence);
 
-            left = new BinaryExpressionNode(left, operatorToken, right);
+            left = new BinaryExpressionNode(superNode, left, operatorToken, right);
         }
 
         return left;
@@ -287,19 +299,19 @@ public class PopcornParser {
                     ExpressionNode expression = parseBinaryExpression(0);
                     Token closedParenthesisToken = match(TokenType.CPAREN);
 
-                    return new ParenthesizedExpression(openParenthesisToken, expression, closedParenthesisToken);
+                    return new ParenthesizedExpression(superNode, openParenthesisToken, expression, closedParenthesisToken);
 
                 case IDENTIFIER:
                     Token identifierToken = get();
 
-                    return new NameExpressionNode(identifierToken);
+                    return new NameExpressionNode(superNode, identifierToken);
 
                 default:
                     // TODO: 15/02/2020 Add NPE catch
                     Token literal = matchAny(ConversionUtils.getLiterals());
                     ConversionUtils.DataType type = ConversionUtils.toInternalType(literal.getType());
 
-                    return new LiteralExpressionNode(new LiteralValue(type, ConversionUtils.toValueType(literal.getType()), literal.getValue()));
+                    return new LiteralExpressionNode(superNode, new LiteralValue(type, ConversionUtils.toValueType(literal.getType()), literal.getValue()));
             }
         } catch (Exception ex) {
             diagnostics.reportUnexpectedLiteralException(current().getType());

@@ -14,8 +14,10 @@ import com.popcorn.compiler.node.statements.*;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.enums.ValueType;
+import com.popcorn.utils.enums.VariableLevel;
 import com.popcorn.utils.utilities.ConversionUtils;
 import com.popcorn.utils.values.LiteralValue;
+import com.popcorn.utils.values.VariableScope;
 import com.popcorn.utils.values.VariableSymbol;
 
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ public class Binder {
 
     public BoundNode bindNode(Node node) throws PopcornException {
         switch (node.getNodeType()) {
+            case OBJECT_STATEMENT_NODE:
+                return bindObjectStatement((ObjectStatementNode) node);
             case LITERAL_NODE:
                 return bindLiteralExpression((LiteralExpressionNode) node);
             case NAME_NODE:
@@ -65,6 +69,18 @@ public class Binder {
             default:
                 throw new PopcornException("Unexpected syntax {0}", node.getNodeType());
         }
+    }
+
+    private BoundNode bindObjectStatement(ObjectStatementNode node) throws PopcornException {
+        ArrayList<BoundNode> boundNodes = new ArrayList<>();
+
+        System.out.println("Binding nodes!");
+        System.out.println(node.getBody().size());
+
+        for (Node bodyNode : node.getBody())
+            boundNodes.add(bindNode(bodyNode));
+
+        return new BoundObjectStatementNode(node.getName(), boundNodes);
     }
 
     private BoundExpressionNode bindLiteralExpression(LiteralExpressionNode node) {
@@ -97,7 +113,8 @@ public class Binder {
                 return new BoundLiteralExpressionNode(new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null));
             }
 
-            VariableSymbol symbolization = new VariableSymbol(name, type);
+            VariableScope scope = ConversionUtils.getAccordingVariableLevel(node);
+            VariableSymbol symbolization = new VariableSymbol(name, type, scope);
 
             variables.add(symbolization);
 

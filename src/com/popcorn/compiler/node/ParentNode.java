@@ -19,7 +19,7 @@ public class ParentNode implements StatementNode {
     }
 
     @Override
-    public StatementNode getParentNode() {
+    public Node getSuperNode() {
         return null;
     }
 
@@ -30,9 +30,6 @@ public class ParentNode implements StatementNode {
     }
 
     @Override
-    public void setParentNode(StatementNode node) { }
-
-    @Override
     public Node[] getChildren() {
         return new Node[] { object };
     }
@@ -41,4 +38,7 @@ public class ParentNode implements StatementNode {
     public NodeType getNodeType() {
         return NodeType.PARENT_NODE;
     }
+
+    @Override
+    public void setSuperNode(Node node) {}
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class ElseIfStatementNode implements StatementNode {
 
-    private StatementNode parentNode;
+    private Node superNode;
     private Token openParenthesisToken;
     private ExpressionNode expression;
     private Token closedParenthesisToken;
@@ -19,7 +19,7 @@ public class ElseIfStatementNode implements StatementNode {
     private ArrayList<Node> body;
 
     public ElseIfStatementNode(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken, Token openBraceToken) {
-        this.parentNode = null;
+        this.superNode = null;
         this.openParenthesisToken = openParenthesisToken;
         this.expression = expression;
         this.closedParenthesisToken = closedParenthesisToken;
@@ -36,8 +36,8 @@ public class ElseIfStatementNode implements StatementNode {
     }
 
     @Override
-    public StatementNode getParentNode() {
-        return parentNode;
+    public Node getSuperNode() {
+        return superNode;
     }
 
     @Override
@@ -45,9 +45,8 @@ public class ElseIfStatementNode implements StatementNode {
         return body;
     }
 
-    @Override
-    public void setParentNode(StatementNode parentNode) {
-        this.parentNode = parentNode;
+    public void setSuperNode(StatementNode superNode) {
+        this.superNode = superNode;
     }
 
     @Override
@@ -66,5 +65,10 @@ public class ElseIfStatementNode implements StatementNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.ELSE_IF_STATEMENT_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }

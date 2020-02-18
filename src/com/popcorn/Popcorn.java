@@ -1,6 +1,6 @@
 package com.popcorn;
 
-import com.popcorn.terminal.PopcornTerminal;
+import com.popcorn.io.PopcornTerminal;
 
 public class Popcorn {
 

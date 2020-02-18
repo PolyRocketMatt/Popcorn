@@ -2,10 +2,7 @@ package com.popcorn.interpreter;
 
 import com.popcorn.compiler.binding.node.BoundNode;
 import com.popcorn.compiler.binding.node.expressions.*;
-import com.popcorn.compiler.binding.node.statements.BoundElseIfStatementNode;
-import com.popcorn.compiler.binding.node.statements.BoundElseStatementNode;
-import com.popcorn.compiler.binding.node.statements.BoundIfStatementNode;
-import com.popcorn.compiler.binding.node.statements.BoundPrintStatementNode;
+import com.popcorn.compiler.binding.node.statements.*;
 import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.enums.BoundBinaryOperatorKind;
@@ -42,6 +39,13 @@ public class Interpreter {
 
     private LiteralValue evaluateExpression(BoundNode node) throws PopcornException {
         switch (node.getKind()) {
+            case OBJECT_STATEMENT:
+                for (BoundNode bodyNode : ((BoundObjectStatementNode) node).getBoundNodes()) {
+                    evaluateExpression(bodyNode);
+                }
+
+                return new LiteralValue(ConversionUtils.DataType.INT, ValueType.INT, 0);
+
             case LITERAL_EXPRESSION:
                 return ((BoundLiteralExpressionNode) node).getValue();
 

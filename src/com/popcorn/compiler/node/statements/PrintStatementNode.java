@@ -10,13 +10,13 @@ import java.util.ArrayList;
 
 public class PrintStatementNode implements StatementNode {
 
-    private StatementNode parentNode;
+    private Node superNode;
     private Token openParenthesisToken;
     private ExpressionNode expression;
     private Token closedParenthesisToken;
 
     public PrintStatementNode(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken) {
-        this.parentNode = null;
+        this.superNode = null;
         this.openParenthesisToken = openParenthesisToken;
         this.expression = expression;
         this.closedParenthesisToken = closedParenthesisToken;
@@ -27,8 +27,8 @@ public class PrintStatementNode implements StatementNode {
     }
 
     @Override
-    public StatementNode getParentNode() {
-        return parentNode;
+    public Node getSuperNode() {
+        return superNode;
     }
 
     @Override
@@ -39,11 +39,6 @@ public class PrintStatementNode implements StatementNode {
     }
 
     @Override
-    public void setParentNode(StatementNode parentNode) {
-        this.parentNode = parentNode;
-    }
-
-    @Override
     public Node[] getChildren() {
         return new Node[] { openParenthesisToken, expression, closedParenthesisToken};
     }
@@ -51,5 +46,10 @@ public class PrintStatementNode implements StatementNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.PRINT_STATEMENT_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }

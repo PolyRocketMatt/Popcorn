@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 public class SkipNode implements Node {
 
+    @Override
+    public Node getSuperNode() {
+        return null;
+    }
+
     public ArrayList<Node> getBody() { return new ArrayList<>(); }
 
     @Override
@@ -16,5 +21,10 @@ public class SkipNode implements Node {
     @Override
     public NodeType getNodeType() {
         return NodeType.SKIP_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node node) {
+
     }
 }

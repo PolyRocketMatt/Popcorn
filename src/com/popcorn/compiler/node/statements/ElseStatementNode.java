@@ -10,12 +10,12 @@ import java.util.ArrayList;
 
 public class ElseStatementNode implements StatementNode {
 
-    private StatementNode parentNode;
+    private Node superNode;
     private Token openBraceToken;
     private ArrayList<Node> body;
 
     public ElseStatementNode(Token openBraceToken) {
-        this.parentNode = null;
+        this.superNode = null;
         this.openBraceToken = openBraceToken;
         this.body = new ArrayList<>();
     }
@@ -25,8 +25,8 @@ public class ElseStatementNode implements StatementNode {
     }
 
     @Override
-    public StatementNode getParentNode() {
-        return parentNode;
+    public Node getSuperNode() {
+        return superNode;
     }
 
     @Override
@@ -34,9 +34,8 @@ public class ElseStatementNode implements StatementNode {
         return body;
     }
 
-    @Override
-    public void setParentNode(StatementNode parentNode) {
-        this.parentNode = parentNode;
+    public void setSuperNode(StatementNode superNode) {
+        this.superNode = superNode;
     }
 
     @Override
@@ -50,5 +49,10 @@ public class ElseStatementNode implements StatementNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.ELSE_STATEMENT_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }

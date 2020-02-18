@@ -9,12 +9,14 @@ import com.popcorn.utils.utilities.ConversionUtils;
 
 public class BinaryExpressionNode implements ExpressionNode {
 
+    private Node superNode;
     private ExpressionNode left;
     private Token operatorToken;
     private BinaryOperatorType operatorType;
     private ExpressionNode right;
 
-    public BinaryExpressionNode(ExpressionNode left, Token operatorToken, ExpressionNode right) {
+    public BinaryExpressionNode(Node superNode, ExpressionNode left, Token operatorToken, ExpressionNode right) {
+        this.superNode = superNode;
         this.left = left;
         this.operatorToken = operatorToken;
         this.right = right;
@@ -43,6 +45,11 @@ public class BinaryExpressionNode implements ExpressionNode {
     }
 
     @Override
+    public Node getSuperNode() {
+        return superNode;
+    }
+
+    @Override
     public Node[] getChildren() {
         return new Node[] { left, operatorToken, right };
     }
@@ -50,5 +57,10 @@ public class BinaryExpressionNode implements ExpressionNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.BINARY_OPERATOR_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }

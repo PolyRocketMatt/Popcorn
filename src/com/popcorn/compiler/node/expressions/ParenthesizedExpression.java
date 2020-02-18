@@ -7,11 +7,13 @@ import com.popcorn.utils.enums.NodeType;
 
 public class ParenthesizedExpression implements ExpressionNode {
 
+    private Node superNode;
     private Token openParenthesisToken;
     private ExpressionNode expression;
     private Token closedParenthesisToken;
 
-    public ParenthesizedExpression(Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken) {
+    public ParenthesizedExpression(Node superNode, Token openParenthesisToken, ExpressionNode expression, Token closedParenthesisToken) {
+        this.superNode = superNode;
         this.openParenthesisToken = openParenthesisToken;
         this.expression = expression;
         this.closedParenthesisToken = closedParenthesisToken;
@@ -22,6 +24,11 @@ public class ParenthesizedExpression implements ExpressionNode {
     }
 
     @Override
+    public Node getSuperNode() {
+        return superNode;
+    }
+
+    @Override
     public Node[] getChildren() {
         return new Node[] { openParenthesisToken, expression, closedParenthesisToken };
     }
@@ -29,5 +36,10 @@ public class ParenthesizedExpression implements ExpressionNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.PARENTHESIZED_EXPRESSION_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }

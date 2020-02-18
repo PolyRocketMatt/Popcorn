@@ -7,14 +7,21 @@ import com.popcorn.utils.values.LiteralValue;
 
 public class LiteralExpressionNode implements ExpressionNode {
 
+    private Node superNode;
     private LiteralValue value;
 
-    public LiteralExpressionNode(LiteralValue value) {
+    public LiteralExpressionNode(Node superNode, LiteralValue value) {
+        this.superNode = superNode;
         this.value = value;
     }
 
     public LiteralValue getValue() {
         return value;
+    }
+
+    @Override
+    public Node getSuperNode() {
+        return superNode;
     }
 
     @Override
@@ -25,5 +32,10 @@ public class LiteralExpressionNode implements ExpressionNode {
     @Override
     public NodeType getNodeType() {
         return NodeType.LITERAL_NODE;
+    }
+
+    @Override
+    public void setSuperNode(Node superNode) {
+        this.superNode = superNode;
     }
 }
