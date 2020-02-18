@@ -66,6 +66,10 @@ public class PopcornParser {
             ObjectStatementNode node = new ObjectStatementNode(parentNode, identifier.getValue().toString());
 
             while (current().getType() != TokenType.CBRACE) {
+                if (current().getType() == TokenType.EOF) {
+                    break;
+                }
+
                 Node statement = parseStatement();
 
                 node.getBody().add(statement);

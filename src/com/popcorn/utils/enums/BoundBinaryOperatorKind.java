@@ -10,6 +10,7 @@ public enum BoundBinaryOperatorKind {
     LOGICAL_AND,
     LOGICAL_OR,
     LOGICAL_EQUALS,
-    LOGICAL_NOT_EQUALS
+    LOGICAL_NOT_EQUALS,
+    CONCATENATION,
 
 }

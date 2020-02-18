@@ -24,11 +24,16 @@ public class Compilation {
     private List<LiteralValue> values;
     private SyntaxTree tree;
 
-    public Compilation(SyntaxTree tree) {
+    private long compilationTime;
+    private boolean wasSuccessful;
+
+    public Compilation(SyntaxTree tree, long parseTime) {
         diagnostics = tree.getDiagnostics();
         interpreter = new Interpreter();
         binder = new Binder();
         values = new ArrayList<>();
+        compilationTime = parseTime;
+        wasSuccessful = false;
 
         this.tree = tree;
     }
@@ -54,11 +59,16 @@ public class Compilation {
     }
 
     public void exec() {
+        long interpretationDeltaTime = System.currentTimeMillis();
+
         if (tree.getParentNode().getObject() instanceof ObjectStatementNode) {
             for (Node node : ((ObjectStatementNode) tree.getParentNode().getObject()).getBody()) {
                 values.add(evaluate(node));
             }
         }
+
+        interpretationDeltaTime = System.currentTimeMillis() - interpretationDeltaTime;
+        compilationTime = interpretationDeltaTime;
     }
 
     // TODO: 10/02/2020 Make type checker more accessible
@@ -88,6 +98,8 @@ public class Compilation {
                 LiteralValue value = interpreter.evaluate(node);
 
                 if (interpreter.getDiagnostics().getDiagnostics().isEmpty()) {
+                    wasSuccessful = true;
+
                     return value;
                 } else {
                     for (Diagnostic diagnostic : interpreter.getDiagnostics().getDiagnostics())
@@ -100,5 +112,13 @@ public class Compilation {
         }
 
         return new LiteralValue(ConversionUtils.DataType.NOT_DEFINED, ValueType.NULL, null);
+    }
+
+    public long getCompilationTime() {
+        return compilationTime;
+    }
+
+    public boolean wasSuccessful() {
+        return wasSuccessful;
     }
 }
