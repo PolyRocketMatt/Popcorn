@@ -101,7 +101,9 @@ public class Tokenizer {
         this.stream = new TokenStream();
         int lineIndex = 1;
         for (String line : source.split("\n")) {
-            if (!line.startsWith("//")) {
+            line = line.trim();
+
+            if (line.length() < 2 || line.charAt(0) != '/' || line.charAt(1) != '/') {
                 line = line.trim();
                 lineIndex++;
 

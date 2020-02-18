@@ -65,6 +65,8 @@ public class Compilation {
             for (Node node : ((ObjectStatementNode) tree.getParentNode().getObject()).getBody()) {
                 values.add(evaluate(node));
             }
+
+            wasSuccessful = true;
         }
 
         interpretationDeltaTime = System.currentTimeMillis() - interpretationDeltaTime;
@@ -98,8 +100,6 @@ public class Compilation {
                 LiteralValue value = interpreter.evaluate(node);
 
                 if (interpreter.getDiagnostics().getDiagnostics().isEmpty()) {
-                    wasSuccessful = true;
-
                     return value;
                 } else {
                     for (Diagnostic diagnostic : interpreter.getDiagnostics().getDiagnostics())

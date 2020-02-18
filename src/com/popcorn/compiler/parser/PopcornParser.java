@@ -13,7 +13,6 @@ import com.popcorn.utils.rules.SyntaxRules;
 import com.popcorn.utils.SyntaxTree;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
-import com.popcorn.utils.utilities.PrintUtils;
 import com.popcorn.utils.values.LiteralValue;
 
 public class PopcornParser {

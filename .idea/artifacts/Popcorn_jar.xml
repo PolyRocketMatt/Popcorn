@@ -6,7 +6,6 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Popcorn" />
-      <element id="module-test-output" name="Popcorn" />
     </root>
   </artifact>
 </component>

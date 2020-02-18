@@ -73,8 +73,6 @@ _
 ,src/com/popcorn/compiler/binding/Binder.java,2\5\2531412f3e1fd616343541374c0870f33d7ba4d4
 U
 %src/com/popcorn/utils/SyntaxTree.java,2\e\2e666ff146b8367f435827b415e20913de6faffb
-]
--src/com/popcorn/terminal/PopcornTerminal.java,5\5\5579993047488311161c989e96d5d4dcb0d6a907
 „
 Tsrc/com/popcorn/compiler/binding/node/expressions/BoundAssignmentExpressionNode.java,b\d\bd876faa55a71d54d1c9a7dd1007a063b554d99f
 w
@@ -123,3 +121,15 @@ h
 8src/com/popcorn/compiler/binding/node/BoundSkipNode.java,2\2\224fdf015e605f0853cc3c8de2f4dfe2a0d79991
 q
 Asrc/com/popcorn/compiler/node/statements/ElseIfStatementNode.java,f\b\fb1c67bf1349192925edbdaebc98d9355ed56870
+~
+Nsrc/com/popcorn/compiler/binding/node/statements/BoundObjectStatementNode.java,2\9\29d7cb324b51eeb30dd0d46ce4dc5dec1382a701
+^
+.src/com/popcorn/utils/enums/VariableLevel.java,f\9\f9add27a1a5e395ad9164b447f1e9f67cef41802
+_
+/src/com/popcorn/utils/values/VariableScope.java,8\4\8445bef1cddf10a0dd3c9de144068d7cb22ec6c6
+q
+Asrc/com/popcorn/compiler/node/statements/ObjectStatementNode.java,4\5\45ef810ed571acb29c1fc387ca46bbe2c3a9c690
+W
+'src/com/popcorn/io/PopcornTerminal.java,f\7\f772ccbd1d70b514dd14c2feb6de735d8247830d
+S
+#src/com/popcorn/io/PopcornTest.java,b\9\b9a28c7ff212d1a1c1d8e194218952643836a660

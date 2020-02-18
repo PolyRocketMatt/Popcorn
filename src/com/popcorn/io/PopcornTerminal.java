@@ -7,6 +7,8 @@ import com.popcorn.utils.diagnostics.Diagnostic;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.PrintUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -29,54 +31,75 @@ public class PopcornTerminal {
             boolean isPrint = false;
             boolean isTable = false;
             while (!instruction.equals("exit")) {
-                switch (instruction) {
-                    case "tree":
-                        isPrint = !isPrint;
-                        System.out.println("Printing Tree: " + isPrint);
-                        break;
+                if (instruction.startsWith("file ")) {
+                    String path = instruction.replaceFirst("file ", "");
+                    StringBuilder builder = new StringBuilder();
 
-                    case "table":
-                        isTable = !isTable;
-                        System.out.println("Printing Tables: " + isTable);
-                        break;
+                    try {
+                        File file = new File("\"" + path + "\"");
+                        Scanner reader = new Scanner(file);
 
-                    case "test":
-                        try {
-                            new PopcornTest();
-                        } catch (PopcornException ex) {
-                            System.out.println("Test failed!");
+                        while (reader.hasNextLine()) {
+                            builder.append(reader.nextLine());
                         }
-                        break;
 
-                    default:
-                        try {
-                            long deltaParseTime = System.currentTimeMillis();
-                            SyntaxTree tree = Objects.requireNonNull(SyntaxTree.parse(instruction));
+                        reader.close();
 
-                            deltaParseTime = System.currentTimeMillis() - deltaParseTime;
+                        System.out.println(builder.toString());
+                    } catch (FileNotFoundException ex) {
+                        System.out.println("An error occurred.");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    switch (instruction) {
+                        case "tree":
+                            isPrint = !isPrint;
+                            System.out.println("Printing Tree: " + isPrint);
+                            break;
 
-                            if (compilation == null)
-                                compilation = new Compilation(tree, deltaParseTime);
-                            else
-                                compilation.setTree(SyntaxTree.parse(instruction));
-                            compilation.exec();
+                        case "table":
+                            isTable = !isTable;
+                            System.out.println("Printing Tables: " + isTable);
+                            break;
 
-                            // TODO: 10/02/2020 Implement proper error reporting!
-                            if (compilation.getDiagnostics().isEmpty()) {
-                                if (isPrint)
-                                    PrintUtils.prettyPrint(compilation.getTree().getParentNode(), "", true);
-                                if (isTable)
-                                    PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
-                            } else {
-                                for (Diagnostic diagnostic : compilation.getDiagnostics())
-                                    System.out.println(diagnostic.getMessage());
-                                compilation.getDiagnostics().clear();
+                        case "test":
+                            try {
+                                new PopcornTest();
+                            } catch (PopcornException ex) {
+                                ex.printStackTrace();
                             }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        break;
+                            break;
 
+                        default:
+                            try {
+                                long deltaParseTime = System.currentTimeMillis();
+                                SyntaxTree tree = Objects.requireNonNull(SyntaxTree.parse(instruction));
+
+                                deltaParseTime = System.currentTimeMillis() - deltaParseTime;
+
+                                if (compilation == null)
+                                    compilation = new Compilation(tree, deltaParseTime);
+                                else
+                                    compilation.setTree(SyntaxTree.parse(instruction));
+                                compilation.exec();
+
+                                // TODO: 10/02/2020 Implement proper error reporting!
+                                if (compilation.getDiagnostics().isEmpty()) {
+                                    if (isPrint)
+                                        PrintUtils.prettyPrint(compilation.getTree().getParentNode(), "", true);
+                                    if (isTable)
+                                        PrintUtils.prettyPrint(compilation.getInterpreter().getVariables());
+                                } else {
+                                    for (Diagnostic diagnostic : compilation.getDiagnostics())
+                                        System.out.println(diagnostic.getMessage());
+                                    compilation.getDiagnostics().clear();
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+
+                    }
                 }
 
                 diagnostics.getDiagnostics().clear();
@@ -84,6 +107,8 @@ public class PopcornTerminal {
                 System.out.print("> ");
                 instruction = scanner.nextLine();
             }
+
+            scanner.close();
         }
     }
 

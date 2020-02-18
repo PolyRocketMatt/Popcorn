@@ -1,9 +1,7 @@
 package com.popcorn.compiler.lexical;
 
-import com.popcorn.exception.PopcornException;
 import com.popcorn.utils.diagnostics.DiagnosticsBag;
 import com.popcorn.utils.utilities.ConversionUtils;
-import com.popcorn.utils.utilities.PrintUtils;
 
 import java.util.LinkedList;
 
